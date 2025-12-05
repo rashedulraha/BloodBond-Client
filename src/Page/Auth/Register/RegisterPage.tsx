@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, ChangeEvent } from "react";
+import React, { useState, useCallback, useMemo, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import {
   FaUser,
@@ -202,7 +202,7 @@ const RegisterPage: React.FC = () => {
     confirmPassword: "",
   });
 
-  const [selectedDistrict, setSelectedDistrict] = useState<District>("Dhaka");
+  const [selectedDistrict] = useState<District>("Dhaka");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const upazilaOptions = useMemo(
@@ -218,26 +218,10 @@ const RegisterPage: React.FC = () => {
     }));
   }, []);
 
-  const handleDistrictChange = useCallback((value: District) => {
-    setSelectedDistrict(value);
-    setFormData((prev) => ({
-      ...prev,
-      district: value,
-      upazila: "",
-    }));
-  }, []);
-
   const handleUpazilaChange = useCallback((value: Upazila) => {
     setFormData((prev) => ({
       ...prev,
       upazila: value,
-    }));
-  }, []);
-
-  const handleBloodGroupChange = useCallback((value: BloodGroup) => {
-    setFormData((prev) => ({
-      ...prev,
-      bloodGroup: value,
     }));
   }, []);
 
@@ -256,162 +240,173 @@ const RegisterPage: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <Card className="w-full rounded-none border-none">
-        <CardHeader className="text-center">
-          <div className="mx-auto h-16 w-16 bg-primary rounded-full flex items-center justify-center">
-            <FaTint className="h-10 w-10 text-primary-foreground" />
-          </div>
-          <CardTitle className="text-2xl font-bold">Join as a Donor</CardTitle>
-          <CardDescription>Create your account to save lives.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
-              <div className="space-y-2 w-full">
-                <Label htmlFor="firstName">First Name</Label>
-                <IconInput
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  placeholder="Rashedul"
-                  required
-                  icon={FaUser}
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="space-y-2 w-full">
-                <Label htmlFor="lastName">Last Name</Label>
-                <IconInput
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  placeholder="Islam"
-                  required
-                  icon={FaUser}
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                />
-              </div>
+    <div className="flex flex-col lg:flex-row w-full h-full">
+      {/* Header Section */}
+      <div className="w-full lg:w-2/3 p-6 lg:p-8 flex flex-col justify-center">
+        <Card className="h-full flex flex-col justify-center">
+          <CardHeader className="text-center">
+            <div className="mx-auto h-16 w-16 bg-primary rounded-full flex items-center justify-center">
+              <FaTint className="h-10 w-10 text-primary-foreground" />
             </div>
+            <CardTitle className="text-2xl font-bold">
+              Join as a Donor
+            </CardTitle>
+            <CardDescription>
+              Create your account to save lives.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
 
-            <FileUpload onFileChange={handleFileChange} />
-
-            <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
-              <div className="space-y-2 w-full">
-                <Label htmlFor="email">Email Address</Label>
-                <IconInput
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  required
-                  icon={FaEnvelope}
-                  value={formData.email}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="space-y-2 w-full">
-                <Label>Blood Group</Label>
-                <IconSelect
-                  placeholder="Select Blood Group"
-                  required
-                  icon={FaTint}
-                  value={formData.bloodGroup}
-                  onValueChange={handleBloodGroupChange}>
-                  {BLOOD_GROUPS.map((group) => (
-                    <SelectItem key={group} value={group}>
-                      {group}
-                    </SelectItem>
-                  ))}
-                </IconSelect>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
-              <div className="space-y-2 w-full">
-                <Label>District</Label>
-                <IconSelect
-                  placeholder="Select District"
-                  required
-                  icon={FaMapMarkerAlt}
-                  value={formData.district}
-                  onValueChange={handleDistrictChange}>
-                  {DISTRICTS.map((district) => (
-                    <SelectItem key={district} value={district}>
-                      {district}
-                    </SelectItem>
-                  ))}
-                </IconSelect>
+      {/* Form Section */}
+      <div className="w-full lg:w-2/3 p-6 lg:p-8">
+        <Card className="h-full">
+          <CardContent className="h-full flex flex-col justify-center">
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
+                <div className="space-y-2 w-full">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <IconInput
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    placeholder="Rashedul"
+                    required
+                    icon={FaUser}
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="space-y-2 w-full">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <IconInput
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    placeholder="Islam"
+                    required
+                    icon={FaUser}
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2 w-full">
-                <Label>Upazila</Label>
-                <IconSelect
-                  placeholder="Select Upazila"
-                  required
-                  icon={FaMapMarkerAlt}
-                  value={formData.upazila}
-                  onValueChange={handleUpazilaChange}
-                  disabled={!selectedDistrict}>
-                  {upazilaOptions.map((upazila) => (
-                    <SelectItem key={upazila} value={upazila}>
-                      {upazila}
-                    </SelectItem>
-                  ))}
-                </IconSelect>
+              <FileUpload onFileChange={handleFileChange} />
+
+              <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
+                <div className="space-y-2 w-full">
+                  <Label htmlFor="email">Email Address</Label>
+                  <IconInput
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    required
+                    icon={FaEnvelope}
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="space-y-2 w-full">
+                  <Label>Blood Group</Label>
+                  <IconSelect
+                    placeholder="Select Blood Group"
+                    required
+                    icon={FaTint}
+                    value={formData.bloodGroup}>
+                    {BLOOD_GROUPS.map((group) => (
+                      <SelectItem key={group} value={group}>
+                        {group}
+                      </SelectItem>
+                    ))}
+                  </IconSelect>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
-              <div className="space-y-2 w-full">
-                <Label htmlFor="password">Password</Label>
-                <IconInput
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="••••••••"
-                  required
-                  icon={FaLock}
-                  value={formData.password}
-                  onChange={handleInputChange}
-                />
+              <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
+                <div className="space-y-2 w-full">
+                  <Label>District</Label>
+                  <IconSelect
+                    placeholder="Select District"
+                    required
+                    icon={FaMapMarkerAlt}
+                    value={formData.district}>
+                    {DISTRICTS.map((district) => (
+                      <SelectItem key={district} value={district}>
+                        {district}
+                      </SelectItem>
+                    ))}
+                  </IconSelect>
+                </div>
+
+                <div className="space-y-2 w-full">
+                  <Label>Upazila</Label>
+                  <IconSelect
+                    placeholder="Select Upazila"
+                    required
+                    icon={FaMapMarkerAlt}
+                    value={formData.upazila}
+                    onValueChange={handleUpazilaChange}
+                    disabled={!selectedDistrict}>
+                    {upazilaOptions.map((upazila) => (
+                      <SelectItem key={upazila} value={upazila}>
+                        {upazila}
+                      </SelectItem>
+                    ))}
+                  </IconSelect>
+                </div>
               </div>
 
-              <div className="space-y-2 w-full">
-                <Label htmlFor="confirm_password">Confirm Password</Label>
-                <IconInput
-                  id="confirm_password"
-                  name="confirm_password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="••••••••"
-                  required
-                  icon={FaLock}
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                />
+              <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
+                <div className="space-y-2 w-full">
+                  <Label htmlFor="password">Password</Label>
+                  <IconInput
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="••••••••"
+                    required
+                    icon={FaLock}
+                    value={formData.password}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="space-y-2 w-full">
+                  <Label htmlFor="confirm_password">Confirm Password</Label>
+                  <IconInput
+                    id="confirm_password"
+                    name="confirm_password"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="••••••••"
+                    required
+                    icon={FaLock}
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                  />
+                </div>
               </div>
-            </div>
 
-            <Button type="submit" className="w-full">
-              Register
-            </Button>
+              <Button type="submit" className="w-full">
+                Register
+              </Button>
 
-            <div className="text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="font-medium text-primary hover:underline">
-                Login
-              </Link>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+              <div className="text-center text-sm text-muted-foreground">
+                Already have an account?{" "}
+                <Link
+                  to="/login"
+                  className="font-medium text-primary hover:underline">
+                  Login
+                </Link>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
