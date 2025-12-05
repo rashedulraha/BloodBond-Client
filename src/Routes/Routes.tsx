@@ -18,6 +18,12 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     Component: AuthLayout,
+    children: [
+      {
+        index: true,
+        Component: RegisterPage,
+      },
+    ],
   },
 ]);
 
