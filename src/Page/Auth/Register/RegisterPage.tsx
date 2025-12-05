@@ -53,19 +53,36 @@ const RegisterPage: React.FC = () => {
         </CardHeader>
         <CardContent>
           <form className="space-y-4">
-            {/* Name Input - Reduced height */}
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <div className="relative">
-                <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="John Doe"
-                  required
-                  className="pl-10 h-9"
-                />
+            <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
+              {/* Name Input - Reduced height */}
+              <div className="space-y-2 w-full">
+                <Label htmlFor="name">First Name</Label>
+                <div className="relative">
+                  <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="Rashedul"
+                    required
+                    className="pl-10 h-9"
+                  />
+                </div>
+              </div>{" "}
+              {/* Name Input - Reduced height */}
+              <div className="space-y-2 w-full">
+                <Label htmlFor="name">Last Name</Label>
+                <div className="relative">
+                  <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="Islam"
+                    required
+                    className="pl-10 h-9"
+                  />
+                </div>
               </div>
             </div>
 
@@ -83,7 +100,7 @@ const RegisterPage: React.FC = () => {
                 />
                 <label
                   htmlFor="avatar-upload"
-                  className="flex h-9 w-full cursor-pointer items-center rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                  className="flex h-9 w-full cursor-pointer items-center rounded-md border border-input bg-background px-3 py-1 text-sm">
                   <span className="truncate">
                     {fileName ? fileName : "Choose file..."}
                   </span>
