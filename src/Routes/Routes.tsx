@@ -1,4 +1,6 @@
+import AuthLayout from "@/Layout/Auth/AuthLayout";
 import MainLayouts from "@/Layout/MainLayouts/MainLayouts";
+import RegisterPage from "@/Page/Auth/Register/RegisterPage";
 import Home from "@/Page/Home/Home";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -12,6 +14,10 @@ const router = createBrowserRouter([
         Component: Home,
       },
     ],
+  },
+  {
+    path: "/auth",
+    Component: AuthLayout,
   },
 ]);
 
