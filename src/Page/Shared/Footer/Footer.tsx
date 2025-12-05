@@ -360,6 +360,39 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           </div>
         </div>
       </div>
+      {/* Bottom Bar */}
+      <div className="bg-background/80 py-6 border-t border-border">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-muted-foreground text-sm font-sans">
+              © {currentYear} Bloodbond. All rights reserved.
+              <span className="text-primary ml-2">❤️ Every Drop Counts</span>
+            </div>
+            <div className="flex items-center gap-6 text-sm">
+              {legalLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-muted-foreground hover:text-foreground transition-colors font-sans">
+                  {link.label}
+                </a>
+              ))}
+            </div>
+            <div className="text-xs text-muted-foreground/60 font-sans">
+              Registered Non-Profit Organization • Tax ID: 45-1234567
+            </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border/50 text-center">
+            <p className="text-xs text-muted-foreground/80 font-sans leading-relaxed">
+              Blood types displayed are for informational purposes. Always
+              consult with medical professionals.
+              <br />
+              This platform connects donors with recipients but does not provide
+              medical advice.
+            </p>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 };
