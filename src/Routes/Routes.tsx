@@ -17,11 +17,11 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/auth",
+    path: "/",
     Component: AuthLayout,
     children: [
       {
-        index: true,
+        path: "register",
         Component: RegisterPage,
       },
       {

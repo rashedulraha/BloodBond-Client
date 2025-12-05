@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   FaTint,
   FaBars,
@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useAuth from "@/Hook/useAuth/useAuth";
 
 interface User {
   name: string;
@@ -29,13 +30,13 @@ interface NavbarProps {
   user: User | null;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ user }) => {
-  const navigate = useNavigate();
+const Navbar: React.FC<NavbarProps> = () => {
+  // const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   const handleLogout = () => {
     console.log("User logged out");
-    navigate("/login");
   };
 
   return (
@@ -167,9 +168,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
               </>
             ) : (
               <Button asChild className="w-full mt-2">
-                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                  Login
-                </Link>
+                <Link to="login">Login</Link>
               </Button>
             )}
           </div>

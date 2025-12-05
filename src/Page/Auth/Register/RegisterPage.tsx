@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, type ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { data, Link, useFormAction } from "react-router-dom";
 import {
   FaUser,
   FaEnvelope,
@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useAuth from "@/Hook/useAuth/useAuth";
 
 // Type definitions
 type BloodGroup = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
@@ -121,6 +122,10 @@ interface IconSelectProps {
   onValueChange?: (value: string) => void;
   disabled?: boolean;
 }
+interface InputData {
+  email: string;
+  password: string;
+}
 
 const IconSelect: React.FC<IconSelectProps> = React.memo(
   ({
@@ -202,12 +207,11 @@ const RegisterPage: React.FC = () => {
     confirmPassword: "",
   });
 
-  const [selectedDistrict] = useState<District>("Dhaka");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const upazilaOptions = useMemo(
-    () => UPAZILAS[selectedDistrict] || [],
-    [selectedDistrict]
+    () => UPAZILAS[formData.district] || [],
+    [formData.district]
   );
 
   const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -229,21 +233,20 @@ const RegisterPage: React.FC = () => {
     setAvatarFile(file);
   }, []);
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      // Form validation and submission logic here
-      console.log("Form data:", formData);
-      console.log("Avatar file:", avatarFile);
-    },
-    [formData, avatarFile]
-  );
+  const { registerUser } = useAuth();
+
+  const handleSubmitForm = (data: InputData) => {
+    const email = data.email;
+    const password = data.password;
+    registerUser(email, password);
+    console.log(data);
+  };
 
   return (
     <div className="flex flex-col lg:flex-row w-full h-full">
       {/* Header Section */}
-      <div className="w-full lg:w-2/3 p-6 lg:p-8 flex flex-col justify-center">
-        <Card className="h-full flex flex-col justify-center">
+      <div className="w-full lg:w-1/3 p-6 lg:p-8 flex flex-col justify-center">
+        <Card className="h-full flex flex-col justify-center  shadow-none">
           <CardHeader className="text-center">
             <div className="mx-auto h-16 w-16 bg-primary rounded-full flex items-center justify-center">
               <FaTint className="h-10 w-10 text-primary-foreground" />
@@ -260,9 +263,9 @@ const RegisterPage: React.FC = () => {
 
       {/* Form Section */}
       <div className="w-full lg:w-2/3 p-6 lg:p-8">
-        <Card className="h-full">
+        <Card className="h-full  shadow-none">
           <CardContent className="h-full flex flex-col justify-center">
-            <form className="space-y-4" onSubmit={handleSubmit}>
+            <form className="space-y-4" onSubmit={handleSubmitForm}>
               <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
                 <div className="space-y-2 w-full">
                   <Label htmlFor="firstName">First Name</Label>
@@ -301,6 +304,7 @@ const RegisterPage: React.FC = () => {
                     id="email"
                     name="email"
                     type="email"
+                    {...register("email")}
                     autoComplete="email"
                     placeholder="you@example.com"
                     required
@@ -349,7 +353,7 @@ const RegisterPage: React.FC = () => {
                     icon={FaMapMarkerAlt}
                     value={formData.upazila}
                     onValueChange={handleUpazilaChange}
-                    disabled={!selectedDistrict}>
+                    disabled={!formData.district}>
                     {upazilaOptions.map((upazila) => (
                       <SelectItem key={upazila} value={upazila}>
                         {upazila}
@@ -366,6 +370,7 @@ const RegisterPage: React.FC = () => {
                     id="password"
                     name="password"
                     type="password"
+                    {...register("password")}
                     autoComplete="new-password"
                     placeholder="••••••••"
                     required
@@ -378,15 +383,13 @@ const RegisterPage: React.FC = () => {
                 <div className="space-y-2 w-full">
                   <Label htmlFor="confirm_password">Confirm Password</Label>
                   <IconInput
-                    id="confirm_password"
                     name="confirm_password"
                     type="password"
                     autoComplete="new-password"
                     placeholder="••••••••"
                     required
                     icon={FaLock}
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
+                    id={""}
                   />
                 </div>
               </div>
