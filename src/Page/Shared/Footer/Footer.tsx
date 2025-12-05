@@ -334,6 +334,31 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
             </div>
           </div>
         </div>
+        {/* Newsletter & Social */}
+        <div className="mt-12 pt-8 border-t border-border grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <NewsletterSection />
+          <div className="bg-card/50 p-6 rounded-xl shadow-sm">
+            <h3 className="text-xl font-bold mb-4 text-foreground font-sans">
+              Follow Our Journey
+            </h3>
+            <p className="text-muted-foreground mb-6 font-sans leading-relaxed">
+              Join our community of lifesavers on social media
+            </p>
+            <div className="flex gap-4">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className={`bg-secondary text-muted-foreground ${social.color} w-12 h-12 rounded-full flex items-center justify-center text-lg transition-all duration-300 transform hover:scale-110 hover:bg-secondary/80 shadow-sm`}>
+                  {social.icon}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );
