@@ -24,6 +24,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     password: string
   ): Promise<UserCredential | undefined> => {
     try {
+      setLoading(true);
       const res = await createUserWithEmailAndPassword(auth, email, password);
       return res;
     } catch (error: unknown) {
@@ -36,6 +37,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // ! login user
   const loginUser = async (email: string, password: string) => {
     try {
+      setLoading(true);
       const signInUser = await signInWithEmailAndPassword(
         auth,
         email,
@@ -51,6 +53,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   //! --- Logout user ---
   const logOutUser = async () => {
     try {
+      setLoading(true);
       signOut(auth);
     } catch (error: unknown) {
       if (error instanceof Error) {

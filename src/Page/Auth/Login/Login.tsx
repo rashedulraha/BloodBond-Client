@@ -1,6 +1,7 @@
 import useAuth from "@/Hook/useAuth/useAuth";
 import Container from "@/Page/Shared/Responsive/Container";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 type Inputs = {
@@ -11,11 +12,14 @@ type Inputs = {
 const LoginPage = () => {
   const { register, handleSubmit } = useForm<Inputs>();
   const { loginUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const onInputSubmit: SubmitHandler<Inputs> = (data) => {
     const email = data?.email;
     const password = data?.password;
     loginUser(email, password).then((res) => {
+      navigate(location.state || "/");
       toast.success("successfully sign in");
     });
   };

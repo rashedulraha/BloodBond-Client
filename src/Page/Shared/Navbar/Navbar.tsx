@@ -50,7 +50,9 @@ const Navbar = () => {
       <div className="flex flex-col lg:flex-row items-center gap-4 md:gap-6 lg:gap-8 font-medium ">
         {/* <Menu to={""} label={"Home"} />
         <Menu to={"about"} label={"About"} />
+        
         <Menu to={"available-foods"} label={"Available Foods"} /> */}
+        <Link to={"profile"}>Profile</Link>
       </div>
     </>
   );
@@ -97,7 +99,7 @@ const Navbar = () => {
               </div>
             ) : (
               <Link
-                to="login"
+                to="/login"
                 className="btn btn-primary rounded-full px-6 shadow-none border-none hover:shadow-lg transition-all">
                 Login
               </Link>

@@ -3,6 +3,8 @@ import MainLayouts from "@/Layout/MainLayouts/MainLayouts";
 import LoginPage from "@/Page/Auth/Login/Login";
 import RegisterPage from "@/Page/Auth/Register/RegisterPage";
 import Home from "@/Page/Home/Home";
+import Profile from "@/Page/Profile/Profile";
+import PrivetRoute from "@/Page/Shared/PrivetRoute/PrivetRoute";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -13,6 +15,14 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: Home,
+      },
+      {
+        path: "profile",
+        element: (
+          <PrivetRoute>
+            <Profile />
+          </PrivetRoute>
+        ),
       },
     ],
   },
