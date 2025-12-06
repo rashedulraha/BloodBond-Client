@@ -1,180 +1,111 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  FaTint,
-  FaBars,
-  FaTimes,
-  FaUserCircle,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 
-// shad/ui Components
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import Container from "../Responsive/Container";
+
+import { useState } from "react";
 import useAuth from "@/Hook/useAuth/useAuth";
 
-interface User {
-  name: string;
-  email: string;
-  avatar?: string;
-}
-
-interface NavbarProps {
-  user: User | null;
-}
-
-const Navbar: React.FC<NavbarProps> = () => {
-  // const navigate = useNavigate();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
 
-  const handleLogout = () => {
-    console.log("User logged out");
+  const handleUserLogout = () => {
+    console.log("logout");
   };
 
-  return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
-        {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2">
-          <FaTint className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold text-foreground">Bloodbond</span>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link
-            to="/donation-requests"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            Donation Requests
-          </Link>
+  const loginUser = (
+    <>
+      <div className="dropdown dropdown-end">
+        <div tabIndex={0} role="button">
           {user && (
-            <Link
-              to="/funding"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Funding
-            </Link>
-          )}
-        </nav>
-
-        {/* User Actions (Desktop) */}
-        <div className="hidden md:flex items-center space-x-4">
-          {user ? (
-            // Logged In User Avatar Dropdown
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-8 w-8 rounded-full">
-                  <img
-                    className="h-8 w-8 rounded-full object-cover"
-                    src={
-                      user.avatar ||
-                      "https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                    }
-                    alt={user.name}
-                  />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {user.name}
-                    </p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {user.email}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard" className="w-full cursor-pointer">
-                    <FaUserCircle className="mr-2 h-4 w-4" />
-                    <span>Dashboard</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="cursor-pointer">
-                  <FaSignOutAlt className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            // Logged Out User Login Button
-            <Button asChild>
-              <Link to="/login">Login</Link>
-            </Button>
+            <div className="md:tooltip md:tooltip-bottom flex items-center justify-center">
+              <img
+                className="-full border hover:bg-primary hover:text-white transition-all w-8  h-8  cursor-pointer rounded-full"
+                alt="user Image"
+              />
+            </div>
           )}
         </div>
+        <ul
+          tabIndex={0}
+          className="menu menu-sm dropdown-content bg-base-100 rounded-box z-9999 mt-5 md:mt-4 w-60 p-3 border border-base-300 space-y-3">
+          {/* <LinkMenu to={"user-profile"} label={"profile"} />
+          <LinkMenu to={"my-request"} label={"My Requests"} />
+          <LinkMenu to={"my-listings"} label={"My Listings"} />
+          <LinkMenu to={"add-food"} label={"Add Food"} /> */}
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden inline-flex items-center justify-center rounded-md text-sm font-medium text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-          {isMobileMenuOpen ? (
-            <FaTimes className="h-6 w-6" />
-          ) : (
-            <FaBars className="h-6 w-6" />
-          )}
-          <span className="sr-only">Toggle menu</span>
-        </button>
+          <button
+            onClick={handleUserLogout}
+            className=" px-3 py-2 btn-primary rounded-full bg-primary shadow-none cursor-pointer">
+            Logout
+          </button>
+        </ul>
       </div>
+    </>
+  );
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background border-t">
-            <Link
-              to="/donation-requests"
-              className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent"
-              onClick={() => setIsMobileMenuOpen(false)}>
-              Donation Requests
+  const MenuLink = (
+    <>
+      <div className="flex flex-col lg:flex-row items-center gap-4 md:gap-6 lg:gap-8 font-medium ">
+        {/* <Menu to={""} label={"Home"} />
+        <Menu to={"about"} label={"About"} />
+        <Menu to={"available-foods"} label={"Available Foods"} /> */}
+      </div>
+    </>
+  );
+
+  return (
+    <div className="bg-base-100/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+      <Container>
+        <div className="navbar">
+          {/* Logo */}
+          <div className="navbar-start">
+            <div className="dropdown">
+              <label
+                tabIndex={0}
+                className=" cursor-pointer lg:hidden p-2  "
+                onClick={() => setIsOpen(!isOpen)}>
+                {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+              </label>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-9999 mt-3 w-64 p-4 shadow-xl border border-base-300">
+                {MenuLink}
+              </ul>
+            </div>
+
+            <Link to="/" className="flex items-center gap-1 ml-2 md:ml-0 ">
+              <span className="text-2xl font-bold hidden sm:block">
+                Blood <span className="text-primary">bond</span>
+              </span>
             </Link>
-            {user && (
-              <Link
-                to="/funding"
-                className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent"
-                onClick={() => setIsMobileMenuOpen(false)}>
-                Funding
-              </Link>
-            )}
+          </div>
+
+          {/* Desktop Menu */}
+          <div className="navbar-center hidden lg:flex">
+            <ul className="menu menu-horizontal px-1 gap-2">{MenuLink}</ul>
+          </div>
+
+          {/* Right Side: Theme + User/ */}
+          <div className="navbar-end flex items-center gap-5">
+            {/* Theme toggle */}
+            {/* <ThemeToggle /> */}
             {user ? (
-              <>
-                <Link
-                  to="/dashboard"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent"
-                  onClick={() => setIsMobileMenuOpen(false)}>
-                  Dashboard
-                </Link>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-accent">
-                  Log out
-                </button>
-              </>
+              <div className="flex items-center gap-5">
+                <div className="items-center justify-center ">{loginUser}</div>
+              </div>
             ) : (
-              <Button asChild className="w-full mt-2">
-                <Link to="login">Login</Link>
-              </Button>
+              <Link
+                to="/auth/login"
+                className="btn btn-primary rounded-full px-6 shadow-md hover:shadow-lg transition-all">
+                Login
+              </Link>
             )}
           </div>
         </div>
-      )}
-    </header>
+      </Container>
+    </div>
   );
 };
 
