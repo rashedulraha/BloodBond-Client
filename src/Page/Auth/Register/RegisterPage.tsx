@@ -1,3 +1,4 @@
+import useAuth from "@/Hook/useAuth/useAuth";
 import Container from "@/Page/Shared/Responsive/Container";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
@@ -9,19 +10,24 @@ type Inputs = {
   bloodGroup: string;
   district: string;
   upazila: string;
+  password: string;
+  confirmPassword: string;
 };
 
 const RegisterPage = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
+  const { register, handleSubmit } = useForm<Inputs>();
+  const { registerUser } = useAuth();
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
+    const email = data.email;
+    const password = data.password;
+    const userInfo = {
+      email,
+      password,
+    };
+    console.log(userInfo);
   };
-
-  // console.log(watch("example")); // watch input value by passing the name of it
 
   return (
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
@@ -108,6 +114,26 @@ const RegisterPage = () => {
               <option>Amber</option>
               <option>Velvet</option>
             </select>
+          </div>
+        </div>
+        <div className="flex items-center gap-5">
+          <div>
+            <label htmlFor="password"> Password</label>
+            <input
+              type="password"
+              className="input w-full"
+              placeholder="input your secure password"
+              {...register("password")}
+            />
+          </div>
+          <div>
+            <label htmlFor="password"> Confirm Password</label>
+            <input
+              type="password"
+              className="input w-full"
+              placeholder="input your secure password"
+              {...register("confirmPassword")}
+            />
           </div>
         </div>
 

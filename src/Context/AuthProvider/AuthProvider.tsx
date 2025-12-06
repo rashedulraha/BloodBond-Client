@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   type User,
+  type UserCredential,
 } from "firebase/auth";
 
 type AuthProviderProps = {
@@ -12,32 +13,40 @@ type AuthProviderProps = {
 };
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User>();
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const registerUser = async (email: string, password: string) => {
+  // --- Register User ---
+  const registerUser = async (
+    email: string,
+    password: string
+  ): Promise<UserCredential | undefined> => {
     try {
-      const resister = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      return resister;
-    } catch (error) {
-      console.log(error.message);
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      return res;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
     }
   };
 
+  // --- Track Auth State ---
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
-      setUser(currentUser);
+      setUser(currentUser || undefined);
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const userInfo = { registerUser, user, loading };
+  // --- Value passed to Context ---
+  const userInfo = {
+    registerUser,
+    user,
+    loading,
+  };
 
   return (
     <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>
