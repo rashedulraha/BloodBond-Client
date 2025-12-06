@@ -6,10 +6,14 @@ export type UserInfoType = {
     email: string,
     password: string
   ) => Promise<UserCredential | undefined>;
+  loginUser: (
+    email: string,
+    password: string
+  ) => Promise<UserCredential | undefined>;
   user: User | undefined;
   loading: boolean;
 };
 
-const AuthContext = createContext<UserInfoType | null>(null);
+const AuthContext = createContext<UserInfoType | undefined>(undefined);
 
 export default AuthContext;

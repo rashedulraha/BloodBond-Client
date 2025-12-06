@@ -4,6 +4,8 @@ import { auth } from "@/Firebase/Firebase.init";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
   type User,
   type UserCredential,
 } from "firebase/auth";
@@ -16,7 +18,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // --- Register User ---
+  //! --- Register User ---
   const registerUser = async (
     email: string,
     password: string
@@ -24,6 +26,32 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       return res;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+  };
+
+  // ! login user
+  const loginUser = async (email: string, password: string) => {
+    try {
+      const signInUser = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      return signInUser;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+  };
+  //! --- Logout user ---
+  const logOutUser = async () => {
+    try {
+      signOut(auth);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -46,6 +74,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     registerUser,
     user,
     loading,
+    logOutUser,
+    loginUser,
   };
 
   return (

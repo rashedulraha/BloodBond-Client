@@ -17,6 +17,7 @@ type Inputs = {
 
 const RegisterPage = () => {
   const { register, handleSubmit } = useForm<Inputs>();
+
   const { registerUser } = useAuth();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {

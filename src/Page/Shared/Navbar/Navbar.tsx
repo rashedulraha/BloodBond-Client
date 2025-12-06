@@ -8,10 +8,10 @@ import useAuth from "@/Hook/useAuth/useAuth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, logOutUser } = useAuth();
 
   const handleUserLogout = () => {
-    console.log("logout");
+    logOutUser();
   };
 
   const loginUser = (
@@ -97,8 +97,8 @@ const Navbar = () => {
               </div>
             ) : (
               <Link
-                to="/auth/login"
-                className="btn btn-primary rounded-full px-6 shadow-md hover:shadow-lg transition-all">
+                to="login"
+                className="btn btn-primary rounded-full px-6 shadow-none border-none hover:shadow-lg transition-all">
                 Login
               </Link>
             )}
