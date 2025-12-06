@@ -23,7 +23,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         password
       );
       return resister;
-    } catch (error: unknown) {
+    } catch (error) {
       console.log(error.message);
     }
   };

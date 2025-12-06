@@ -1,416 +1,119 @@
-import React, { useState, useCallback, useMemo, type ChangeEvent } from "react";
-import { data, Link, useFormAction } from "react-router-dom";
-import {
-  FaUser,
-  FaEnvelope,
-  FaLock,
-  FaMapMarkerAlt,
-  FaTint,
-  FaCloudUploadAlt,
-} from "react-icons/fa";
+import Container from "@/Page/Shared/Responsive/Container";
+import { useForm, type SubmitHandler } from "react-hook-form";
 
-// shadcn/ui Components
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import useAuth from "@/Hook/useAuth/useAuth";
-
-// Type definitions
-type BloodGroup = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
-type District = "Dhaka" | "Chattogram" | "Rajshahi";
-type Upazila = string;
-
-interface UpazilaOptions {
-  [key: string]: Upazila[];
-}
-
-interface FormData {
+type Inputs = {
   firstName: string;
   lastName: string;
+  fileInput: FileList;
   email: string;
-  bloodGroup: BloodGroup;
-  district: District;
-  upazila: Upazila;
-  password: string;
-  confirmPassword: string;
-  avatar?: File;
-}
-
-// Constants with proper typing
-const BLOOD_GROUPS: BloodGroup[] = [
-  "A+",
-  "A-",
-  "B+",
-  "B-",
-  "AB+",
-  "AB-",
-  "O+",
-  "O-",
-];
-const DISTRICTS: District[] = ["Dhaka", "Chattogram", "Rajshahi"];
-const UPAZILAS: UpazilaOptions = {
-  Dhaka: ["Dhanmondi", "Mirpur"],
-  Chattogram: ["Patiya", "Banshkhali"],
-  Rajshahi: ["Bagmara", "Durgapur"],
+  bloodGroup: string;
+  district: string;
+  upazila: string;
 };
 
-// Icon Input Component with proper typing
-interface IconInputProps {
-  id: string;
-  name: string;
-  type: string;
-  placeholder?: string;
-  required?: boolean;
-  icon: React.ComponentType<{ className?: string }>;
-  autoComplete?: string;
-  className?: string;
-  value?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-}
-
-const IconInput: React.FC<IconInputProps> = React.memo(
-  ({
-    id,
-    name,
-    type,
-    placeholder,
-    required = false,
-    icon: Icon,
-    autoComplete,
-    className = "",
-    value,
-    onChange,
-  }) => (
-    <div className="relative">
-      <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-      <Input
-        id={id}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        required={required}
-        autoComplete={autoComplete}
-        className={`pl-10 h-9 w-full ${className}`}
-        value={value}
-        onChange={onChange}
-      />
-    </div>
-  )
-);
-
-// Icon Select Component with proper typing
-interface IconSelectProps {
-  placeholder: string;
-  required?: boolean;
-  icon: React.ComponentType<{ className?: string }>;
-  children: React.ReactNode;
-  value?: string;
-  onValueChange?: (value: string) => void;
-  disabled?: boolean;
-}
-interface InputData {
-  email: string;
-  password: string;
-}
-
-const IconSelect: React.FC<IconSelectProps> = React.memo(
-  ({
-    placeholder,
-    required = false,
-    icon: Icon,
-    children,
-    value,
-    onValueChange,
-    disabled = false,
-  }) => (
-    <Select
-      required={required}
-      value={value}
-      onValueChange={onValueChange}
-      disabled={disabled}>
-      <SelectTrigger className="h-9 pl-10 w-full">
-        <div className="flex items-center">
-          <Icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          <SelectValue placeholder={placeholder} />
-        </div>
-      </SelectTrigger>
-      <SelectContent>{children}</SelectContent>
-    </Select>
-  )
-);
-
-// File Upload Component with proper typing
-const FileUpload: React.FC<{ onFileChange?: (file: File | null) => void }> =
-  React.memo(({ onFileChange }) => {
-    const [fileName, setFileName] = useState<string | null>(null);
-
-    const handleFileChange = useCallback(
-      (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-          setFileName(file.name);
-          onFileChange?.(file);
-        } else {
-          setFileName(null);
-          onFileChange?.(null);
-        }
-      },
-      [onFileChange]
-    );
-
-    return (
-      <div className="space-y-2">
-        <Label htmlFor="avatar-upload">Avatar</Label>
-        <div className="relative">
-          <FaCloudUploadAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            id="avatar-upload"
-            name="avatar-upload"
-            type="file"
-            onChange={handleFileChange}
-            className="sr-only"
-            accept="image/*"
-          />
-          <label
-            htmlFor="avatar-upload"
-            className="flex h-9 w-full cursor-pointer items-center rounded-md border border-input bg-background px-3 py-1 text-sm">
-            <span className="truncate">{fileName || "Choose file..."}</span>
-          </label>
-        </div>
-      </div>
-    );
-  });
-
-const RegisterPage: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    bloodGroup: "A+",
-    district: "Dhaka",
-    upazila: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-
-  const upazilaOptions = useMemo(
-    () => UPAZILAS[formData.district] || [],
-    [formData.district]
-  );
-
-  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }, []);
-
-  const handleUpazilaChange = useCallback((value: Upazila) => {
-    setFormData((prev) => ({
-      ...prev,
-      upazila: value,
-    }));
-  }, []);
-
-  const handleFileChange = useCallback((file: File | null) => {
-    setAvatarFile(file);
-  }, []);
-
-  const { registerUser } = useAuth();
-
-  const handleSubmitForm = (data: InputData) => {
-    const email = data.email;
-    const password = data.password;
-    registerUser(email, password);
+const RegisterPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
   };
 
+  // console.log(watch("example")); // watch input value by passing the name of it
+
   return (
-    <div className="flex flex-col lg:flex-row w-full h-full">
-      {/* Header Section */}
-      <div className="w-full lg:w-1/3 p-6 lg:p-8 flex flex-col justify-center">
-        <Card className="h-full flex flex-col justify-center  shadow-none">
-          <CardHeader className="text-center">
-            <div className="mx-auto h-16 w-16 bg-primary rounded-full flex items-center justify-center">
-              <FaTint className="h-10 w-10 text-primary-foreground" />
-            </div>
-            <CardTitle className="text-2xl font-bold">
-              Join as a Donor
-            </CardTitle>
-            <CardDescription>
-              Create your account to save lives.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
+    /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
+    <Container>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="max-w-lg mx-auto my-10 space-y-5">
+        <div className="flex items-center gap-5">
+          <div>
+            <label className="">FirstName</label>
+            <input
+              type="text"
+              className="input"
+              placeholder="First Name"
+              {...register("firstName")}
+            />
+          </div>
+          <div>
+            <label className="">FirstName</label>
+            <input
+              type="text"
+              className="input"
+              placeholder="Last Name"
+              {...register("lastName")}
+            />
+          </div>
+        </div>
+        <div>
+          <label htmlFor="inputFile">Input File</label>
+          <input
+            type="file"
+            className="file-input w-full"
+            placeholder="Input your photo"
+            {...register("fileInput")}
+          />
+        </div>
 
-      {/* Form Section */}
-      <div className="w-full lg:w-2/3 p-6 lg:p-8">
-        <Card className="h-full  shadow-none">
-          <CardContent className="h-full flex flex-col justify-center">
-            <form className="space-y-4" onSubmit={handleSubmitForm}>
-              <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
-                <div className="space-y-2 w-full">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <IconInput
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    placeholder="Rashedul"
-                    required
-                    icon={FaUser}
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="space-y-2 w-full">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <IconInput
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    placeholder="Islam"
-                    required
-                    icon={FaUser}
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
+        <div className="flex items-center gap-5">
+          <div className="w-full">
+            <label htmlFor="emailInput">Email</label>
+            <input
+              type="email"
+              className="input w-full"
+              placeholder="rashedul@gmail.com"
+              {...register("email")}
+            />
+          </div>
+          <div className="w-full">
+            <label htmlFor="district">Blood Group</label>
+            <select
+              defaultValue="Pick a color"
+              className="select"
+              {...register("bloodGroup")}>
+              <option disabled={true}>Select your Blood group</option>
+              <option>A+</option>
+              <option>A-</option>
+              <option>B+</option>
+              <option>AB+</option>
+              <option>AB-</option>
+              <option>O+</option>
+              <option>O-</option>
+            </select>
+          </div>
+        </div>
+        <div className="flex items-center gap-5">
+          <div className="w-full">
+            <select
+              defaultValue="Pick a color"
+              className="select"
+              {...register("district")}>
+              <option disabled={true}>District</option>
+              <option>Crimson</option>
+              <option>Amber</option>
+              <option>Velvet</option>
+            </select>
+          </div>
+          <div className="w-full">
+            <select
+              defaultValue="Upazila"
+              className="select"
+              {...register("upazila")}>
+              <option disabled={true}>Upazila</option>
+              <option>Crimson</option>
+              <option>Amber</option>
+              <option>Velvet</option>
+            </select>
+          </div>
+        </div>
 
-              <FileUpload onFileChange={handleFileChange} />
-
-              <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
-                <div className="space-y-2 w-full">
-                  <Label htmlFor="email">Email Address</Label>
-                  <IconInput
-                    id="email"
-                    name="email"
-                    type="email"
-                    {...register("email")}
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                    required
-                    icon={FaEnvelope}
-                    value={formData.email}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="space-y-2 w-full">
-                  <Label>Blood Group</Label>
-                  <IconSelect
-                    placeholder="Select Blood Group"
-                    required
-                    icon={FaTint}
-                    value={formData.bloodGroup}>
-                    {BLOOD_GROUPS.map((group) => (
-                      <SelectItem key={group} value={group}>
-                        {group}
-                      </SelectItem>
-                    ))}
-                  </IconSelect>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
-                <div className="space-y-2 w-full">
-                  <Label>District</Label>
-                  <IconSelect
-                    placeholder="Select District"
-                    required
-                    icon={FaMapMarkerAlt}
-                    value={formData.district}>
-                    {DISTRICTS.map((district) => (
-                      <SelectItem key={district} value={district}>
-                        {district}
-                      </SelectItem>
-                    ))}
-                  </IconSelect>
-                </div>
-
-                <div className="space-y-2 w-full">
-                  <Label>Upazila</Label>
-                  <IconSelect
-                    placeholder="Select Upazila"
-                    required
-                    icon={FaMapMarkerAlt}
-                    value={formData.upazila}
-                    onValueChange={handleUpazilaChange}
-                    disabled={!formData.district}>
-                    {upazilaOptions.map((upazila) => (
-                      <SelectItem key={upazila} value={upazila}>
-                        {upazila}
-                      </SelectItem>
-                    ))}
-                  </IconSelect>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 md:gap-5 flex-col md:flex-row">
-                <div className="space-y-2 w-full">
-                  <Label htmlFor="password">Password</Label>
-                  <IconInput
-                    id="password"
-                    name="password"
-                    type="password"
-                    {...register("password")}
-                    autoComplete="new-password"
-                    placeholder="••••••••"
-                    required
-                    icon={FaLock}
-                    value={formData.password}
-                    onChange={handleInputChange}
-                  />
-                </div>
-
-                <div className="space-y-2 w-full">
-                  <Label htmlFor="confirm_password">Confirm Password</Label>
-                  <IconInput
-                    name="confirm_password"
-                    type="password"
-                    autoComplete="new-password"
-                    placeholder="••••••••"
-                    required
-                    icon={FaLock}
-                    id={""}
-                  />
-                </div>
-              </div>
-
-              <Button type="submit" className="w-full">
-                Register
-              </Button>
-
-              <div className="text-center text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <Link
-                  to="/login"
-                  className="font-medium text-primary hover:underline">
-                  Login
-                </Link>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+        <input type="submit" className="btn w-full" />
+      </form>
+    </Container>
   );
 };
 
