@@ -1,4 +1,5 @@
 import AuthLayout from "@/Layout/Auth/AuthLayout";
+import Dashboard from "@/Layout/Dashboard/Dashboard";
 import MainLayouts from "@/Layout/MainLayouts/MainLayouts";
 import LoginPage from "@/Page/Auth/Login/Login";
 import RegisterPage from "@/Page/Auth/Register/RegisterPage";
@@ -39,6 +40,14 @@ const router = createBrowserRouter([
         Component: LoginPage,
       },
     ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivetRoute>
+        <Dashboard />
+      </PrivetRoute>
+    ),
   },
 ]);
 

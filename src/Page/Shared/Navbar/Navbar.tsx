@@ -5,6 +5,7 @@ import Container from "../Responsive/Container";
 
 import { useState } from "react";
 import useAuth from "@/Hook/useAuth/useAuth";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,9 +36,14 @@ const Navbar = () => {
           <LinkMenu to={"my-listings"} label={"My Listings"} />
           <LinkMenu to={"add-food"} label={"Add Food"} /> */}
 
+          <Link
+            to={"/dashboard"}
+            className=" px-3 py-2 text-center rounded-full bg-primary/10 border border-primary shadow-none cursor-pointer">
+            Dashboard
+          </Link>
           <button
             onClick={handleUserLogout}
-            className=" px-3 py-2 btn-primary rounded-full bg-primary shadow-none cursor-pointer">
+            className=" px-3 py-2  rounded-full bg-primary shadow-none cursor-pointer">
             Logout
           </button>
         </ul>
@@ -92,7 +98,7 @@ const Navbar = () => {
           {/* Right Side: Theme + User/ */}
           <div className="navbar-end flex items-center gap-5">
             {/* Theme toggle */}
-            {/* <ThemeToggle /> */}
+            <ModeToggle />
             {user ? (
               <div className="flex items-center gap-5">
                 <div className="items-center justify-center ">{loginUser}</div>
