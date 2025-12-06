@@ -1,6 +1,7 @@
 import useAuth from "@/Hook/useAuth/useAuth";
 import Container from "@/Page/Shared/Responsive/Container";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
 
 type Inputs = {
   firstName: string;
@@ -22,11 +23,11 @@ const RegisterPage = () => {
     console.log(data);
     const email = data.email;
     const password = data.password;
-    const userInfo = {
-      email,
-      password,
-    };
-    console.log(userInfo);
+
+    registerUser(email, password).then((res: unknown) => {
+      console.log(res);
+      toast.success("Registration successfully");
+    });
   };
 
   return (

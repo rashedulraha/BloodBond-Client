@@ -31,7 +31,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // --- Track Auth State ---
+  //! --- Track Auth State ---
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
       setUser(currentUser || undefined);
@@ -41,7 +41,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => unsubscribe();
   }, []);
 
-  // --- Value passed to Context ---
+  //! --- Value passed to Context ---
   const userInfo = {
     registerUser,
     user,

@@ -1,5 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+
+import { ToastContainer } from "react-toastify";
 import "./index.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
@@ -14,5 +16,6 @@ createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </AuthProvider>
     </ThemeProvider>
+    <ToastContainer />
   </StrictMode>
 );
