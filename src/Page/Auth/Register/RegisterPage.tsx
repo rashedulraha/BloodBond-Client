@@ -12,6 +12,7 @@ import {
   FaImage,
   FaUserPlus,
 } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 type Inputs = {
   name: string;
@@ -33,6 +34,8 @@ const RegisterPage = () => {
   } = useForm<Inputs>();
   const [isLoading, setIsLoading] = useState(false);
   const { registerUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const password = watch("password");
 
@@ -41,12 +44,6 @@ const RegisterPage = () => {
     try {
       // Create FormData to handle file upload
       const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("email", data.email);
-      formData.append("bloodGroup", data.bloodGroup);
-      formData.append("district", data.district);
-      formData.append("upazila", data.upazila);
-      formData.append("password", data.password);
 
       // Handle avatar upload to ImageBB
       if (data.avatar && data.avatar[0]) {
@@ -68,8 +65,12 @@ const RegisterPage = () => {
         }
       }
 
+      const email = data.email;
+      const password = data.password;
+
       // Register user
-      await registerUser(formData);
+      await registerUser(email, password);
+      navigate(location.state || "/");
       toast.success("Registration successful! Please login.");
     } catch (error) {
       console.error("Registration error:", error);
@@ -140,7 +141,7 @@ const RegisterPage = () => {
                       className={`w-full pl-10 pr-3 py-2 border ${
                         errors.name ? "border-destructive" : "border-border"
                       } rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent`}
-                      placeholder="John Doe"
+                      placeholder="Rashedul Islam"
                       {...register("name", { required: "Name is required" })}
                     />
                   </div>
@@ -165,7 +166,7 @@ const RegisterPage = () => {
                       className={`w-full pl-10 pr-3 py-2 border ${
                         errors.email ? "border-destructive" : "border-border"
                       } rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent`}
-                      placeholder="john@example.com"
+                      placeholder="rashedul@example.com"
                       {...register("email", {
                         required: "Email is required",
                         pattern: {
@@ -413,9 +414,9 @@ const RegisterPage = () => {
             <div className="mt-6 text-center">
               <p className="text-muted-foreground">
                 Already have an account?{" "}
-                <a href="/login" className="text-primary hover:underline">
+                <Link to="/login" className="text-primary hover:underline">
                   Login here
-                </a>
+                </Link>
               </p>
             </div>
           </div>
