@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa";
-
+import {
+  FaBars,
+  FaTimes,
+  FaHandHoldingHeart,
+  FaMoneyBillWave,
+  FaUserCircle,
+} from "react-icons/fa";
 import Container from "../Responsive/Container";
-
 import { useState } from "react";
 import useAuth from "@/Hook/useAuth/useAuth";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -15,56 +19,123 @@ const Navbar = () => {
     logOutUser();
   };
 
-  const loginUser = (
+  // Public links (shown when not logged in)
+  const publicLinks = (
     <>
+      <Link
+        to="/donation-requests"
+        className="flex items-center gap-2 hover:text-primary transition-colors">
+        <FaHandHoldingHeart />
+        <span>Donation Requests</span>
+      </Link>
+      <Link
+        to="/login"
+        className="btn btn-primary rounded-full px-6 shadow-none border-none hover:shadow-lg transition-all">
+        Login
+      </Link>
+    </>
+  );
+
+  // Private links (shown when logged in)
+  const privateLinks = (
+    <>
+      <Link
+        to="/donation-requests"
+        className="flex items-center gap-2 hover:text-primary transition-colors">
+        <FaHandHoldingHeart />
+        <span>Donation Requests</span>
+      </Link>
+      <Link
+        to="/funding"
+        className="flex items-center gap-2 hover:text-primary transition-colors">
+        <FaMoneyBillWave />
+        <span>Funding</span>
+      </Link>
+
       <div className="dropdown dropdown-end">
-        <div tabIndex={0} role="button">
-          {user && (
+        <div tabIndex={0} role="button" className="cursor-pointer">
+          {user ? (
             <div className="md:tooltip md:tooltip-bottom flex items-center justify-center">
-              <img
-                className="-full border hover:bg-primary hover:text-white transition-all w-8  h-8  cursor-pointer rounded-full"
-                alt="user Image"
-              />
+              {user.avatar ? (
+                <img
+                  src={user.avatar}
+                  className="w-8 h-8 rounded-full border-2 border-primary cursor-pointer"
+                  alt="User"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                  <FaUserCircle />
+                </div>
+              )}
             </div>
-          )}
+          ) : null}
         </div>
         <ul
           tabIndex={0}
-          className="menu menu-sm dropdown-content bg-base-100 rounded-box z-9999 mt-5 md:mt-4 w-60 p-3 border border-base-300 space-y-3">
-          {/* <LinkMenu to={"user-profile"} label={"profile"} />
-          <LinkMenu to={"my-request"} label={"My Requests"} />
-          <LinkMenu to={"my-listings"} label={"My Listings"} />
-          <LinkMenu to={"add-food"} label={"Add Food"} /> */}
-
-          <Link
-            to={"/dashboard"}
-            className=" px-3 py-2 text-center rounded-full bg-primary/10 border border-primary shadow-none cursor-pointer">
-            Dashboard
-          </Link>
-          <button
-            onClick={handleUserLogout}
-            className=" px-3 py-2  rounded-full bg-primary shadow-none cursor-pointer">
-            Logout
-          </button>
+          className="menu menu-sm dropdown-content bg-card rounded-box z-50 mt-3 w-60 p-3 border border-border space-y-3 shadow-lg">
+          <li className="font-semibold text-center text-foreground">
+            {user?.name}
+          </li>
+          <li className="text-center text-muted-foreground text-sm">
+            {user?.email}
+          </li>
+          <li className="text-center text-muted-foreground text-sm">
+            Role: {user?.role}
+          </li>
+          <div className="divider my-1"></div>
+          <li>
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2 px-3 py-2 text-center rounded-lg bg-primary/10 border border-primary hover:bg-primary hover:text-primary-foreground transition-colors">
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <button
+              onClick={handleUserLogout}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-destructive/10 border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground transition-colors">
+              Logout
+            </button>
+          </li>
         </ul>
       </div>
     </>
   );
 
-  const MenuLink = (
+  // Mobile menu links
+  const mobileMenuLinks = user ? (
     <>
-      <div className="flex flex-col lg:flex-row items-center gap-4 md:gap-6 lg:gap-8 font-medium ">
-        {/* <Menu to={""} label={"Home"} />
-        <Menu to={"about"} label={"About"} />
-        
-        <Menu to={"available-foods"} label={"Available Foods"} /> */}
-        <Link to={"profile"}>Profile</Link>
-      </div>
+      <Link to="/donation-requests" className="flex items-center gap-2 py-2">
+        <FaHandHoldingHeart />
+        <span>Donation Requests</span>
+      </Link>
+      <Link to="/funding" className="flex items-center gap-2 py-2">
+        <FaMoneyBillWave />
+        <span>Funding</span>
+      </Link>
+      <Link to="/dashboard" className="flex items-center gap-2 py-2">
+        Dashboard
+      </Link>
+      <button
+        onClick={handleUserLogout}
+        className="flex items-center gap-2 py-2 text-destructive">
+        Logout
+      </button>
+    </>
+  ) : (
+    <>
+      <Link to="/donation-requests" className="flex items-center gap-2 py-2">
+        <FaHandHoldingHeart />
+        <span>Donation Requests</span>
+      </Link>
+      <Link to="/login" className="flex items-center gap-2 py-2">
+        Login
+      </Link>
     </>
   );
 
   return (
-    <div className="bg-base-100/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+    <div className="bg-background/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm border-b border-border">
       <Container>
         <div className="navbar">
           {/* Logo */}
@@ -72,43 +143,49 @@ const Navbar = () => {
             <div className="dropdown">
               <label
                 tabIndex={0}
-                className=" cursor-pointer lg:hidden p-2  "
+                className="cursor-pointer lg:hidden p-2"
                 onClick={() => setIsOpen(!isOpen)}>
                 {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
               </label>
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-9999 mt-3 w-64 p-4 shadow-xl border border-base-300">
-                {MenuLink}
+                className="menu menu-sm dropdown-content bg-card rounded-box z-50 mt-3 w-64 p-4 shadow-xl border border-border">
+                {mobileMenuLinks}
               </ul>
             </div>
 
-            <Link to="/" className="flex items-center gap-1 ml-2 md:ml-0 ">
+            <Link to="/" className="flex items-center gap-1 ml-2 md:ml-0">
               <span className="text-2xl font-bold hidden sm:block">
-                Blood <span className="text-primary">bond</span>
+                Blood <span className="text-primary">Bond</span>
               </span>
             </Link>
           </div>
 
           {/* Desktop Menu */}
           <div className="navbar-center hidden lg:flex">
-            <ul className="menu menu-horizontal px-1 gap-2">{MenuLink}</ul>
+            <div className="flex items-center gap-6 font-medium">
+              {user ? privateLinks : publicLinks}
+            </div>
           </div>
 
-          {/* Right Side: Theme + User/ */}
+          {/* Right Side: Theme Toggle */}
           <div className="navbar-end flex items-center gap-5">
-            {/* Theme toggle */}
             <ModeToggle />
-            {user ? (
-              <div className="flex items-center gap-5">
-                <div className="items-center justify-center ">{loginUser}</div>
+            {/* Mobile user menu */}
+            {user && (
+              <div className="lg:hidden flex items-center justify-center">
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    className="w-8 h-8 rounded-full border-2 border-primary cursor-pointer"
+                    alt="User"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                    <FaUserCircle />
+                  </div>
+                )}
               </div>
-            ) : (
-              <Link
-                to="/login"
-                className="btn btn-primary rounded-full px-6 shadow-none border-none hover:shadow-lg transition-all">
-                Login
-              </Link>
             )}
           </div>
         </div>

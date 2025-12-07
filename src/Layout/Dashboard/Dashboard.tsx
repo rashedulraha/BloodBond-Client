@@ -7,6 +7,7 @@ import {
   FaList,
   FaMoneyBillWave,
   FaSignOutAlt,
+  FaUserCircle,
 } from "react-icons/fa";
 import { ModeToggle } from "@/components/mode-toggle";
 import Container from "@/Page/Shared/Responsive/Container";
@@ -14,17 +15,15 @@ import SidebarLink from "./Shared/SidebarLink/SidebarLink";
 import useAuth from "@/Hook/useAuth/useAuth";
 
 const Dashboard = () => {
-  const { user, logout } = useAuth(); // Get user info and logout function
+  const { user, logOutUser } = useAuth();
 
-  // Logout Handler
   const handleLogout = () => {
-    logout();
+    logOutUser();
   };
 
-  // Define sidebar links based on user role
   const getSidebarLinks = () => {
     const commonLinks = [
-      { to: "/dashboard", label: "Dashboard", icon: GoHome },
+      { to: "/", label: "Home", icon: GoHome },
       { to: "/dashboard/profile", label: "Profile", icon: IoSettingsOutline },
     ];
 
@@ -92,36 +91,6 @@ const Dashboard = () => {
 
             <div className="flex items-center gap-3">
               <ModeToggle />
-              <div className="dropdown dropdown-end">
-                <div
-                  tabIndex={0}
-                  role="button"
-                  className="btn btn-ghost btn-circle avatar">
-                  <div className="w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
-                    {user?.name?.charAt(0) || <FaUserFriends />}
-                  </div>
-                </div>
-                <ul
-                  tabIndex={0}
-                  className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-card rounded-box w-52 border border-border">
-                  <li>
-                    <span className="font-semibold">{user?.name}</span>
-                  </li>
-                  <li>
-                    <span className="text-muted-foreground">{user?.email}</span>
-                  </li>
-                  <li>
-                    <span className="text-muted-foreground">
-                      Role: {user?.role}
-                    </span>
-                  </li>
-                  <li className="mt-2">
-                    <button onClick={handleLogout} className="text-error">
-                      <FaSignOutAlt /> Logout
-                    </button>
-                  </li>
-                </ul>
-              </div>
             </div>
           </nav>
 
@@ -136,14 +105,45 @@ const Dashboard = () => {
           <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
 
           <div className="flex flex-col bg-sidebar min-h-full is-drawer-close:w-16 is-drawer-open:w-64 border-r border-sidebar-border duration-300">
-            {/* Sidebar Header */}
+            {/* User Profile Section */}
             <div className="p-4 border-b border-sidebar-border">
-              <h2 className="text-sidebar-primary font-bold text-lg is-drawer-close:hidden">
-                Blood Bond
-              </h2>
-              <p className="text-sidebar-foreground text-sm is-drawer-close:hidden">
-                {user?.role} Dashboard
-              </p>
+              <div className="flex flex-col items-center text-center is-drawer-close:hidden">
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt="User Avatar"
+                    className="w-16 h-16 rounded-full border-2 border-sidebar-primary mb-3"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-sidebar-primary text-sidebar-primary-foreground flex items-center justify-center mb-3">
+                    <FaUserCircle size={32} />
+                  </div>
+                )}
+                <h3 className="font-semibold text-sidebar-foreground">
+                  {user?.name}
+                </h3>
+                <p className="text-sm text-sidebar-accent-foreground">
+                  {user?.email}
+                </p>
+                <span className="mt-1 px-2 py-1 bg-sidebar-accent text-sidebar-accent-foreground text-xs rounded-full">
+                  {user?.role}
+                </span>
+              </div>
+
+              {/* Collapsed state avatar */}
+              <div className="is-drawer-close:flex is-drawer-open:hidden justify-center">
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt="User Avatar"
+                    className="w-8 h-8 rounded-full border-2 border-sidebar-primary"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-sidebar-primary text-sidebar-primary-foreground flex items-center justify-center">
+                    <FaUserCircle size={16} />
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Sidebar Menu */}
@@ -163,7 +163,7 @@ const Dashboard = () => {
             <div className="p-2 border-t border-sidebar-border">
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors">
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-sm cursor-pointer text-sidebar-foreground border border-transparent hover:border-primary hover:bg-primary/10 hover:text-sidebar-accent-foreground transition-colors">
                 <FaSignOutAlt />
                 <span className="is-drawer-close:hidden">Logout</span>
               </button>
