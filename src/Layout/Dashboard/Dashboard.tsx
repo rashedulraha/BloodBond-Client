@@ -15,15 +15,15 @@ import SidebarLink from "./Shared/SidebarLink/SidebarLink";
 import useAuth from "@/Hook/useAuth/useAuth";
 
 const Dashboard = () => {
-  const { user, logOutUser } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    logOutUser();
+    logout();
   };
 
   const getSidebarLinks = () => {
     const commonLinks = [
-      { to: "/", label: "Home", icon: GoHome },
+      { to: "/dashboard", label: "Dashboard", icon: GoHome },
       { to: "/dashboard/profile", label: "Profile", icon: IoSettingsOutline },
     ];
 
@@ -74,8 +74,8 @@ const Dashboard = () => {
 
         {/* ------------- main dashboard content ------------- */}
         <div className="drawer-content flex flex-col">
-          {/* ---------- NAVBAR ---------- */}
-          <nav className="navbar flex items-center justify-between w-full bg-card shadow-sm px-4 lg:px-6 border-b border-border">
+          {/* ---------- Mobile NAVBAR (only visible on mobile) ---------- */}
+          <nav className="navbar flex items-center justify-between w-full bg-card shadow-sm px-4 lg:px-6 border-b border-border lg:hidden">
             <div className="flex items-center gap-2">
               {/* Drawer Toggle for mobile */}
               <label
@@ -163,7 +163,7 @@ const Dashboard = () => {
             <div className="p-2 border-t border-sidebar-border">
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-sm cursor-pointer text-sidebar-foreground border border-transparent hover:border-primary hover:bg-primary/10 hover:text-sidebar-accent-foreground transition-colors">
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors">
                 <FaSignOutAlt />
                 <span className="is-drawer-close:hidden">Logout</span>
               </button>
