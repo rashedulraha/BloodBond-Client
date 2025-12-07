@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 type SidebarLink = {
   to: string;
   dataTip: string;
-  Icon: string;
+  Icon: React.ElementType;
   span: string;
 };
 
