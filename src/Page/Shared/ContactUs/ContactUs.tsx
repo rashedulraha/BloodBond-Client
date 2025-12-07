@@ -1,0 +1,153 @@
+import { useState } from "react";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import Container from "../Responsive/Container";
+
+const ContactUs = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Form submission logic would go here
+    console.log("Form submitted:", formData);
+    alert("Thank you for your message! We'll get back to you soon.");
+    setFormData({
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    });
+  };
+
+  return (
+    <section className="my-10">
+      <Container>
+        <div className="text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Contact Us
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Have questions or want to get involved? Reach out to our team and
+            we'll be happy to help.
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between flex-col md:flex-row gap-12 pt-10">
+          {/* Contact Form */}
+          <div className="bg-card rounded-md shadow-lg flex-1 w-ful p-6 md:p-8">
+            <h3 className="text-xl font-semibold text-foreground mb-6">
+              Send us a message
+            </h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-foreground mb-1">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+                  placeholder="Rashedul Islam"
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-foreground mb-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+                  placeholder="rashedul@example.com"
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="subject"
+                  className="block text-sm font-medium text-foreground mb-1">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+                  placeholder="How can we help?"
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-foreground mb-1">
+                  Your Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  rows={5}
+                  className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+                  placeholder="Type your message here..."
+                  required></textarea>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-primary text-primary-foreground font-medium py-3 px-6 rounded-md hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg">
+                Send Message
+              </button>
+            </form>
+          </div>
+
+          <div className="h-full w-full flex-1">
+            {/* Map Placeholder */}
+            <div className="bg-card rounded-md shadow-lg overflow-hidden">
+              <div className="h-full bg-linear-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                <div className="text-center">
+                  <FaMapMarkerAlt className="text-4xl text-primary mx-auto mb-2" />
+                  <p className="text-foreground font-medium">Our Location</p>
+                  <p className="text-muted-foreground text-sm">
+                    Map will be displayed here
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+};
+
+export default ContactUs;
