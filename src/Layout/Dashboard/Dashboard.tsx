@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   const getSidebarLinks = () => {
     const commonLinks = [
-      { to: "/dashboard", label: "Dashboard", icon: GoHome },
+      { to: "/", label: "Home", icon: GoHome },
       { to: "/dashboard/profile", label: "Profile", icon: IoSettingsOutline },
     ];
 
@@ -74,8 +74,8 @@ const Dashboard = () => {
 
         {/* ------------- main dashboard content ------------- */}
         <div className="drawer-content flex flex-col">
-          {/* ---------- Mobile NAVBAR (only visible on mobile) ---------- */}
-          <nav className="navbar flex items-center justify-between w-full bg-card shadow-sm px-4 lg:px-6 border-b border-border lg:hidden">
+          {/* ---------- NAVBAR ---------- */}
+          <nav className="navbar flex items-center justify-between w-full bg-card shadow-sm px-4 lg:px-6 border-b border-border">
             <div className="flex items-center gap-2">
               {/* Drawer Toggle for mobile */}
               <label
