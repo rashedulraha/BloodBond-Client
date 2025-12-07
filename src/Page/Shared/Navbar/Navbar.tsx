@@ -56,14 +56,16 @@ const Navbar = () => {
       <Container>
         <div className="flex items-center justify-between py-3">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <Link to="/" className="text-2xl font-bold">
+          <div className="items-center gap-2 flex ">
+            <Link to="/" className="text-2xl font-bold hidden md:flex">
               Blood <span className="text-primary">Bond</span>
             </Link>
 
             {/* Mobile Menu Button */}
             <div className="lg:hidden ml-2">
-              <button onClick={() => setIsOpen(!isOpen)} className="p-2">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="p-2  cursor-pointer">
                 {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
               </button>
             </div>
@@ -142,7 +144,7 @@ const Navbar = () => {
                 </Link>
                 <button
                   onClick={handleUserLogout}
-                  className="text-destructive py-2 text-left">
+                  className="text-destructive py-2 text-left bg-primary/10 border border-primary rounded-sm mb-2">
                   Logout
                 </button>
               </>

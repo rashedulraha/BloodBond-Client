@@ -1,4 +1,5 @@
 import Banner from "../Shared/Banner/Banner";
+import Features from "../Shared/Feature/Feature";
 import Container from "../Shared/Responsive/Container";
 
 const Home = () => {
@@ -6,6 +7,7 @@ const Home = () => {
     <div>
       <Container>
         <Banner />
+        <Features />
       </Container>
     </div>
   );
