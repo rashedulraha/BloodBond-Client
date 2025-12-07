@@ -15,10 +15,10 @@ import SidebarLink from "./Shared/SidebarLink/SidebarLink";
 import useAuth from "@/Hook/useAuth/useAuth";
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logOutUser } = useAuth();
 
   const handleLogout = () => {
-    logout();
+    logOutUser();
   };
 
   const getSidebarLinks = () => {
@@ -163,9 +163,9 @@ const Dashboard = () => {
             <div className="p-2 border-t border-sidebar-border">
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors">
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-sidebar-primary/10 border border-transparent hover:border hover:border-primary cursor-pointer text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors">
                 <FaSignOutAlt />
-                <span className="is-drawer-close:hidden">Logout</span>
+                <span className="is-drawer-close:hidden ">Logout</span>
               </button>
             </div>
           </div>

@@ -14,6 +14,8 @@ import {
   FaLinkedin,
   FaYoutube,
 } from "react-icons/fa";
+import LoadingSpinner from "../Spinner/LoadingSpinner";
+import useAuth from "@/Hook/useAuth/useAuth";
 
 // --- Interfaces ---
 interface FooterLink {
@@ -202,6 +204,7 @@ const FooterBrand: React.FC = () => (
 const NewsletterSection: React.FC = () => {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const { loading } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -212,6 +215,10 @@ const NewsletterSection: React.FC = () => {
     setTimeout(() => setIsSubscribed(false), 3000);
     setEmail("");
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="bg-card/50 p-6 rounded-xl shadow-sm">

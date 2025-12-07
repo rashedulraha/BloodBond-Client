@@ -8,11 +8,13 @@ import {
 } from "react-icons/fa";
 import Container from "../Responsive/Container";
 import { useState } from "react";
-import useAuth from "@/Hook/useAuth/useAuth";
+// import useAuth from "@/Hook/useAuth/useAuth";
 import { ModeToggle } from "@/components/mode-toggle";
+import useAuth from "@/Hook/useAuth/useAuth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+
   const { user, logOutUser } = useAuth();
 
   const handleUserLogout = () => {
@@ -26,11 +28,6 @@ const Navbar = () => {
         to="/donation-requests"
         className="flex items-center gap-2 hover:text-primary transition-colors">
         <FaHandHoldingHeart /> Donation Requests
-      </Link>
-      <Link
-        to="/login"
-        className="btn btn-primary rounded-full px-6 shadow-none border-none hover:shadow-lg transition-all">
-        Login
       </Link>
     </>
   );
@@ -79,6 +76,16 @@ const Navbar = () => {
           {/* Right Side: Mode Toggle + Avatar */}
           <div className="flex items-center gap-4">
             <ModeToggle />
+
+            {user ? (
+              ""
+            ) : (
+              <Link
+                to="/login"
+                className="btn bg-primary/30 rounded-full px-6 shadow-none border-none hover:shadow-lg transition-all">
+                Login
+              </Link>
+            )}
 
             {user && (
               <div className="dropdown dropdown-end">
@@ -155,7 +162,7 @@ const Navbar = () => {
                   className="flex items-center gap-2 py-2">
                   <FaHandHoldingHeart /> Donation Requests
                 </Link>
-                <Link to="/login" className="flex items-center gap-2 py-2">
+                <Link to="/login" className="flex items-center  gap-2 py-2">
                   Login
                 </Link>
               </>
