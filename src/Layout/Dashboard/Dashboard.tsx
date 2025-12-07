@@ -147,7 +147,7 @@ const Dashboard = () => {
             </div>
 
             {/* Sidebar Menu */}
-            <ul className="menu w-full p-2 py-4 gap-1 flex-grow">
+            <ul className="menu w-full p-2 py-4 gap-1 grow">
               {sidebarLinks.map((link, index) => (
                 <SidebarLink
                   key={index}

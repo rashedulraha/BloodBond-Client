@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
-import { FaHandHoldingHeart, FaSearch } from "react-icons/fa";
 import Container from "../Responsive/Container";
+import BannerLink from "./Shared/BannerLink";
 
 const Banner = () => {
   return (
@@ -26,19 +25,18 @@ const Banner = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link
-              to="/register"
-              className="btn bg-primary text-primary-foreground px-10 py-4 rounded-full flex items-center justify-center gap-3 shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 hover:scale-105">
-              <FaHandHoldingHeart className="text-xl" />
-              Join as a Donor
-            </Link>
-
-            <Link
+            <BannerLink
               to="/search"
-              className="btn border-2 border-primary text-primary px-10 py-4 rounded-full flex items-center justify-center gap-3 hover:bg-primary hover:text-primary-foreground transition-all transform hover:-translate-y-1 hover:scale-105">
-              <FaSearch className="text-xl" />
-              Search Donors
-            </Link>
+              span="Join as a Donor"
+              Icon="FaHandHoldingHeart"
+              className="bg-primary text-foreground"
+            />
+            <BannerLink
+              to="/register"
+              span="Search Donors"
+              Icon="FaSearch"
+              className="text-primary bg-foreground"
+            />
           </div>
         </div>
       </Container>
