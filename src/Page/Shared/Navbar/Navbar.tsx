@@ -38,6 +38,9 @@ const Navbar = () => {
       <Link to="/funding" className="hover:text-primary transition-colors">
         Funding
       </Link>
+      <Link to="/donation-requests" className="lg:hidden">
+        <Button>Donation request</Button>
+      </Link>
     </>
   );
 
@@ -46,8 +49,8 @@ const Navbar = () => {
       <Container>
         <div className="flex items-center justify-between py-3">
           {/* Logo */}
-          <div className="items-center gap-2 flex">
-            <Link to="/" className="text-2xl font-bold">
+          <div className=" items-center gap-2 flex">
+            <Link to="/" className="text-2xl font-bold hidden lg:flex">
               Blood <span className="text-primary">Bond</span>
             </Link>
 
@@ -80,7 +83,7 @@ const Navbar = () => {
             {user && (
               <Link
                 to="/donation-requests"
-                className="btn bg-primary rounded-full border-none  transition-all">
+                className="btn bg-primary rounded border-none  transition-all hidden lg:flex">
                 Donation Requests
               </Link>
             )}
