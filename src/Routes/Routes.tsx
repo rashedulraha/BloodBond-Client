@@ -12,6 +12,7 @@ import Profile from "@/Page/Dashboard/Profile/Profile";
 
 import WelcomePage from "@/Page/Dashboard/WelcomePage/WelcomePage";
 import DonationRequest from "@/Page/DonationRequest/DonationRequest";
+import FindBloodInput from "@/Page/FindBloodInput/FindBloodInput";
 import Funding from "@/Page/Funding/Funding";
 import Home from "@/Page/Home/Home";
 
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "contact",
         Component: Contact,
+      },
+      {
+        path: "find-blood-input",
+        Component: FindBloodInput,
       },
       {
         path: "volunteer-register",

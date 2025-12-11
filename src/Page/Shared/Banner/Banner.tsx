@@ -96,7 +96,7 @@ const HeroBanner: React.FC = () => {
             data-aos-delay="400">
             {/* Primary CTA: Find Requests */}
             <CtaButton
-              to="/search-requests"
+              to="/find-blood-input"
               label="Search Blood Now"
               Icon={Search}
               variant="primary"
@@ -104,7 +104,7 @@ const HeroBanner: React.FC = () => {
 
             {/* Secondary CTA: Register */}
             <CtaButton
-              to="/register"
+              to="/volunteer-register"
               label="Volunteer/Register"
               Icon={Users}
               variant="secondary"
