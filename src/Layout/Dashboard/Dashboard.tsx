@@ -9,6 +9,7 @@ import {
   FaSignOutAlt,
   FaUserCircle,
   FaUserInjured,
+  FaHandHoldingHeart,
 } from "react-icons/fa";
 import { FaBarsStaggered } from "react-icons/fa6";
 import Container from "@/Page/Shared/Responsive/Container";
@@ -31,6 +32,11 @@ const Dashboard = () => {
         to: "/dashboard/CreateDonationRequest",
         label: "Profile",
         icon: FaUserInjured,
+      },
+      {
+        to: "/dashboard/my-donation-requests",
+        label: "My Donation Requests",
+        icon: FaHandHoldingHeart,
       },
     ];
 

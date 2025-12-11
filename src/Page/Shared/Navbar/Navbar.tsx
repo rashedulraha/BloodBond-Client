@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 import useAuth from "@/Hook/useAuth/useAuth";
 import { Button } from "@/components/ui/button";
+import { Label } from "@radix-ui/react-dropdown-menu";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,10 +20,14 @@ const Navbar = () => {
       <Link to="/" className="hover:text-primary transition-colors">
         Home
       </Link>
-      <Link
-        to="/donation-requests"
-        className="hover:text-primary transition-colors">
-        Donation Requests
+      <Link to="/about" className="hover:text-primary transition-colors">
+        About
+      </Link>
+      <Link to="/blog" className="hover:text-primary transition-colors">
+        Blog
+      </Link>
+      <Link to="/contact" className="hover:text-primary transition-colors">
+        Contact
       </Link>
     </>
   );
@@ -30,14 +35,6 @@ const Navbar = () => {
   // Private Links (Icons removed)
   const privateLinks = (
     <>
-      <Link to="/" className="hover:text-primary transition-colors">
-        Home
-      </Link>
-      <Link
-        to="/donation-requests"
-        className="hover:text-primary transition-colors">
-        Donation Requests
-      </Link>
       <Link to="/funding" className="hover:text-primary transition-colors">
         Funding
       </Link>
@@ -66,16 +63,13 @@ const Navbar = () => {
 
           {/* Center Nav Links */}
           <div className="hidden lg:flex gap-6 font-medium">
-            {user ? privateLinks : publicLinks}
+            {/* {user ? privateLinks : publicLinks} */}
+            {publicLinks} {user && privateLinks}
           </div>
 
           {/* Right Side: Mode Toggle + Avatar */}
           <div className="flex items-center gap-4">
-            <ModeToggle />
-
-            {user ? (
-              ""
-            ) : (
+            {!user && (
               <Link
                 to="/login"
                 className="btn bg-primary/30 rounded-full px-6 shadow-none border-none hover:shadow-lg transition-all">
@@ -84,20 +78,28 @@ const Navbar = () => {
             )}
 
             {user && (
+              <Link
+                to="/donation-requests"
+                className="btn bg-primary rounded-full border-none  transition-all">
+                Donation Requests
+              </Link>
+            )}
+
+            {user && (
               <div className="dropdown dropdown-end">
-                <label tabIndex={0} className="cursor-pointer">
+                <Label tabIndex={0} className="cursor-pointer">
                   {user.photoURL ? (
                     <img
                       src={user.photoURL}
                       alt="User"
-                      className="w-8 h-8 rounded-full border-2 border-primary"
+                      className="w-10 h-10 rounded-full border-2 border-primary"
                     />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-sm">
                       {user.email?.charAt(0).toUpperCase() || "U"}
                     </div>
                   )}
-                </label>
+                </Label>
                 <ul
                   tabIndex={0}
                   className="menu menu-sm dropdown-content bg-card rounded-box z-50 mt-3 w-56 p-3 border border-border space-y-2 shadow-lg">
@@ -106,7 +108,7 @@ const Navbar = () => {
                     {user.email}
                   </li>
                   <li className="text-center text-muted-foreground text-sm">
-                    Role: {user.role}
+                    Role: {user.role || "User"}
                   </li>
                   <div className="divider my-1"></div>
 
@@ -124,57 +126,14 @@ const Navbar = () => {
                 </ul>
               </div>
             )}
+            <ModeToggle />
           </div>
         </div>
 
         {/* Mobile Menu */}
         {isOpen && (
           <div className="lg:hidden mt-2 border-t border-border pt-2 flex flex-col gap-2 pb-5">
-            {user ? (
-              <>
-                <Link
-                  to="/"
-                  className="py-2 hover:text-primary transition-colors">
-                  Home
-                </Link>
-                <Link
-                  to="/donation-requests"
-                  className="py-2 hover:text-primary transition-colors">
-                  Donation Requests
-                </Link>
-                <Link
-                  to="/funding"
-                  className="py-2 hover:text-primary transition-colors">
-                  Funding
-                </Link>
-                <Link
-                  to="/dashboard"
-                  className="py-2 hover:text-primary transition-colors">
-                  Dashboard
-                </Link>
-                <button className="text-destructive w-fit py-2 px-4 text-left font-semibold">
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/"
-                  className="py-2 hover:text-primary transition-colors">
-                  Home
-                </Link>
-                <Link
-                  to="/donation-requests"
-                  className="py-2 hover:text-primary transition-colors">
-                  Donation Requests
-                </Link>
-                <Link
-                  to="/login"
-                  className="py-2 hover:text-primary transition-colors">
-                  Login
-                </Link>
-              </>
-            )}
+            {publicLinks} {user && privateLinks}
           </div>
         )}
       </Container>

@@ -1,9 +1,13 @@
 import AuthLayout from "@/Layout/Auth/AuthLayout";
 import Dashboard from "@/Layout/Dashboard/Dashboard";
 import MainLayouts from "@/Layout/MainLayouts/MainLayouts";
+import About from "@/Page/About/About";
 import LoginPage from "@/Page/Auth/Login/Login";
 import RegisterPage from "@/Page/Auth/Register/RegisterPage";
+import Blog from "@/Page/Blog/Blog";
+import Contact from "@/Page/Contact/Contact";
 import CreateDonationRequest from "@/Page/Dashboard/CreateDonationRequest/CreateDonationRequest";
+import MyDonationRequests from "@/Page/Dashboard/MyDonationRequests/MyDonationRequests";
 import Profile from "@/Page/Dashboard/Profile/Profile";
 
 import WelcomePage from "@/Page/Dashboard/WelcomePage/WelcomePage";
@@ -22,6 +26,18 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: Home,
+      },
+      {
+        path: "about",
+        Component: About,
+      },
+      {
+        path: "blog",
+        Component: Blog,
+      },
+      {
+        path: "contact",
+        Component: Contact,
       },
       {
         path: "donation-requests",
@@ -74,6 +90,10 @@ const router = createBrowserRouter([
       {
         path: "CreateDonationRequest",
         Component: CreateDonationRequest,
+      },
+      {
+        path: "my-donation-requests",
+        Component: MyDonationRequests,
       },
     ],
   },
