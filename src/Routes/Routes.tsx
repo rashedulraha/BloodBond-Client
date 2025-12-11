@@ -3,8 +3,12 @@ import Dashboard from "@/Layout/Dashboard/Dashboard";
 import MainLayouts from "@/Layout/MainLayouts/MainLayouts";
 import LoginPage from "@/Page/Auth/Login/Login";
 import RegisterPage from "@/Page/Auth/Register/RegisterPage";
+import Profile from "@/Page/Dashboard/Profile/profile";
+import WelcomePage from "@/Page/Dashboard/WelcomePage/WelcomePage";
+import DonationRequest from "@/Page/DonationRequest/DonationRequest";
+import Funding from "@/Page/Funding/Funding";
 import Home from "@/Page/Home/Home";
-import Profile from "@/Page/Profile/Profile";
+
 import PrivetRoute from "@/Page/Shared/PrivetRoute/PrivetRoute";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -18,10 +22,18 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: "profile",
+        path: "donation-requests",
         element: (
           <PrivetRoute>
-            <Profile />
+            <DonationRequest />
+          </PrivetRoute>
+        ),
+      },
+      {
+        path: "funding",
+        element: (
+          <PrivetRoute>
+            <Funding />
           </PrivetRoute>
         ),
       },
@@ -42,13 +54,22 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/dashboard",
+    path: "dashboard",
     element: (
       <PrivetRoute>
         <Dashboard />
       </PrivetRoute>
     ),
-    children: [{}],
+    children: [
+      {
+        index: true,
+        Component: WelcomePage,
+      },
+      {
+        path: "profile",
+        Component: Profile,
+      },
+    ],
   },
 ]);
 

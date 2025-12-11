@@ -3,6 +3,7 @@ import Container from "../Responsive/Container";
 import { useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 import useAuth from "@/Hook/useAuth/useAuth";
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,9 +86,9 @@ const Navbar = () => {
             {user && (
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="cursor-pointer">
-                  {user.avatar ? (
+                  {user.photoURL ? (
                     <img
-                      src={user.avatar}
+                      src={user.photoURL}
                       alt="User"
                       className="w-8 h-8 rounded-full border-2 border-primary"
                     />
@@ -108,20 +109,18 @@ const Navbar = () => {
                     Role: {user.role}
                   </li>
                   <div className="divider my-1"></div>
-                  <li>
-                    <Link
-                      to="/dashboard"
-                      className="flex items-center justify-center px-3 py-2 rounded-sm bg-primary/10 hover:bg-primary border border-primary  hover:text-primary-foreground transition-colors">
+
+                  <Link to="/dashboard">
+                    <Button
+                      variant={"outline"}
+                      className="w-full rounded cursor-pointer">
                       Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={handleUserLogout}
-                      className="w-full px-3 py-2 rounded-sm bg-destructive hover:bg-destructive/80 text-destructive-foreground transition-colors text-center">
-                      Logout
-                    </button>
-                  </li>
+                    </Button>
+                  </Link>
+
+                  <Button onClick={handleUserLogout} className="w-full">
+                    Logout
+                  </Button>
                 </ul>
               </div>
             )}
@@ -153,9 +152,7 @@ const Navbar = () => {
                   className="py-2 hover:text-primary transition-colors">
                   Dashboard
                 </Link>
-                <button
-                  onClick={handleUserLogout}
-                  className="text-destructive w-fit py-2 px-4 text-left font-semibold">
+                <button className="text-destructive w-fit py-2 px-4 text-left font-semibold">
                   Logout
                 </button>
               </>

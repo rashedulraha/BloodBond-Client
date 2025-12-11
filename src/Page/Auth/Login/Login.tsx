@@ -2,7 +2,7 @@ import useAuth from "@/Hook/useAuth/useAuth";
 import Container from "@/Page/Shared/Responsive/Container";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useState } from "react";
 import { FaEnvelope, FaSignInAlt, FaUser, FaHeartbeat } from "react-icons/fa";
 
@@ -57,17 +57,19 @@ const LoginPage = () => {
   };
 
   const handleLoginWithGoogle = () => {
-    signinWithGoogle().then(() => {
+    signinWithGoogle().then((res) => {
       navigate(location.state || "/");
+      toast.success("Account has been created");
+      console.log(res);
     });
   };
 
   return (
     <div className="min-h-screen bg-background py-12">
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
           {/* Left Column - Header and Icon (unchanged) */}
-          <div className="text-center lg:text-left">
+          <div className="text-center lg:text-left col-span-1 md:col-span-2">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary mb-6">
               <FaSignInAlt className="text-3xl" />
             </div>
@@ -105,7 +107,7 @@ const LoginPage = () => {
           </div>
 
           {/* Right Column - Login Form */}
-          <div className="bg-card rounded-xl shadow-lg p-8 border border-border">
+          <div className="bg-card rounded-xl shadow-lg p-8 border border-border col-span-1">
             <form onSubmit={handleSubmit(onInputSubmit)} className="space-y-6">
               {/* Email Field */}
               <div>

@@ -6,14 +6,17 @@ type Children = {
 };
 
 const PrivetRoute = ({ children }: Children) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const location = useLocation();
-  console.log(location.pathname);
 
-  if (user) {
-    return children;
+  if (loading) {
+    return;
   }
-  return <Navigate to={"/login"} state={location.pathname} />;
+
+  if (!user) {
+    return <Navigate to={"/login"} state={location.pathname} />;
+  }
+  return children;
 };
 
 export default PrivetRoute;

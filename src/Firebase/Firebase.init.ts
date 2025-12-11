@@ -7,12 +7,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBXSxsODyguxpSHlicc661MIFN9I-6_XPc",
-  authDomain: "bloodbond-b9a2f.firebaseapp.com",
-  projectId: "bloodbond-b9a2f",
-  storageBucket: "bloodbond-b9a2f.firebasestorage.app",
-  messagingSenderId: "124001249196",
-  appId: "1:124001249196:web:8090f69ecc44c279f0fc09",
+  apiKey: "AIzaSyDbY7gZz3QAAx6eSaeageoNC2p1u6HCLUU",
+  authDomain: "bloodbond-1adac.firebaseapp.com",
+  projectId: "bloodbond-1adac",
+  storageBucket: "bloodbond-1adac.firebasestorage.app",
+  messagingSenderId: "890265174006",
+  appId: "1:890265174006:web:c141a5fac8db4e906251d7",
 };
 
 // Initialize Firebase

@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import { GoHome, GoSidebarExpand } from "react-icons/go";
+import { GoHome } from "react-icons/go";
 import { IoSettingsOutline } from "react-icons/io5";
 import {
   FaUserFriends,
@@ -9,10 +9,12 @@ import {
   FaSignOutAlt,
   FaUserCircle,
 } from "react-icons/fa";
-import { ModeToggle } from "@/components/mode-toggle";
+import { FaBarsStaggered } from "react-icons/fa6";
 import Container from "@/Page/Shared/Responsive/Container";
 import SidebarLink from "./Shared/SidebarLink/SidebarLink";
 import useAuth from "@/Hook/useAuth/useAuth";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
   const { user, logOutUser } = useAuth();
@@ -70,18 +72,18 @@ const Dashboard = () => {
   return (
     <Container>
       <div className="drawer lg:drawer-open bg-background min-h-screen">
-        <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+        <Input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
 
         {/* ------------- main dashboard content ------------- */}
         <div className="drawer-content flex flex-col">
           {/* ---------- NAVBAR ---------- */}
 
-          <div className="flex items-center gap-2 py-3 lg:hidden">
+          <div className="flex items-center gap-2 py-3 lg:hidden bg-background/95 backdrop-blur-sm sticky top-0 z-1 shadow-sm border-b border-border">
             {/* Drawer Toggle for mobile */}
             <label
               htmlFor="my-drawer-4"
               className="flex items-center justify-center cursor-pointer  ">
-              <GoSidebarExpand size={21} className="text-foreground" />
+              <FaBarsStaggered size={21} className="text-foreground" />
             </label>
           </div>
 
@@ -102,8 +104,8 @@ const Dashboard = () => {
             <div className="p-4 border-b border-sidebar-border">
               <label
                 htmlFor="my-drawer-4"
-                className="flex items-center justify-center cursor-pointer  ">
-                <GoSidebarExpand size={21} className="text-foreground" />
+                className="flex items-center justify-end cursor-pointer  ">
+                <FaBarsStaggered size={21} className="text-foreground" />
               </label>
             </div>
 
@@ -123,10 +125,10 @@ const Dashboard = () => {
             {/* Sidebar Footer */}
             <div className="p-2 border-t border-sidebar-border flex items-center is-drawer-close:flex-col is-drawer-open:flex-row  gap-2">
               {/* Collapsed state avatar */}
-              <div className="  justify-center">
-                {user?.avatar ? (
+              <Link to={"/dashboard/profile"} className="  justify-center">
+                {user?.photoURL ? (
                   <img
-                    src={user.avatar}
+                    src={user.photoURL}
                     alt="User Avatar"
                     className="w-8 h-8 rounded-full border-2 border-sidebar-primary"
                   />
@@ -135,13 +137,11 @@ const Dashboard = () => {
                     <FaUserCircle size={16} />
                   </div>
                 )}
-              </div>
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-sidebar-primary/10 border border-transparent hover:border hover:border-primary cursor-pointer text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors mt-">
+              </Link>
+              <Button variant={"outline"}>
                 <FaSignOutAlt />
                 <span className="is-drawer-close:hidden ">Logout</span>
-              </button>
+              </Button>
             </div>
           </div>
         </div>
