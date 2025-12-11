@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   FaUserPlus,
   FaSearch,
@@ -82,12 +83,10 @@ const HowItWorks = () => {
               communities. Your donation can save lives.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="btn btn-primary rounded-full px-8 py-3 shadow-lg hover:shadow-xl transition-all">
-                Register Now
-              </button>
-              <button className="btn btn-outline rounded-full px-8 py-3 border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all">
-                Learn More
-              </button>
+              <Button className="rounded-full">Register here now</Button>
+              <Button className="rounded-full" variant={"outline"}>
+                Learn about more
+              </Button>
             </div>
           </div>
         </div>

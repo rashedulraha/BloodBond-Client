@@ -1,6 +1,7 @@
 import useAuth from "@/Hook/useAuth/useAuth";
 import Container from "@/Page/Shared/Responsive/Container";
-import { useForm, type SubmitHandler } from "react-hook-form";
+
+import { useForm, type SubmitHandler, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { FaUser, FaMapMarkerAlt, FaTint, FaUserPlus } from "react-icons/fa";
@@ -25,6 +26,7 @@ type Inputs = {
   email: string;
   avatar: FileList;
   bloodGroup: string;
+  division: string;
   district: string;
   upazila: string;
   password: string;
@@ -37,6 +39,7 @@ const RegisterPage = () => {
     handleSubmit,
     formState: { errors },
     watch,
+    control,
   } = useForm<Inputs>();
   const [isLoading, setIsLoading] = useState(false);
   const { registerUser } = useAuth();
@@ -47,11 +50,15 @@ const RegisterPage = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
+
+    console.log("Form Data:", data);
+
     try {
       // Create FormData to handle file upload
       const formData = new FormData();
 
       // Handle avatar upload to ImageBB
+      let avatarUrl = "";
       if (data.avatar && data.avatar[0]) {
         const imageFormData = new FormData();
         imageFormData.append("image", data.avatar[0]);
@@ -67,15 +74,19 @@ const RegisterPage = () => {
 
         const imageData = await response.json();
         if (imageData.success) {
-          formData.append("avatar", imageData.data.url);
+          avatarUrl = imageData.data.url;
         }
       }
 
       const email = data.email;
-      const password = data.password;
+      const userPassword = data.password;
 
-      // Register user
-      await registerUser(email, password);
+      // Register user (e.g., Firebase)
+      await registerUser(email, userPassword);
+
+      // If you are storing user profile in a database (e.g., Firestore/MongoDB):
+      // await saveUserProfileToDB({ ...data, avatarUrl });
+
       navigate(location.state || "/");
       toast.success("Registration successful! Please login.");
     } catch (error) {
@@ -90,7 +101,7 @@ const RegisterPage = () => {
     <div className="py-10">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Header and Icon */}
+          {/* ... Left Column (unchanged) ... */}
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary mb-6">
               <FaUserPlus className="text-3xl" />
@@ -105,7 +116,7 @@ const RegisterPage = () => {
             </p>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
                   <FaTint />
                 </div>
                 <span className="text-foreground">
@@ -129,26 +140,26 @@ const RegisterPage = () => {
             </div>
           </div>
 
-          {/* Right Column - Registration Form */}
+          {/* Right Column - Registration Form (FIXED) */}
           <div className="bg-card rounded-xl shadow-lg p-8 border border-border">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="flex items-center justify-between gap-5 flex-col md:flex-row">
-                {/* Name Field */}
+                {/* Name Field (OK) */}
                 <div className="w-full">
                   <Label>Full Name</Label>
-
                   <Input
                     type="text"
                     placeholder="Rashedul Islam"
                     {...register("name", { required: "Name is required" })}
                   />
-
                   {errors.name && (
                     <p className="mt-1 text-sm text-destructive">
                       {errors.name.message}
                     </p>
                   )}
                 </div>
+
+                {/* Email Field (Assuming InputGroupInput handles forwardRef, otherwise switch to standard Input) */}
                 <div className="w-full">
                   <Label>Email</Label>
                   <InputGroup>
@@ -173,16 +184,19 @@ const RegisterPage = () => {
               </div>
 
               <div className="flex items-center flex-col md:flex-row gap-5 ">
-                {/* Avatar Upload */}
+                {/* Avatar Upload (FIXED Validation) */}
                 <div className="w-full">
                   <Label>Profile Photo</Label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
                     <Input
                       id="picture"
                       type="file"
+                      // Correct validation for FileList
                       {...register("avatar", {
                         required: "Profile photo is required",
+                        validate: (value) =>
+                          (value && value.length > 0) ||
+                          "Profile photo is required",
                       })}
                     />
                   </div>
@@ -193,32 +207,39 @@ const RegisterPage = () => {
                   )}
                 </div>
 
-                {/* Blood Group */}
+                {/* Blood Group (FIXED: Using Controller with Select) */}
                 <div className="w-full">
                   <Label>Blood Group</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder="Select blood group"
-                        {...register("bloodGroup", {
-                          required: "Blood group is required",
-                        })}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel> Select your blood group</SelectLabel>
-                        <SelectItem value="A+">A+</SelectItem>
-                        <SelectItem value="A-">A-</SelectItem>
-                        <SelectItem value="B+">B+</SelectItem>
-                        <SelectItem value="B-">B-</SelectItem>
-                        <SelectItem value="AB+">AB+</SelectItem>
-                        <SelectItem value="AB-">AB-</SelectItem>
-                        <SelectItem value="O+">O+</SelectItem>
-                        <SelectItem value="O-">O-</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="bloodGroup"
+                    control={control}
+                    rules={{ required: "Blood group is required" }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}>
+                        <SelectTrigger
+                          className={
+                            errors.bloodGroup ? "border-destructive" : ""
+                          }>
+                          <SelectValue placeholder="Select blood group" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel> Select your blood group</SelectLabel>
+                            <SelectItem value="A+">A+</SelectItem>
+                            <SelectItem value="A-">A-</SelectItem>
+                            <SelectItem value="B+">B+</SelectItem>
+                            <SelectItem value="B-">B-</SelectItem>
+                            <SelectItem value="AB+">AB+</SelectItem>
+                            <SelectItem value="AB-">AB-</SelectItem>
+                            <SelectItem value="O+">O+</SelectItem>
+                            <SelectItem value="O-">O-</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                   {errors.bloodGroup && (
                     <p className="mt-1 text-sm text-destructive">
                       {errors.bloodGroup.message}
@@ -228,75 +249,94 @@ const RegisterPage = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Division (FIXED: Using Controller and name="division") */}
                 <div className="w-full">
                   <Label>Division</Label>
-                  <div>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder="Select division"
-                          {...register("district", {
-                            required: "division is required",
-                          })}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel> Select your division </SelectLabel>
-                          <SelectItem value="Dhaka">Dhaka</SelectItem>
-                          <SelectItem value="Chattogram">Chattogram</SelectItem>
-                          <SelectItem value="Rajshahi">Rajshahi</SelectItem>
-                          <SelectItem value="Khulna">Khulna</SelectItem>
-                          <SelectItem value="Barisal">Barisal</SelectItem>
-                          <SelectItem value="Sylhet">Sylhet</SelectItem>
-                          <SelectItem value="Rangpur">Rangpur</SelectItem>
-                          <SelectItem value="Mymensingh">Mymensingh</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    {errors.district && (
-                      <p className="mt-1 text-sm text-destructive">
-                        {errors.district.message}
-                      </p>
+                  <Controller
+                    name="division" // Corrected field name
+                    control={control}
+                    rules={{ required: "Division is required" }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}>
+                        <SelectTrigger
+                          className={
+                            errors.division ? "border-destructive" : ""
+                          }>
+                          <SelectValue placeholder="Select division" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel> Select your division </SelectLabel>
+                            <SelectItem value="Dhaka">Dhaka</SelectItem>
+                            <SelectItem value="Chattogram">
+                              Chattogram
+                            </SelectItem>
+                            <SelectItem value="Rajshahi">Rajshahi</SelectItem>
+                            <SelectItem value="Khulna">Khulna</SelectItem>
+                            <SelectItem value="Barisal">Barisal</SelectItem>
+                            <SelectItem value="Sylhet">Sylhet</SelectItem>
+                            <SelectItem value="Rangpur">Rangpur</SelectItem>
+                            <SelectItem value="Mymensingh">
+                              Mymensingh
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     )}
-                  </div>
+                  />
+                  {errors.division && (
+                    <p className="mt-1 text-sm text-destructive">
+                      {errors.division.message}
+                    </p>
+                  )}
                 </div>
 
+                {/* District (FIXED: Still need to filter options based on 'division') */}
                 <div className="w-full">
                   <Label>District</Label>
-                  <div>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder="Select district"
-                          {...register("district", {
-                            required: "District is required",
-                          })}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel> Select your district </SelectLabel>
-                          <SelectItem value="Dhaka">Dhaka</SelectItem>
-                          <SelectItem value="Chattogram">Chattogram</SelectItem>
-                          <SelectItem value="Rajshahi">Rajshahi</SelectItem>
-                          <SelectItem value="Khulna">Khulna</SelectItem>
-                          <SelectItem value="Barisal">Barisal</SelectItem>
-                          <SelectItem value="Sylhet">Sylhet</SelectItem>
-                          <SelectItem value="Rangpur">Rangpur</SelectItem>
-                          <SelectItem value="Mymensingh">Mymensingh</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    {errors.district && (
-                      <p className="mt-1 text-sm text-destructive">
-                        {errors.district.message}
-                      </p>
+                  <Controller
+                    name="district" // Corrected field name
+                    control={control}
+                    rules={{ required: "District is required" }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        // Disable district selection until division is selected
+                        // disabled={!selectedDivision}
+                      >
+                        <SelectTrigger
+                          className={
+                            errors.district ? "border-destructive" : ""
+                          }>
+                          <SelectValue placeholder="Select district" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel> Select your district </SelectLabel>
+                            {/* You need to dynamically load district options here based on the selected division */}
+                            <SelectItem value="Placeholder_DHA_1">
+                              Dhanmondi (Needs Dynamic Data)
+                            </SelectItem>
+                            <SelectItem value="Placeholder_DHA_2">
+                              Mirpur (Needs Dynamic Data)
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     )}
-                  </div>
+                  />
+                  {errors.district && (
+                    <p className="mt-1 text-sm text-destructive">
+                      {errors.district.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
+              {/* ... Password Fields and Submit Button (unchanged) ... */}
               {/* Password Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="w-full">

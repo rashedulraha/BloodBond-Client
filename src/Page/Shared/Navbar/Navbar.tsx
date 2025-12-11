@@ -1,49 +1,44 @@
 import { Link } from "react-router-dom";
-import {
-  FaBars,
-  FaTimes,
-  FaHandHoldingHeart,
-  FaMoneyBillWave,
-  FaUserCircle,
-} from "react-icons/fa";
 import Container from "../Responsive/Container";
 import { useState } from "react";
-// import useAuth from "@/Hook/useAuth/useAuth";
 import { ModeToggle } from "@/components/mode-toggle";
 import useAuth from "@/Hook/useAuth/useAuth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
   const { user, logOutUser } = useAuth();
 
   const handleUserLogout = () => {
     logOutUser();
   };
 
-  // Public Links
+  // Public Links (Icons removed)
   const publicLinks = (
     <>
+      <Link to="/" className="hover:text-primary transition-colors">
+        Home
+      </Link>
       <Link
         to="/donation-requests"
-        className="flex items-center gap-2 hover:text-primary transition-colors">
-        <FaHandHoldingHeart /> Donation Requests
+        className="hover:text-primary transition-colors">
+        Donation Requests
       </Link>
     </>
   );
 
-  // Private Links
+  // Private Links (Icons removed)
   const privateLinks = (
     <>
-      <Link
-        to="/donation-requests"
-        className="flex items-center gap-2 hover:text-primary transition-colors">
-        <FaHandHoldingHeart /> Donation Requests
+      <Link to="/" className="hover:text-primary transition-colors">
+        Home
       </Link>
       <Link
-        to="/funding"
-        className="flex items-center gap-2 hover:text-primary transition-colors">
-        <FaMoneyBillWave /> Funding
+        to="/donation-requests"
+        className="hover:text-primary transition-colors">
+        Donation Requests
+      </Link>
+      <Link to="/funding" className="hover:text-primary transition-colors">
+        Funding
       </Link>
     </>
   );
@@ -53,17 +48,17 @@ const Navbar = () => {
       <Container>
         <div className="flex items-center justify-between py-3">
           {/* Logo */}
-          <div className="items-center gap-2 flex ">
-            <Link to="/" className="text-2xl font-bold hidden md:flex">
+          <div className="items-center gap-2 flex">
+            <Link to="/" className="text-2xl font-bold">
               Blood <span className="text-primary">Bond</span>
             </Link>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Using basic symbols */}
             <div className="lg:hidden ml-2">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2  cursor-pointer">
-                {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+                className="p-2 cursor-pointer text-2xl font-bold">
+                {isOpen ? "✕" : "☰"}
               </button>
             </div>
           </div>
@@ -97,8 +92,8 @@ const Navbar = () => {
                       className="w-8 h-8 rounded-full border-2 border-primary"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
-                      <FaUserCircle />
+                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-semibold text-sm">
+                      {user.email?.charAt(0).toUpperCase() || "U"}
                     </div>
                   )}
                 </label>
@@ -116,14 +111,14 @@ const Navbar = () => {
                   <li>
                     <Link
                       to="/dashboard"
-                      className="flex items-center justify-center px-3 py-2 rounded-sm bg-primary/10 hover:bg-primary border border-primary  hover:text-primary-foreground transition-colors">
+                      className="flex items-center justify-center px-3 py-2 rounded-sm bg-primary/10 hover:bg-primary border border-primary  hover:text-primary-foreground transition-colors">
                       Dashboard
                     </Link>
                   </li>
                   <li>
                     <button
                       onClick={handleUserLogout}
-                      className="w-full px-3 py-2 rounded-sm bg-primary hover:text-destructive-foreground transition-colors text-center">
+                      className="w-full px-3 py-2 rounded-sm bg-destructive hover:bg-destructive/80 text-destructive-foreground transition-colors text-center">
                       Logout
                     </button>
                   </li>
@@ -139,30 +134,46 @@ const Navbar = () => {
             {user ? (
               <>
                 <Link
+                  to="/"
+                  className="py-2 hover:text-primary transition-colors">
+                  Home
+                </Link>
+                <Link
                   to="/donation-requests"
-                  className="flex items-center gap-2 py-2">
-                  <FaHandHoldingHeart /> Donation Requests
+                  className="py-2 hover:text-primary transition-colors">
+                  Donation Requests
                 </Link>
-                <Link to="/funding" className="flex items-center gap-2 py-2">
-                  <FaMoneyBillWave /> Funding
+                <Link
+                  to="/funding"
+                  className="py-2 hover:text-primary transition-colors">
+                  Funding
                 </Link>
-                <Link to="/dashboard" className="flex items-center gap-2 py-2">
+                <Link
+                  to="/dashboard"
+                  className="py-2 hover:text-primary transition-colors">
                   Dashboard
                 </Link>
                 <button
                   onClick={handleUserLogout}
-                  className="text-destructive w-fit py-2 text-left bg-primary/10 border border-primary rounded-sm mb-2 ">
+                  className="text-destructive w-fit py-2 px-4 text-left font-semibold">
                   Logout
                 </button>
               </>
             ) : (
               <>
                 <Link
-                  to="/donation-requests"
-                  className="flex items-center gap-2 py-2">
-                  <FaHandHoldingHeart /> Donation Requests
+                  to="/"
+                  className="py-2 hover:text-primary transition-colors">
+                  Home
                 </Link>
-                <Link to="/login" className="flex items-center  gap-2 py-2">
+                <Link
+                  to="/donation-requests"
+                  className="py-2 hover:text-primary transition-colors">
+                  Donation Requests
+                </Link>
+                <Link
+                  to="/login"
+                  className="py-2 hover:text-primary transition-colors">
                   Login
                 </Link>
               </>

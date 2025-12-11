@@ -5,7 +5,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { FaEnvelope, FaSignInAlt, FaUser, FaHeartbeat } from "react-icons/fa";
-import { Label } from "@radix-ui/react-dropdown-menu";
+
+// ✅ FIX 1: Label component is correctly imported from Shadcn/ui components
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -20,7 +22,9 @@ const LoginPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
-  const { loginUser } = useAuth();
+
+  const { loginUser, signinWithGoogle } = useAuth();
+
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
@@ -28,24 +32,41 @@ const LoginPage = () => {
   const onInputSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
     try {
-      const email = data?.email;
-      const password = data?.password;
+      const email = data.email;
+      const password = data.password;
+
+      if (!email || !password) {
+        toast.error("Email and password are required.");
+        setIsLoading(false);
+        return;
+      }
+
       await loginUser(email, password);
-      navigate(location.state?.from?.pathname || "/dashboard");
+
+      const redirectTo = location.state?.from?.pathname || "/dashboard";
+      navigate(redirectTo, { replace: true }); // Using replace: true is often better for login redirects
+
       toast.success("Successfully signed in!");
     } catch (error) {
       console.error("Login error:", error);
+
       toast.error("Login failed. Please check your credentials.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleLoginWithGoogle = () => {
+    signinWithGoogle().then(() => {
+      navigate(location.state || "/");
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background py-12">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Header and Icon */}
+          {/* Left Column - Header and Icon (unchanged) */}
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary mb-6">
               <FaSignInAlt className="text-3xl" />
@@ -67,13 +88,13 @@ const LoginPage = () => {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
                   <FaUser />
                 </div>
                 <span className="text-foreground">Manage your profile</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
                   <FaEnvelope />
                 </div>
                 <span className="text-foreground">
@@ -88,7 +109,7 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit(onInputSubmit)} className="space-y-6">
               {/* Email Field */}
               <div>
-                <Label className="mb-1"> Email </Label>
+                <Label> Email </Label>
 
                 <Input
                   type="email"
@@ -100,6 +121,7 @@ const LoginPage = () => {
                       message: "Invalid email address",
                     },
                   })}
+                  className={errors.email ? "border-destructive" : ""}
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-destructive">
@@ -110,7 +132,7 @@ const LoginPage = () => {
 
               {/* Password Field */}
               <div>
-                <Label className="mb-1">Password</Label>
+                <Label>Password</Label>
                 <div>
                   <Input
                     type="password"
@@ -122,6 +144,7 @@ const LoginPage = () => {
                         message: "Password must be at least 6 characters",
                       },
                     })}
+                    className={errors.password ? "border-destructive" : ""}
                   />
                   {errors.password && (
                     <p className="mt-1 text-sm text-destructive">
@@ -131,7 +154,7 @@ const LoginPage = () => {
                 </div>
               </div>
 
-              {/* Remember Me & Forgot Password */}
+              {/* Remember Me & Forgot Password (Unchanged) */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
@@ -147,15 +170,15 @@ const LoginPage = () => {
                   </label>
                 </div>
                 <div className="text-sm">
-                  <a
-                    href="#"
+                  <Link
+                    to="/forgot-password" // Changed href="#" to Link
                     className="font-medium text-primary hover:text-primary/80">
                     Forgot your password?
-                  </a>
+                  </Link>
                 </div>
               </div>
 
-              {/* Submit Button */}
+              {/* Submit Button (FIXED Text) */}
               <Button
                 type="submit"
                 disabled={isLoading}
@@ -179,13 +202,19 @@ const LoginPage = () => {
                         fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Signing Account...
+                    Signing In...
                   </>
                 ) : (
-                  "Register"
+                  "Login"
                 )}
               </Button>
             </form>
+            <Button
+              onClick={handleLoginWithGoogle}
+              variant="outline"
+              className="w-full rounded mt-3">
+              Login with Google
+            </Button>
             <div className="mt-6 text-center">
               <p className="text-muted-foreground">
                 Don't have an account?{" "}

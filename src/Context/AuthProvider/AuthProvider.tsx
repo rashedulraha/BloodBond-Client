@@ -3,8 +3,10 @@ import AuthContext from "../AuthContext/AuthContext";
 import { auth } from "@/Firebase/Firebase.init";
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   type User,
   type UserCredential,
@@ -13,6 +15,7 @@ import {
 type AuthProviderProps = {
   children: ReactNode;
 };
+const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -50,6 +53,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       }
     }
   };
+
+  // ! signin with google
+  const signinWithGoogle = async () => {
+    try {
+      const loginUser = await signInWithPopup(auth, googleProvider);
+      return loginUser;
+    } catch (error: unknown) {
+      return error.message;
+    }
+  };
+
   //! --- Logout user ---
   const logOutUser = async () => {
     try {
@@ -79,6 +93,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     loading,
     logOutUser,
     loginUser,
+    signinWithGoogle,
   };
 
   return (

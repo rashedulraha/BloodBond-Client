@@ -14,8 +14,9 @@ import {
   FaLinkedin,
   FaYoutube,
 } from "react-icons/fa";
-import LoadingSpinner from "../Spinner/LoadingSpinner";
-import useAuth from "@/Hook/useAuth/useAuth";
+// LoadingSpinner এবং useAuth ইমপোর্ট থাকলেও, NewsletterSection এ ব্যবহার না করার জন্য কোড অপটিমাইজ করা হয়েছে।
+// import LoadingSpinner from "../Spinner/LoadingSpinner";
+// import useAuth from "@/Hook/useAuth/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -23,6 +24,7 @@ import { Input } from "@/components/ui/input";
 interface FooterLink {
   name: string;
   href: string;
+  // React.ReactNode is used because icons are JSX elements
   icon?: React.ReactNode;
 }
 
@@ -165,7 +167,7 @@ const FooterBrand: React.FC = () => (
         <FaHeart className="w-8 h-8 text-primary-foreground" />
       </div>
       <div>
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-primary/80 to-primary bg-clip-text text-transparent font-sans">
+        <h2 className="text-3xl font-bold bg-linear-to-r from-primary/80 to-primary bg-clip-text text-transparent font-sans">
           Bloodbond
         </h2>
         <p className="text-muted-foreground font-medium font-sans">
@@ -202,25 +204,29 @@ const FooterBrand: React.FC = () => (
   </div>
 );
 
-// Newsletter Section
+// Newsletter Section (Optimized to remove dependency on useAuth)
 const NewsletterSection: React.FC = () => {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const { loading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    // In a real app, you would send this to your backend
-    console.log("Subscribed email:", email);
-    setIsSubscribed(true);
-    setTimeout(() => setIsSubscribed(false), 3000);
-    setEmail("");
-  };
+    if (!email || isSubmitting) return;
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+    setIsSubmitting(true);
+
+    // Simulate API call or form submission delay
+    setTimeout(() => {
+      console.log("Subscribed email:", email);
+      setIsSubscribed(true);
+      setIsSubmitting(false);
+      setEmail("");
+
+      // Show success message briefly
+      setTimeout(() => setIsSubscribed(false), 3000);
+    }, 1000);
+  };
 
   return (
     <div className="bg-card/50 p-6 rounded-xl shadow-sm">
@@ -238,8 +244,16 @@ const NewsletterSection: React.FC = () => {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="flex gap-2">
-          <Input type="email" placeholder="Enter your email"></Input>
-          <Button>Subscribe</Button>
+          <Input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={isSubmitting}
+          />
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Subscribing..." : "Subscribe"}
+          </Button>
         </form>
       )}
     </div>
