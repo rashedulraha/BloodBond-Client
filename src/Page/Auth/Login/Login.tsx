@@ -59,7 +59,7 @@ const LoginPage = () => {
             </p>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center">
                   <FaHeartbeat />
                 </div>
                 <span className="text-foreground">
@@ -67,13 +67,13 @@ const LoginPage = () => {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
                   <FaUser />
                 </div>
                 <span className="text-foreground">Manage your profile</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
                   <FaEnvelope />
                 </div>
                 <span className="text-foreground">

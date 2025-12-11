@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import Container from "../Responsive/Container";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -52,81 +56,47 @@ const ContactUs = () => {
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-foreground mb-1">
-                  Your Name
-                </label>
-                <input
+                <Label className="mb-1">Your Name</Label>
+                <Input
                   type="text"
-                  id="name"
-                  name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
                   placeholder="Rashedul Islam"
-                  required
                 />
               </div>
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-foreground mb-1">
-                  Email Address
-                </label>
-                <input
+                <Label className="mb-1">Email Address</Label>
+                <Input
                   type="email"
-                  id="email"
-                  name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
                   placeholder="rashedul@example.com"
-                  required
                 />
               </div>
 
               <div>
-                <label
-                  htmlFor="subject"
-                  className="block text-sm font-medium text-foreground mb-1">
-                  Subject
-                </label>
-                <input
+                <Label className=" mb-1">Subject</Label>
+                <Input
                   type="text"
-                  id="subject"
-                  name="subject"
                   value={formData.subject}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
                   placeholder="How can we help?"
-                  required
                 />
               </div>
 
               <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-foreground mb-1">
-                  Your Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
+                <Label className="mb-1">Your Message</Label>
+                <Textarea
                   value={formData.message}
                   onChange={handleInputChange}
                   rows={5}
-                  className="w-full px-4 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
-                  placeholder="Type your message here..."
-                  required></textarea>
+                  placeholder="Type your message here..."></Textarea>
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-primary text-primary-foreground font-medium py-3 px-6 rounded-md hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg">
+              <Button type="submit" className="w-full">
                 Send Message
-              </button>
+              </Button>
             </form>
           </div>
 
