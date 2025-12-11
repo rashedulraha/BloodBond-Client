@@ -16,6 +16,7 @@ import Funding from "@/Page/Funding/Funding";
 import Home from "@/Page/Home/Home";
 
 import PrivetRoute from "@/Page/Shared/PrivetRoute/PrivetRoute";
+import VolunteerRegister from "@/Page/VolunteerRegister/VolunteerRegister";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -38,6 +39,14 @@ const router = createBrowserRouter([
       {
         path: "contact",
         Component: Contact,
+      },
+      {
+        path: "volunteer-register",
+        element: (
+          <PrivetRoute>
+            <VolunteerRegister />
+          </PrivetRoute>
+        ),
       },
       {
         path: "donation-requests",
