@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
+import { ModeToggle } from "@/components/mode-toggle";
 
 interface UserProfile {
   name: string;
@@ -77,9 +78,9 @@ const Profile: React.FC = () => {
     setLoading(true);
 
     try {
-      // --- [ API Call Placeholder: PUT/PATCH ] ---
+      // ---  API Call Placeholder: PUT/PATCH  ---
       console.log("Updating user data:", formData);
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // On success:
       setUser(formData);
@@ -100,6 +101,7 @@ const Profile: React.FC = () => {
           <h2 className="text-4xl font-extrabold text-primary">User Profile</h2>
 
           <div className="flex space-x-3">
+            <ModeToggle />
             {isEditing ? (
               <>
                 <Button
@@ -131,7 +133,7 @@ const Profile: React.FC = () => {
         </div>
 
         {/* ---  4. Profile Card Layout  --- */}
-        <div className="bg-card p-8 rounded-xl shadow-2xl border border-border">
+        <div className="bg-card p-8 rounded-md border border-border">
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col md:flex-row items-start md:space-x-8">
               {/* Left Side: Avatar & Basic Info */}

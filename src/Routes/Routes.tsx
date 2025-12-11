@@ -3,7 +3,9 @@ import Dashboard from "@/Layout/Dashboard/Dashboard";
 import MainLayouts from "@/Layout/MainLayouts/MainLayouts";
 import LoginPage from "@/Page/Auth/Login/Login";
 import RegisterPage from "@/Page/Auth/Register/RegisterPage";
-import Profile from "@/Page/Dashboard/Profile/profile";
+import CreateDonationRequest from "@/Page/Dashboard/CreateDonationRequest/CreateDonationRequest";
+import Profile from "@/Page/Dashboard/Profile/Profile";
+
 import WelcomePage from "@/Page/Dashboard/WelcomePage/WelcomePage";
 import DonationRequest from "@/Page/DonationRequest/DonationRequest";
 import Funding from "@/Page/Funding/Funding";
@@ -68,6 +70,10 @@ const router = createBrowserRouter([
       {
         path: "profile",
         Component: Profile,
+      },
+      {
+        path: "CreateDonationRequest",
+        Component: CreateDonationRequest,
       },
     ],
   },

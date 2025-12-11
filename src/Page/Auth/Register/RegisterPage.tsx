@@ -58,7 +58,7 @@ const RegisterPage = () => {
       const formData = new FormData();
 
       // Handle avatar upload to ImageBB
-      let avatarUrl = "";
+      let photoURL = "";
       if (data.avatar && data.avatar[0]) {
         const imageFormData = new FormData();
         imageFormData.append("image", data.avatar[0]);
@@ -74,7 +74,7 @@ const RegisterPage = () => {
 
         const imageData = await response.json();
         if (imageData.success) {
-          avatarUrl = imageData.data.url;
+          photoURL = imageData.data.url;
         }
       }
 
