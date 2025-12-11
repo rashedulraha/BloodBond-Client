@@ -135,7 +135,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="lg:hidden mt-2 border-t border-border pt-2 flex flex-col gap-2">
+          <div className="lg:hidden mt-2 border-t border-border pt-2 flex flex-col gap-2 pb-5">
             {user ? (
               <>
                 <Link
@@ -151,7 +151,7 @@ const Navbar = () => {
                 </Link>
                 <button
                   onClick={handleUserLogout}
-                  className="text-destructive py-2 text-left bg-primary/10 border border-primary rounded-sm mb-2">
+                  className="text-destructive w-fit py-2 text-left bg-primary/10 border border-primary rounded-sm mb-2 ">
                   Logout
                 </button>
               </>

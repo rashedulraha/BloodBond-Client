@@ -3,16 +3,22 @@ import Container from "@/Page/Shared/Responsive/Container";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { FaUser, FaMapMarkerAlt, FaTint, FaUserPlus } from "react-icons/fa";
 import {
-  FaUser,
-  FaEnvelope,
-  FaLock,
-  FaMapMarkerAlt,
-  FaTint,
-  FaImage,
-  FaUserPlus,
-} from "react-icons/fa";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import { Label } from "@/components/ui/label";
+import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 
 type Inputs = {
   name: string;
@@ -99,7 +105,7 @@ const RegisterPage = () => {
             </p>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
                   <FaTint />
                 </div>
                 <span className="text-foreground">
@@ -107,13 +113,13 @@ const RegisterPage = () => {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center">
                   <FaMapMarkerAlt />
                 </div>
                 <span className="text-foreground">Location-based matching</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center">
                   <FaUser />
                 </div>
                 <span className="text-foreground">
@@ -126,47 +132,29 @@ const RegisterPage = () => {
           {/* Right Column - Registration Form */}
           <div className="bg-card rounded-xl shadow-lg p-8 border border-border">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="flex items-center gap-5 flex-col md:flex-row">
+              <div className="flex items-center justify-between gap-5 flex-col md:flex-row">
                 {/* Name Field */}
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaUser className="text-muted-foreground" />
-                    </div>
-                    <input
-                      type="text"
-                      className={`w-full pl-10 pr-3 py-2 border ${
-                        errors.name ? "border-destructive" : "border-border"
-                      } rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent`}
-                      placeholder="Rashedul Islam"
-                      {...register("name", { required: "Name is required" })}
-                    />
-                  </div>
+                <div className="w-full">
+                  <Label>Full Name</Label>
+
+                  <Input
+                    type="text"
+                    placeholder="Rashedul Islam"
+                    {...register("name", { required: "Name is required" })}
+                  />
+
                   {errors.name && (
                     <p className="mt-1 text-sm text-destructive">
                       {errors.name.message}
                     </p>
                   )}
                 </div>
-
-                {/* Email Field */}
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaEnvelope className="text-muted-foreground" />
-                    </div>
-                    <input
+                <div className="w-full">
+                  <Label>Email</Label>
+                  <InputGroup>
+                    <InputGroupInput
                       type="email"
-                      className={`w-full pl-10 pr-3 py-2 border ${
-                        errors.email ? "border-destructive" : "border-border"
-                      } rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent`}
-                      placeholder="rashedul@example.com"
+                      placeholder="Enter your email"
                       {...register("email", {
                         required: "Email is required",
                         pattern: {
@@ -175,9 +163,9 @@ const RegisterPage = () => {
                         },
                       })}
                     />
-                  </div>
+                  </InputGroup>
                   {errors.email && (
-                    <p className="mt-1 text-sm text-destructive">
+                    <p className="text-destructive text-sm mt-1">
                       {errors.email.message}
                     </p>
                   )}
@@ -186,20 +174,13 @@ const RegisterPage = () => {
 
               <div className="flex items-center flex-col md:flex-row gap-5 ">
                 {/* Avatar Upload */}
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Profile Photo
-                  </label>
+                <div className="w-full">
+                  <Label>Profile Photo</Label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaImage className="text-muted-foreground" />
-                    </div>
-                    <input
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                    <Input
+                      id="picture"
                       type="file"
-                      accept="image/*"
-                      className={`w-full pl-10 pr-3 py-2 border ${
-                        errors.avatar ? "border-destructive" : "border-border"
-                      } rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90`}
                       {...register("avatar", {
                         required: "Profile photo is required",
                       })}
@@ -213,34 +194,31 @@ const RegisterPage = () => {
                 </div>
 
                 {/* Blood Group */}
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Blood Group
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaTint className="text-muted-foreground" />
-                    </div>
-                    <select
-                      className={`w-full pl-10 pr-3 py-2 border ${
-                        errors.bloodGroup
-                          ? "border-destructive"
-                          : "border-border"
-                      } rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent appearance-none`}
-                      {...register("bloodGroup", {
-                        required: "Blood group is required",
-                      })}>
-                      <option value="">Select your blood group</option>
-                      <option value="A+">A+</option>
-                      <option value="A-">A-</option>
-                      <option value="B+">B+</option>
-                      <option value="B-">B-</option>
-                      <option value="AB+">AB+</option>
-                      <option value="AB-">AB-</option>
-                      <option value="O+">O+</option>
-                      <option value="O-">O-</option>
-                    </select>
-                  </div>
+                <div className="w-full">
+                  <Label>Blood Group</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder="Select blood group"
+                        {...register("bloodGroup", {
+                          required: "Blood group is required",
+                        })}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel> Select your blood group</SelectLabel>
+                        <SelectItem value="A+">A+</SelectItem>
+                        <SelectItem value="A-">A-</SelectItem>
+                        <SelectItem value="B+">B+</SelectItem>
+                        <SelectItem value="B-">B-</SelectItem>
+                        <SelectItem value="AB+">AB+</SelectItem>
+                        <SelectItem value="AB-">AB-</SelectItem>
+                        <SelectItem value="O+">O+</SelectItem>
+                        <SelectItem value="O-">O-</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                   {errors.bloodGroup && (
                     <p className="mt-1 text-sm text-destructive">
                       {errors.bloodGroup.message}
@@ -249,89 +227,84 @@ const RegisterPage = () => {
                 </div>
               </div>
 
-              {/* District and Upazila */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    District
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaMapMarkerAlt className="text-muted-foreground" />
-                    </div>
-                    <select
-                      className={`w-full pl-10 pr-3 py-2 border ${
-                        errors.district ? "border-destructive" : "border-border"
-                      } rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent appearance-none`}
-                      {...register("district", {
-                        required: "District is required",
-                      })}>
-                      <option value="">Select district</option>
-                      {/* Add districts from the resource here */}
-                      <option value="Dhaka">Dhaka</option>
-                      <option value="Chittagong">Chittagong</option>
-                      <option value="Rajshahi">Rajshahi</option>
-                      <option value="Khulna">Khulna</option>
-                      <option value="Barisal">Barisal</option>
-                      <option value="Sylhet">Sylhet</option>
-                      <option value="Rangpur">Rangpur</option>
-                      <option value="Mymensingh">Mymensingh</option>
-                    </select>
+                <div className="w-full">
+                  <Label>Division</Label>
+                  <div>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder="Select division"
+                          {...register("district", {
+                            required: "division is required",
+                          })}
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel> Select your division </SelectLabel>
+                          <SelectItem value="Dhaka">Dhaka</SelectItem>
+                          <SelectItem value="Chattogram">Chattogram</SelectItem>
+                          <SelectItem value="Rajshahi">Rajshahi</SelectItem>
+                          <SelectItem value="Khulna">Khulna</SelectItem>
+                          <SelectItem value="Barisal">Barisal</SelectItem>
+                          <SelectItem value="Sylhet">Sylhet</SelectItem>
+                          <SelectItem value="Rangpur">Rangpur</SelectItem>
+                          <SelectItem value="Mymensingh">Mymensingh</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    {errors.district && (
+                      <p className="mt-1 text-sm text-destructive">
+                        {errors.district.message}
+                      </p>
+                    )}
                   </div>
-                  {errors.district && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.district.message}
-                    </p>
-                  )}
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Upazila
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaMapMarkerAlt className="text-muted-foreground" />
-                    </div>
-                    <select
-                      className={`w-full pl-10 pr-3 py-2 border ${
-                        errors.upazila ? "border-destructive" : "border-border"
-                      } rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent appearance-none`}
-                      {...register("upazila", {
-                        required: "Upazila is required",
-                      })}>
-                      <option value="">Select upazila</option>
-                      {/* Add upazilas based on selected district here */}
-                      <option value="Dhanmondi">Dhanmondi</option>
-                      <option value="Gulshan">Gulshan</option>
-                      <option value="Mirpur">Mirpur</option>
-                      <option value="Uttara">Uttara</option>
-                    </select>
+                <div className="w-full">
+                  <Label>District</Label>
+                  <div>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder="Select district"
+                          {...register("district", {
+                            required: "District is required",
+                          })}
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel> Select your district </SelectLabel>
+                          <SelectItem value="Dhaka">Dhaka</SelectItem>
+                          <SelectItem value="Chattogram">Chattogram</SelectItem>
+                          <SelectItem value="Rajshahi">Rajshahi</SelectItem>
+                          <SelectItem value="Khulna">Khulna</SelectItem>
+                          <SelectItem value="Barisal">Barisal</SelectItem>
+                          <SelectItem value="Sylhet">Sylhet</SelectItem>
+                          <SelectItem value="Rangpur">Rangpur</SelectItem>
+                          <SelectItem value="Mymensingh">Mymensingh</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    {errors.district && (
+                      <p className="mt-1 text-sm text-destructive">
+                        {errors.district.message}
+                      </p>
+                    )}
                   </div>
-                  {errors.upazila && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.upazila.message}
-                    </p>
-                  )}
                 </div>
               </div>
 
               {/* Password Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaLock className="text-muted-foreground" />
-                    </div>
-                    <input
+                <div className="w-full">
+                  <Label>Password</Label>
+                  <div>
+                    <Input
                       type="password"
-                      className={`w-full pl-10 pr-3 py-2 border ${
-                        errors.password ? "border-destructive" : "border-border"
-                      } rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent`}
-                      placeholder="••••••••"
+                      placeholder="Enter your password"
                       {...register("password", {
                         required: "Password is required",
                         minLength: {
@@ -340,54 +313,43 @@ const RegisterPage = () => {
                         },
                       })}
                     />
+                    {errors.password && (
+                      <p className="mt-1 text-sm text-destructive">
+                        {errors.password.message}
+                      </p>
+                    )}
                   </div>
-                  {errors.password && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.password.message}
-                    </p>
-                  )}
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Confirm Password
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <FaLock className="text-muted-foreground" />
-                    </div>
-                    <input
+                <div className="w-full">
+                  <Label>Confirm Password</Label>
+                  <div>
+                    <Input
                       type="password"
-                      className={`w-full pl-10 pr-3 py-2 border ${
-                        errors.confirmPassword
-                          ? "border-destructive"
-                          : "border-border"
-                      } rounded-lg bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent`}
-                      placeholder="••••••••"
+                      placeholder="Enter your password"
                       {...register("confirmPassword", {
                         required: "Please confirm your password",
                         validate: (value) =>
                           value === password || "Passwords do not match",
                       })}
                     />
+                    {errors.confirmPassword && (
+                      <p className="mt-1 text-sm text-destructive">
+                        {errors.confirmPassword.message}
+                      </p>
+                    )}
                   </div>
-                  {errors.confirmPassword && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.confirmPassword.message}
-                    </p>
-                  )}
                 </div>
               </div>
 
               {/* Submit Button */}
-              <button
+              <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-primary text-primary-foreground font-medium py-3 px-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+                className="w-full py-3 px-4 font-medium flex items-center justify-center">
                 {isLoading ? (
                   <>
                     <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      className="animate-spin -ml-1 mr-3 h-5 w-5"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24">
@@ -408,7 +370,7 @@ const RegisterPage = () => {
                 ) : (
                   "Register"
                 )}
-              </button>
+              </Button>
             </form>
 
             <div className="mt-6 text-center">

@@ -16,6 +16,8 @@ import {
 } from "react-icons/fa";
 import LoadingSpinner from "../Spinner/LoadingSpinner";
 import useAuth from "@/Hook/useAuth/useAuth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 // --- Interfaces ---
 interface FooterLink {
@@ -236,19 +238,8 @@ const NewsletterSection: React.FC = () => {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="flex gap-2">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Your email address"
-            required
-            className="flex-1 px-4 py-3 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent text-foreground font-sans"
-          />
-          <button
-            type="submit"
-            className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 font-sans shadow-sm">
-            Subscribe
-          </button>
+          <Input type="email" placeholder="Enter your email"></Input>
+          <Button>Subscribe</Button>
         </form>
       )}
     </div>

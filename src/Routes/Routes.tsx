@@ -48,6 +48,7 @@ const router = createBrowserRouter([
         <Dashboard />
       </PrivetRoute>
     ),
+    children: [{}],
   },
 ]);
 

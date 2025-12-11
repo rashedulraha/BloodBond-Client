@@ -26,13 +26,13 @@ const Banner = () => {
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <BannerLink
-              to="/search"
+              to="register"
               span="Join as a Donor"
               Icon="FaHandHoldingHeart"
               className="bg-primary text-foreground"
             />
             <BannerLink
-              to="/register"
+              to="search"
               span="Search Donors"
               Icon="FaSearch"
               className="text-primary bg-foreground"
