@@ -27,6 +27,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 // --- [ 1. Validation Schema ] ---
 const requestSchema = z.object({
@@ -189,13 +190,12 @@ const CreateDonationRequest: React.FC = () => {
                 <h3 className="font-semibold mb-3 text-primary">Location</h3>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center">
+                    <Label className=" flex items-center">
                       <MapPin className="w-4 h-4 mr-2" /> District
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       {...register("recipientDistrict")}
-                      placeholder="e.g. Dhaka"
-                      className="input input-bordered w-full"
+                      placeholder="Select your location"
                     />
                     {errors.recipientDistrict && (
                       <p className="text-destructive text-xs">
@@ -204,13 +204,12 @@ const CreateDonationRequest: React.FC = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center">
+                    <Label className="flex items-center">
                       <MapPin className="w-4 h-4 mr-2" /> Upazila
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       {...register("recipientUpazila")}
-                      placeholder="e.g. Gulshan"
-                      className="input input-bordered w-full"
+                      placeholder="Enter  your upazila name"
                     />
                     {errors.recipientUpazila && (
                       <p className="text-destructive text-xs">
@@ -231,13 +230,12 @@ const CreateDonationRequest: React.FC = () => {
                 </h3>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center">
+                    <Label className=" flex items-center">
                       <Hospital className="w-4 h-4 mr-2" /> Hospital Name
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       {...register("hospitalName")}
-                      placeholder="e.g. Dhaka Medical College"
-                      className="input input-bordered w-full"
+                      placeholder="Enter your hospital name"
                     />
                     {errors.hospitalName && (
                       <p className="text-destructive text-xs">
@@ -246,13 +244,12 @@ const CreateDonationRequest: React.FC = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center">
+                    <Label className="flex items-center">
                       Full Address Line
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       {...register("fullAddress")}
-                      placeholder="e.g. House 12, Road 5, Sector 3"
-                      className="input input-bordered w-full"
+                      placeholder="Enter your full address"
                     />
                     {errors.fullAddress && (
                       <p className="text-destructive text-xs">
@@ -270,14 +267,10 @@ const CreateDonationRequest: React.FC = () => {
                 </h3>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center">
+                    <Label className="flex items-center">
                       <Calendar className="w-4 h-4 mr-2" /> Donation Date
-                    </label>
-                    <input
-                      type="date"
-                      {...register("donationDate")}
-                      className="input input-bordered w-full"
-                    />
+                    </Label>
+                    <Input type="date" {...register("donationDate")} />
                     {errors.donationDate && (
                       <p className="text-destructive text-xs">
                         {errors.donationDate.message}
@@ -285,14 +278,10 @@ const CreateDonationRequest: React.FC = () => {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center">
+                    <Label className="text-sm font-medium flex items-center">
                       <Clock className="w-4 h-4 mr-2" /> Donation Time
-                    </label>
-                    <input
-                      type="time"
-                      {...register("donationTime")}
-                      className="input input-bordered w-full"
-                    />
+                    </Label>
+                    <Input type="time" {...register("donationTime")} />
                     {errors.donationTime && (
                       <p className="text-destructive text-xs">
                         {errors.donationTime.message}
@@ -308,15 +297,10 @@ const CreateDonationRequest: React.FC = () => {
                   Additional Information
                 </h3>
                 <div className="space-y-2 ">
-                  <label className="text-sm font-medium flex items-center">
+                  <Label className=" flex items-center">
                     <MessageSquare className="w-4 h-4 mr-2" /> Request Message
-                  </label>
-                  <textarea
-                    {...register("requestMessage")}
-                    rows={4}
-                    placeholder="Explain why blood is needed..."
-                    className="textarea textarea-bordered w-full"
-                  />
+                  </Label>
+                  <Textarea {...register("requestMessage")} rows={5} />
                   {errors.requestMessage && (
                     <p className="text-destructive text-xs">
                       {errors.requestMessage.message}
