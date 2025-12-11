@@ -4,13 +4,10 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import {
-  FaEnvelope,
-  FaLock,
-  FaSignInAlt,
-  FaUser,
-  FaHeartbeat,
-} from "react-icons/fa";
+import { FaEnvelope, FaSignInAlt, FaUser, FaHeartbeat } from "react-icons/fa";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 type Inputs = {
   email: string;
@@ -91,28 +88,19 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit(onInputSubmit)} className="space-y-6">
               {/* Email Field */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaEnvelope className="text-muted-foreground" />
-                  </div>
-                  <input
-                    type="email"
-                    className={`w-full pl-10 pr-3 py-2 border ${
-                      errors.email ? "border-destructive" : "border-border"
-                    } rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent`}
-                    placeholder="rashed@example.com"
-                    {...register("email", {
-                      required: "Email is required",
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Invalid email address",
-                      },
-                    })}
-                  />
-                </div>
+                <Label className="mb-1"> Email </Label>
+
+                <Input
+                  type="email"
+                  placeholder="Enter your valid email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
+                />
                 {errors.email && (
                   <p className="mt-1 text-sm text-destructive">
                     {errors.email.message}
@@ -122,19 +110,11 @@ const LoginPage = () => {
 
               {/* Password Field */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaLock className="text-muted-foreground" />
-                  </div>
-                  <input
+                <Label className="mb-1">Password</Label>
+                <div>
+                  <Input
                     type="password"
-                    className={`w-full pl-10 pr-3 py-2 border ${
-                      errors.password ? "border-destructive" : "border-border"
-                    } rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent`}
-                    placeholder="••••••••"
+                    placeholder="Enter your valid password"
                     {...register("password", {
                       required: "Password is required",
                       minLength: {
@@ -143,12 +123,12 @@ const LoginPage = () => {
                       },
                     })}
                   />
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-destructive">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
-                {errors.password && (
-                  <p className="mt-1 text-sm text-destructive">
-                    {errors.password.message}
-                  </p>
-                )}
               </div>
 
               {/* Remember Me & Forgot Password */}
@@ -176,14 +156,14 @@ const LoginPage = () => {
               </div>
 
               {/* Submit Button */}
-              <button
+              <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-primary text-primary-foreground font-medium py-3 px-4 rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+                className="w-full py-3 px-4 font-medium flex items-center justify-center">
                 {isLoading ? (
                   <>
                     <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      className="animate-spin -ml-1 mr-3 h-5 w-5"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24">
@@ -199,12 +179,12 @@ const LoginPage = () => {
                         fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Signing In...
+                    Signing Account...
                   </>
                 ) : (
-                  "Sign In"
+                  "Register"
                 )}
-              </button>
+              </Button>
             </form>
             <div className="mt-6 text-center">
               <p className="text-muted-foreground">
