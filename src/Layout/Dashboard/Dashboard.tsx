@@ -8,6 +8,7 @@ import {
   FaMoneyBillWave,
   FaSignOutAlt,
   FaUserCircle,
+  FaUserInjured,
 } from "react-icons/fa";
 import { FaBarsStaggered } from "react-icons/fa6";
 import Container from "@/Page/Shared/Responsive/Container";
@@ -19,14 +20,18 @@ import { Button } from "@/components/ui/button";
 const Dashboard = () => {
   const { user, logOutUser } = useAuth();
 
-  const handleLogout = () => {
-    logOutUser();
-  };
+  // const handleLogout = () => {
+  //   logOutUser();
+  // };
 
   const getSidebarLinks = () => {
     const commonLinks = [
       { to: "/", label: "Home", icon: GoHome },
-      { to: "/dashboard/profile", label: "Profile", icon: IoSettingsOutline },
+      {
+        to: "/dashboard/CreateDonationRequest",
+        label: "Profile",
+        icon: FaUserInjured,
+      },
     ];
 
     if (user?.role === "admin") {
