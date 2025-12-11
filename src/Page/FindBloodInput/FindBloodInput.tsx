@@ -70,12 +70,10 @@ const FindBloodInput: React.FC = () => {
           data-aos-delay="200">
           <form onSubmit={handleSearch} className="space-y-6">
             {/* --- [ Inputs Section: Grid Layout for better responsiveness ] --- */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-end">
+            <div className="grid grid-cols-1 sm:grid-cols-3  gap-4 md:gap-6 items-end">
               {/* 1. Blood Group Input */}
               <div>
-                <Label
-                  htmlFor="blood-group"
-                  className="text-sm font-medium flex items-center text-foreground">
+                <Label className="text-sm font-medium flex items-center text-foreground truncate">
                   <Droplet className="w-4 h-4 mr-2 text-destructive" /> Required
                   Blood Group
                 </Label>
@@ -100,9 +98,7 @@ const FindBloodInput: React.FC = () => {
 
               {/* 2. District Input */}
               <div>
-                <Label
-                  htmlFor="district"
-                  className="text-sm font-medium flex items-center text-foreground">
+                <Label className="text-sm font-medium flex items-center text-foreground truncate">
                   <MapPin className="w-4 h-4 mr-2 text-primary" /> Donation
                   District
                 </Label>
@@ -122,9 +118,30 @@ const FindBloodInput: React.FC = () => {
                   </SelectContent>
                 </Select>
               </div>
+              <div>
+                <Label className="text-sm font-medium flex items-center text-foreground truncate">
+                  <MapPin className="w-4 h-4 mr-2 text-primary" /> Donation
+                  Upozila
+                </Label>
+                <Select onValueChange={setDistrict} value={district}>
+                  <SelectTrigger id="district" className="w-full">
+                    <SelectValue placeholder="Select District" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Districts in Bangladesh</SelectLabel>
+                      {Districts.map((d) => (
+                        <SelectItem key={d} value={d}>
+                          {d}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
 
               {/* 3. Search Button (Takes full width on mobile, 1/3 on desktop) */}
-              <div className="w-full pt-2 md:pt-0">
+              <div className="w-full pt-2 md:pt-0 sm:col-start-2  ">
                 <Button
                   type="submit"
                   className="w-full h-10 text-base font-bold shadow-md transition-transform duration-200 hover:shadow-lg"
