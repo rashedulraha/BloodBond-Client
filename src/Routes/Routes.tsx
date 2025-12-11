@@ -102,7 +102,7 @@ const router = createBrowserRouter([
         Component: Profile,
       },
       {
-        path: "CreateDonationRequest",
+        path: "create-donation-request",
         Component: CreateDonationRequest,
       },
       {
