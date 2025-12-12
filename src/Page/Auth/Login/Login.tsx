@@ -57,19 +57,18 @@ const LoginPage = () => {
   };
 
   const handleLoginWithGoogle = () => {
-    signinWithGoogle().then((res) => {
+    signinWithGoogle().then(() => {
       navigate(location.state || "/");
       toast.success("Account has been created");
-      console.log(res);
     });
   };
 
   return (
     <div className="min-h-screen bg-background py-12">
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-4xl">
           {/* Left Column - Header and Icon (unchanged) */}
-          <div className="text-center lg:text-left col-span-1 md:col-span-2">
+          <div className="text-center lg:text-left col-span-1">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary mb-6">
               <FaSignInAlt className="text-3xl" />
             </div>
@@ -107,7 +106,7 @@ const LoginPage = () => {
           </div>
 
           {/* Right Column - Login Form */}
-          <div className="bg-card rounded-xl shadow-lg p-8 border border-border col-span-1">
+          <div className="bg-card rounded-md shadow-md p-8 border border-border col-span-1">
             <form onSubmit={handleSubmit(onInputSubmit)} className="space-y-6">
               {/* Email Field */}
               <div>
@@ -181,42 +180,46 @@ const LoginPage = () => {
               </div>
 
               {/* Submit Button (FIXED Text) */}
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-3 px-4 font-medium flex items-center justify-center">
-                {isLoading ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24">
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Signing In...
-                  </>
-                ) : (
-                  "Login"
-                )}
-              </Button>
+              <div className="flex items-center gap-5">
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="flex-1 py-3 px-4 font-medium flex items-center justify-center">
+                  {isLoading ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Signing In...
+                    </>
+                  ) : (
+                    "Login"
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleLoginWithGoogle}
+                  variant="outline"
+                  className="flex-1 rounded ">
+                  Login with Google
+                </Button>
+              </div>
             </form>
-            <Button
-              onClick={handleLoginWithGoogle}
-              variant="outline"
-              className="w-full rounded mt-3">
-              Login with Google
-            </Button>
+
             <div className="mt-6 text-center">
               <p className="text-muted-foreground">
                 Don't have an account?{" "}
