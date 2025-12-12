@@ -98,7 +98,7 @@ type DonationRequestFormState = z.infer<typeof formSchema>;
 // 3. MAIN COMPONENT
 // ---------------------------------------------------
 
-const CreateDonationRequestPage: React.FC = () => {
+const DonationRequest: React.FC = () => {
   const navigate = useNavigate();
   const user = mockUser;
 
@@ -509,4 +509,4 @@ const CreateDonationRequestPage: React.FC = () => {
   );
 };
 
-export default CreateDonationRequestPage;
+export default DonationRequest;

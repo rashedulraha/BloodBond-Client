@@ -1,298 +1,433 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import {
-  Edit,
-  Trash2,
-  CheckCircle,
-  XCircle,
-  Eye,
-  Loader2,
+  HeartPulse,
   Filter,
+  Clock,
+  MapPin,
+  List,
+  XCircle,
+  CheckCircle,
+  Hourglass,
+  RefreshCw,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
-import type { DonationRequest } from "@/types/donation";
-import mockDonations from "@/Data/MockDonations/MockDonations";
+// Shadcn UI Components
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationLink,
+} from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge"; // Assuming you have a Badge component
 
-// Constants for Pagination
+// ---------------------------------------------------
+// 1. DATA AND TYPE DEFINITIONS
+// ---------------------------------------------------
+
+type DonationStatus = "pending" | "inprogress" | "done" | "canceled";
+
+interface DonationRequest {
+  id: string;
+  recipientName: string;
+  bloodGroup: string;
+  location: string;
+  donationDate: string;
+  donationTime: string;
+  status: DonationStatus;
+  requesterEmail: string; // Used to filter requests made by the current user
+}
+
+// Mock Logged-in User (The requester)
+const currentUser = {
+  email: "rahim.ahmed@example.com",
+  name: "Rahim Ahmed",
+};
+
+// Mock Data Source (All requests, including some not made by the current user)
+const mockDonationRequests: DonationRequest[] = [
+  // Requests made by the current user (Rahim Ahmed)
+  {
+    id: "req001",
+    recipientName: "Father",
+    bloodGroup: "O+",
+    location: "Dhaka Medical",
+    donationDate: "2025-12-20",
+    donationTime: "10:00 AM",
+    status: "pending",
+    requesterEmail: currentUser.email,
+  },
+  {
+    id: "req002",
+    recipientName: "Niece",
+    bloodGroup: "A-",
+    location: "Rajshahi Clinic",
+    donationDate: "2025-12-18",
+    donationTime: "04:30 PM",
+    status: "inprogress",
+    requesterEmail: currentUser.email,
+  },
+  {
+    id: "req003",
+    recipientName: "Wife",
+    bloodGroup: "B+",
+    location: "Square Hospital",
+    donationDate: "2025-12-10",
+    donationTime: "11:00 AM",
+    status: "done",
+    requesterEmail: currentUser.email,
+  },
+  {
+    id: "req004",
+    recipientName: "Friend",
+    bloodGroup: "AB-",
+    location: "Panchlaish",
+    donationDate: "2025-12-05",
+    donationTime: "09:00 AM",
+    status: "canceled",
+    requesterEmail: currentUser.email,
+  },
+  {
+    id: "req005",
+    recipientName: "Brother",
+    bloodGroup: "O+",
+    location: "Savar",
+    donationDate: "2026-01-01",
+    donationTime: "08:00 AM",
+    status: "pending",
+    requesterEmail: currentUser.email,
+  },
+  {
+    id: "req006",
+    recipientName: "Cousin",
+    bloodGroup: "A+",
+    location: "Motihar",
+    donationDate: "2025-12-25",
+    donationTime: "01:00 PM",
+    status: "inprogress",
+    requesterEmail: currentUser.email,
+  },
+  {
+    id: "req007",
+    recipientName: "Patient X",
+    bloodGroup: "B-",
+    location: "Tejgaon",
+    donationDate: "2025-12-28",
+    donationTime: "02:00 PM",
+    status: "pending",
+    requesterEmail: currentUser.email,
+  },
+  // Other users' requests (will be filtered out)
+  {
+    id: "req100",
+    recipientName: "Donor Y",
+    bloodGroup: "AB+",
+    location: "Chittagong",
+    donationDate: "2025-12-22",
+    donationTime: "03:00 PM",
+    status: "pending",
+    requesterEmail: "other.user@example.com",
+  },
+];
+
 const ITEMS_PER_PAGE = 5;
-const STATUS_FILTERS: (
-  | "inprogress"
-  | "pending"
-  | "all"
-  | "done"
-  | "canceled"
-)[] = ["all", "pending", "inprogress", "done", "canceled"];
 
-// Helper function to get status badge color
-const getStatusBadge = (status: string) => {
+// ---------------------------------------------------
+// 2. HELPER FUNCTIONS & COMPONENTS
+// ---------------------------------------------------
+
+const getStatusBadge = (status: DonationStatus) => {
   switch (status) {
     case "pending":
-      return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400";
+      return (
+        <Badge className="bg-primary/10 text-primary hover:bg-primary/20">
+          <Hourglass className="w-3 h-3 mr-1" /> Pending
+        </Badge>
+      );
     case "inprogress":
-      return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
+      return (
+        <Badge
+          variant="secondary"
+          className="bg-secondary/20 text-secondary-foreground hover:bg-secondary/30">
+          <RefreshCw className="w-3 h-3 mr-1" /> In Progress
+        </Badge>
+      );
     case "done":
-      return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
+      return (
+        <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">
+          <CheckCircle className="w-3 h-3 mr-1" /> Done
+        </Badge>
+      );
     case "canceled":
-      return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
+      return (
+        <Badge
+          variant="destructive"
+          className="bg-destructive/10 text-destructive hover:bg-destructive/20">
+          <XCircle className="w-3 h-3 mr-1" /> Canceled
+        </Badge>
+      );
     default:
-      return "bg-gray-100 text-gray-700 dark:bg-gray-700/30 dark:text-gray-400";
+      return <Badge variant="outline">Unknown</Badge>;
   }
 };
 
-const MyDonationRequests: React.FC = () => {
-  const navigate = useNavigate();
-  const [allRequests, setAllRequests] = useState<DonationRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filterStatus, setFilterStatus] = useState<"all">("all");
-  const [currentPage, setCurrentPage] = useState(1);
+interface CustomPaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
-  // --- [ Data Fetching Simulation ] ---
-  useEffect(() => {
-    //  Replace with your actual API call to fetch all requests made by the logged-in user
-    setLoading(true);
-    setTimeout(() => {
-      // Filter mock data based on the logged-in user's email (simulated)
-      const userEmail = "user@example.com";
-      const userRequests = mockDonations.filter(
-        (req) => req.requesterEmail === userEmail
-      );
-      setAllRequests(userRequests);
-      setLoading(false);
-    }, 1000);
-  }, []);
+const CustomPagination: React.FC<CustomPaginationProps> = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
+  if (totalPages <= 1) return null;
 
-  // --- [ Filtering Logic ] ---
-  const filteredRequests = useMemo(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-render
-    setCurrentPage(1); // Reset to first page on filter change
-    if (filterStatus === "all") {
-      return allRequests;
-    }
-    return allRequests.filter((req) => req.donationStatus === filterStatus);
-  }, [allRequests, filterStatus]);
-
-  // --- [ Pagination Logic ] ---
-  const totalPages = Math.ceil(filteredRequests.length / ITEMS_PER_PAGE);
-  const paginatedRequests = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredRequests.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredRequests, currentPage]);
-
-  // --- [ Action Handlers ] ---
-  const handleStatusUpdate = (id: string, newStatus: "done" | "canceled") => {
-    if (
-      window.confirm(
-        `Are you sure you want to mark this request as ${newStatus}?`
-      )
-    ) {
-      // ⚠️ API Call to update status
-      console.log(`Updating request ${id} to ${newStatus}`);
-      setAllRequests((prev) =>
-        prev.map((req) =>
-          req.id === id ? { ...req, donationStatus: newStatus } : req
-        )
-      );
-      // Optional: Show success toast
-    }
-  };
-
-  const handleDelete = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this request?")) {
-      // ⚠️ API Call to delete request
-      console.log(`Deleting request ${id}`);
-      setAllRequests((prev) => prev.filter((req) => req.id !== id));
-      // Optional: Show success toast
-    }
-  };
-
-  const renderActions = (request: DonationRequest) => {
-    return (
-      <div className="flex space-x-2 justify-end">
-        {/* View Details Button (Redirects to private details page) */}
-        <button
-          onClick={() => navigate(`/donation-request-details/${request.id}`)}
-          className="btn btn-sm btn-secondary tooltip"
-          data-tip="View Details">
-          <Eye className="w-4 h-4" />
-        </button>
-
-        {/* Edit & Delete Buttons (Visible ONLY if status is PENDING) */}
-        {request.donationStatus === "pending" && (
-          <>
-            <button
-              onClick={() => navigate(`/dashboard/edit-request/${request.id}`)}
-              className="btn btn-sm btn-secondary tooltip"
-              data-tip="Edit Request">
-              <Edit className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => handleDelete(request.id)}
-              className="btn btn-sm btn-destructive/80 hover:btn-destructive tooltip"
-              data-tip="Delete Request">
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </>
-        )}
-
-        {/* Done & Cancel Buttons (Visible ONLY if status is IN PROGRESS) */}
-        {request.donationStatus === "inprogress" && (
-          <>
-            <button
-              onClick={() => handleStatusUpdate(request.id, "done")}
-              className="btn btn-sm bg-green-500 hover:bg-green-600 text-white tooltip"
-              data-tip="Mark as Done">
-              <CheckCircle className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => handleStatusUpdate(request.id, "canceled")}
-              className="btn btn-sm bg-red-500 hover:bg-red-600 text-white tooltip"
-              data-tip="Cancel Request">
-              <XCircle className="w-4 h-4" />
-            </button>
-          </>
-        )}
-      </div>
-    );
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen-75 text-primary">
-        <Loader2 className="w-8 h-8 animate-spin mr-2" /> Loading Requests...
-      </div>
-    );
-  }
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="p-4 sm:p-8 bg-background min-h-screen">
-      <div className="max-w-full mx-auto">
-        <div className="mb-8 border-b pb-4 border-border">
-          <h2 className="text-4xl font-extrabold text-primary">
-            My Donation Requests
+    <Pagination className="mt-6">
+      <PaginationContent>
+        {/* Previous Button */}
+        <PaginationItem>
+          <PaginationPrevious
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={
+              currentPage === 1
+                ? "pointer-events-none opacity-50"
+                : "cursor-pointer"
+            }
+          />
+        </PaginationItem>
+
+        {/* Page Number Links */}
+        {pages.map((page) => (
+          <PaginationItem key={page}>
+            <PaginationLink
+              onClick={() => onPageChange(page)}
+              isActive={page === currentPage}
+              className={
+                page === currentPage
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90 cursor-default"
+                  : "cursor-pointer"
+              }>
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+
+        {/* Next Button */}
+        <PaginationItem>
+          <PaginationNext
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={
+              currentPage === totalPages
+                ? "pointer-events-none opacity-50"
+                : "cursor-pointer"
+            }
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  );
+};
+
+// ---------------------------------------------------
+// 3. MAIN COMPONENT
+// ---------------------------------------------------
+
+const MyDonationRequestsPage: React.FC = () => {
+  const [filterStatus, setFilterStatus] = useState<DonationStatus | "all">(
+    "all"
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // 3.1 Filtering Logic (Memoized)
+  const filteredRequests = useMemo(() => {
+    // 1. Filter by current user (Requester)
+    const userRequests = mockDonationRequests.filter(
+      (req) => req.requesterEmail === currentUser.email
+    );
+
+    // 2. Filter by status
+    if (filterStatus === "all") {
+      return userRequests;
+    }
+    return userRequests.filter((req) => req.status === filterStatus);
+  }, [filterStatus]);
+
+  // 3.2 Pagination Logic
+  const totalItems = filteredRequests.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+  const paginatedRequests = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredRequests.slice(startIndex, endIndex);
+  }, [filteredRequests, currentPage]);
+
+  // Reset page when filter changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [filterStatus]);
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    },
+    [totalPages]
+  );
+
+  // Function to handle opening a request detail (if needed)
+  const handleViewDetails = (id: string) => {
+    // Example: navigate(`/requests/${id}`);
+    alert(`Viewing details for Request ID: ${id}`);
+  };
+
+  const statusOptions = [
+    { value: "all", label: "All Requests" },
+    { value: "pending", label: "Pending" },
+    { value: "inprogress", label: "In Progress" },
+    { value: "done", label: "Done" },
+    { value: "canceled", label: "Canceled" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-background text-foreground py-10 px-4 sm:px-6 lg:px-8">
+      <header className="max-w-7xl mx-auto mb-8">
+        <h1 className="text-4xl font-extrabold text-foreground flex items-center">
+          <List className="w-8 h-8 mr-3 text-primary" />
+          My Donation Requests
+        </h1>
+        <p className="mt-2 text-xl text-muted-foreground">
+          All blood donation requests initiated by you ({currentUser.name}).
+        </p>
+      </header>
+
+      <div className="max-w-7xl mx-auto bg-card p-6 rounded-xl shadow-lg border border-border">
+        {/* --- Filtering Control --- */}
+        <div className="flex justify-between items-center mb-6 border-b border-border/70 pb-4">
+          <h2 className="text-xl font-semibold text-foreground flex items-center">
+            <Filter className="w-5 h-5 mr-2 text-primary" />
+            Filter Requests ({totalItems} total)
           </h2>
-          <p className="text-muted-foreground mt-2">
-            Manage all the blood requests you have created.
-          </p>
+
+          <Select
+            onValueChange={(value: DonationStatus | "all") =>
+              setFilterStatus(value)
+            }
+            value={filterStatus}>
+            <SelectTrigger className="w-[180px] bg-input/50">
+              <SelectValue placeholder="Filter by Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {statusOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
 
-        {/* --- [ Filtering and Counter ] --- */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6 p-4 bg-card rounded-lg border border-border shadow-lg">
-          <div className="flex items-center space-x-3 mb-4 md:mb-0">
-            <Filter className="w-5 h-5 text-primary" />
-            <span className="font-semibold text-foreground">
-              Filter by Status:
-            </span>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as "all")}
-              className="select select-bordered select-sm bg-input/20 border-border">
-              {STATUS_FILTERS.map((status) => (
-                <option key={status} value={status}>
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Showing {paginatedRequests.length} of {filteredRequests.length}{" "}
-            total results.
-          </p>
-        </div>
+        {/* --- Data Table --- */}
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px] text-primary">ID</TableHead>
+              <TableHead className="text-primary">Recipient Name</TableHead>
+              <TableHead className="text-primary">
+                <HeartPulse className="w-4 h-4 inline mr-1" /> Blood Group
+              </TableHead>
+              <TableHead className="text-primary">
+                <MapPin className="w-4 h-4 inline mr-1" /> Location
+              </TableHead>
+              <TableHead className="text-primary">
+                <Clock className="w-4 h-4 inline mr-1" /> Date
+              </TableHead>
+              <TableHead className="text-primary text-center">Status</TableHead>
+              <TableHead className="text-primary text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paginatedRequests.length > 0 ? (
+              paginatedRequests.map((request) => (
+                <TableRow key={request.id}>
+                  <TableCell className="font-medium text-primary">
+                    {request.id}
+                  </TableCell>
+                  <TableCell>{request.recipientName}</TableCell>
+                  <TableCell className="font-bold text-destructive">
+                    {request.bloodGroup}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {request.location}
+                  </TableCell>
+                  <TableCell>
+                    <span className="font-medium">{request.donationDate}</span>{" "}
+                    at {request.donationTime}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {getStatusBadge(request.status)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleViewDetails(request.id)}
+                      className="hover:bg-secondary/80">
+                      View Details
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={7}
+                  className="h-24 text-center text-muted-foreground">
+                  No donation requests found for the selected status (
+                  {filterStatus}).
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
 
-        {/* --- [ Table View ] --- */}
-        <div className="overflow-x-auto bg-card rounded-xl shadow-2xl border border-border">
-          <table className="table w-full text-foreground">
-            <thead>
-              <tr className="text-sm uppercase text-primary-foreground bg-primary/80">
-                <th>Recipient</th>
-                <th>Location</th>
-                <th>Date & Time</th>
-                <th>Blood Group</th>
-                <th>Status</th>
-                <th>Donor Info</th>
-                <th className="text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedRequests.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={7}
-                    className="text-center py-8 text-lg text-muted-foreground">
-                    No donation requests found under this status.
-                  </td>
-                </tr>
-              ) : (
-                paginatedRequests.map((request) => (
-                  <tr
-                    key={request.id}
-                    className="hover:bg-accent/30 border-b border-border">
-                    <td className="font-semibold">{request.recipientName}</td>
-                    <td>
-                      {request.recipientUpazila}, {request.recipientDistrict}
-                    </td>
-                    <td>
-                      {request.donationDate} at {request.donationTime}
-                    </td>
-                    <td className="font-bold text-destructive">
-                      {request.bloodGroup}
-                    </td>
-                    <td>
-                      <span
-                        className={`badge ${getStatusBadge(
-                          request.donationStatus
-                        )} font-medium`}>
-                        {request.donationStatus.charAt(0).toUpperCase() +
-                          request.donationStatus.slice(1)}
-                      </span>
-                    </td>
-                    <td>
-                      {request.donationStatus === "inprogress" ? (
-                        <div className="text-xs">
-                          <p className="font-medium text-foreground">
-                            {request.donorName}
-                          </p>
-                          <p className="text-muted-foreground">
-                            {request.donorEmail}
-                          </p>
-                        </div>
-                      ) : (
-                        "N/A"
-                      )}
-                    </td>
-                    <td>{renderActions(request)}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* --- [ Pagination Controls ] --- */}
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center space-x-4 mt-6">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1 || loading}
-              className="btn btn-secondary btn-sm">
-              Previous
-            </button>
-            <span className="text-foreground">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages || loading}
-              className="btn btn-secondary btn-sm">
-              Next
-            </button>
-          </div>
-        )}
+        {/* --- Pagination Control --- */}
+        <CustomPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );
 };
 
-export default MyDonationRequests;
+export default MyDonationRequestsPage;
