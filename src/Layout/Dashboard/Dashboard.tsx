@@ -6,7 +6,7 @@ import {
   // FaPlus,
   // FaList,
   // FaMoneyBillWave,
-  FaUserCircle,
+
   FaHandHoldingHeart,
 } from "react-icons/fa";
 import {
@@ -64,11 +64,6 @@ const Dashboard: React.FC = () => {
   const getSidebarLinks = () => {
     const commonLinks = [
       { to: "/", label: "Home", icon: GoHome },
-      {
-        to: "/dashboard/profile",
-        label: "My Profile",
-        icon: FaUserCircle,
-      },
       {
         to: "/dashboard/my-donation-requests",
         label: "My Requests",

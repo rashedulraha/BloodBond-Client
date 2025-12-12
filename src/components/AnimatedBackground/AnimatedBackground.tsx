@@ -14,7 +14,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cellsRef = useRef<BloodCell[]>([]);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;

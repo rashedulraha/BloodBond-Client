@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // Updated Icons for a strong impact
-import { Search, HeartPulse, Shield, Droplet, TrendingUp } from "lucide-react";
+import { Search, HeartPulse, Droplet, TrendingUp } from "lucide-react";
 
 interface CtaButtonProps {
   to: string;
