@@ -190,7 +190,7 @@ const Profile: React.FC = () => {
                     <Droplet className="w-4 h-4 mr-2 text-destructive" /> Blood
                     Group
                   </Label>
-                  <Select>
+                  <Select disabled={!isEditing || loading}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select your blood" />
                     </SelectTrigger>

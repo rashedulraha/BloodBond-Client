@@ -86,11 +86,11 @@ const RegisterPage = () => {
           const userInfo = {
             ...data,
             createAt,
-            role: "user",
+            role: "donor",
             imageURL: res.data.data.url,
           };
 
-          axiosSecure.post("/users", userInfo).then(() => {
+          axiosSecure.post("/register-user", userInfo).then(() => {
             profileUpdate(userProfile)
               .then()
               .catch((error: { message: unknown }) => {
