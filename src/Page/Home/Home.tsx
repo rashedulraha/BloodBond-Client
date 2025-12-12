@@ -1,11 +1,11 @@
 import useAuth from "@/Hook/useAuth";
-import Banner from "../Shared/Banner/Banner";
 import ContactUs from "../Shared/ContactUs/ContactUs";
 import Features from "../Shared/Feature/Feature";
 import HowItWorks from "../Shared/HowItWorks/HowItWorks";
 import Container from "../Shared/Responsive/Container";
 import LoadingSpinner from "../Shared/Spinner/LoadingSpinner";
-// import { HashLoader } from "react-spinners";
+import AnimatedBackground from "@/components/AnimatedBackground/AnimatedBackground";
+import VideoLikeHeroBanner from "@/components/VideoLikeHeroBanner/VideoLikeHeroBanner";
 
 const Home = () => {
   const { loading } = useAuth();
@@ -13,10 +13,18 @@ const Home = () => {
   if (loading) {
     return <LoadingSpinner />;
   }
+
   return (
     <div>
+      {/* Hero Banner Section */}
+      <AnimatedBackground>
+        <Container>
+          <VideoLikeHeroBanner />
+        </Container>
+      </AnimatedBackground>
+
+      {/* Other Sections */}
       <Container>
-        <Banner />
         <Features />
         <HowItWorks />
         <ContactUs />

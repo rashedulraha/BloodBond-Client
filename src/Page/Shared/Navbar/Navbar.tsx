@@ -46,7 +46,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="bg-background/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm border-b border-border">
+    <div className=" backdrop-blur-sm sticky top-0 z-50 shadow-sm border-b border-border">
       <Container>
         <div className="flex items-center justify-between py-3">
           {/* Logo */}
