@@ -1,4 +1,4 @@
-import useAuth from "@/Hook/useAuth/useAuth";
+import useAuth from "@/Hook/useAuth";
 import { Navigate, useLocation } from "react-router-dom";
 
 type Children = {

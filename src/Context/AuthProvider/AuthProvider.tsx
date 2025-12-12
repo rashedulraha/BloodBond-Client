@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
   type User,
   type UserCredential,
 } from "firebase/auth";
@@ -76,6 +77,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  //! --- Update profile ---
+  const profileUpdate = async (userInformation: {
+    displayName?: string;
+    photoURL?: string;
+  }) => {
+    try {
+      const profile = await updateProfile(auth.currentUser!, userInformation);
+      return profile;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return error.message;
+      }
+      return String(error);
+    }
+  };
+
   //! --- Track Auth State ---
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
@@ -94,6 +111,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     logOutUser,
     loginUser,
     signinWithGoogle,
+    profileUpdate,
   };
 
   return (

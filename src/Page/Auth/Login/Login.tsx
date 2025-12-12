@@ -1,4 +1,3 @@
-import useAuth from "@/Hook/useAuth/useAuth";
 import Container from "@/Page/Shared/Responsive/Container";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -10,6 +9,7 @@ import { FaEnvelope, FaSignInAlt, FaUser, FaHeartbeat } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import useAuth from "@/Hook/useAuth";
 
 type Inputs = {
   email: string;

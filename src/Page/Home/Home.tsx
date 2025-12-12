@@ -1,4 +1,4 @@
-import useAuth from "@/Hook/useAuth/useAuth";
+import useAuth from "@/Hook/useAuth";
 import Banner from "../Shared/Banner/Banner";
 import ContactUs from "../Shared/ContactUs/ContactUs";
 import Features from "../Shared/Feature/Feature";

@@ -1,4 +1,3 @@
-import useAuth from "@/Hook/useAuth/useAuth";
 import Container from "@/Page/Shared/Responsive/Container";
 
 import { useForm, type SubmitHandler, Controller } from "react-hook-form";
@@ -20,6 +19,10 @@ import { Input } from "@/components/ui/input";
 
 import { Label } from "@/components/ui/label";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+// import useAxiosSecure from "@/Hook/useAxiosSecure";
+import useAuth from "@/Hook/useAuth";
+import axios from "axios";
+import useAxiosSecure from "@/Hook/useAxiosSecure";
 
 type Inputs = {
   name: string;
@@ -41,11 +44,14 @@ const RegisterPage = () => {
     watch,
     control,
   } = useForm<Inputs>();
+
   const [isLoading, setIsLoading] = useState(false);
-  const { registerUser } = useAuth();
+  const { registerUser, profileUpdate } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const location = useLocation();
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const password = watch("password");
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -53,48 +59,49 @@ const RegisterPage = () => {
 
     console.log("Form Data:", data);
 
-    try {
-      // Create FormData to handle file upload
-      const formData = new FormData();
+    const profileImage = data.avatar[0];
 
-      // Handle avatar upload to ImageBB
-      let photoURL = "";
-      if (data.avatar && data.avatar[0]) {
-        const imageFormData = new FormData();
-        imageFormData.append("image", data.avatar[0]);
+    registerUser(data.email, data.password)
+      .then(() => {
+        navigate(location.state || "/");
+        toast.success("Signup successfully");
 
-        // Replace with your ImageBB API key
-        const response = await fetch(
-          "https://api.imgbb.com/1/upload?key=YOUR_IMAGEBB_API_KEY",
-          {
-            method: "POST",
-            body: imageFormData,
-          }
-        );
+        //? store the image and get the photo url
 
-        const imageData = await response.json();
-        if (imageData.success) {
-          photoURL = imageData.data.url;
-        }
-      }
+        const formData = new FormData();
+        formData.append("image", profileImage);
 
-      const email = data.email;
-      const userPassword = data.password;
+        const image_Api_Url = `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_IMAGE_HOST_KEY
+        }`;
 
-      // Register user (e.g., Firebase)
-      await registerUser(email, userPassword);
+        axios.post(image_Api_Url, formData).then((res) => {
+          //! update profile here
+          const userProfile = {
+            displayName: data.name,
+            photoURL: res.data.data.url,
+          };
 
-      // If you are storing user profile in a database (e.g., Firestore/MongoDB):
-      // await saveUserProfileToDB({ ...data, avatarUrl });
+          const createAt = new Date();
+          const userInfo = {
+            ...data,
+            createAt,
+            role: "user",
+            imageURL: res.data.data.url,
+          };
 
-      navigate(location.state || "/");
-      toast.success("Registration successful! Please login.");
-    } catch (error) {
-      console.error("Registration error:", error);
-      toast.error("Registration failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+          axiosSecure.post("/users", userInfo).then(() => {
+            profileUpdate(userProfile)
+              .then()
+              .catch((error: { message: unknown }) => {
+                console.log(error.message);
+              });
+          });
+        });
+      })
+      .catch(() => {
+        toast.error("Network error please try again");
+      });
   };
 
   return (
@@ -189,7 +196,6 @@ const RegisterPage = () => {
                   <Label>Profile Photo</Label>
                   <div className="relative">
                     <Input
-                      id="picture"
                       type="file"
                       // Correct validation for FileList
                       {...register("avatar", {

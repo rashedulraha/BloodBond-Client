@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import Container from "../Responsive/Container";
 import { useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
-import useAuth from "@/Hook/useAuth/useAuth";
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-dropdown-menu";
+import useAuth from "@/Hook/useAuth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,17 +74,15 @@ const Navbar = () => {
           {/* Right Side: Mode Toggle + Avatar */}
           <div className="flex items-center gap-4">
             {!user && (
-              <Link
-                to="/login"
-                className="btn bg-primary/30 rounded-full px-6 shadow-none border-none hover:shadow-lg transition-all">
-                Login
+              <Link to="/login">
+                <Button className="cursor-pointer">Login</Button>
               </Link>
             )}
 
             {user && (
               <Link
                 to="/donation-requests"
-                className="btn bg-primary rounded border-none  transition-all hidden lg:flex">
+                className="btn bg-primary rounded shadow-none border-none  transition-all hidden lg:flex">
                 Donation Requests
               </Link>
             )}

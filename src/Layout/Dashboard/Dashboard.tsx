@@ -1,6 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
 import { GoHome } from "react-icons/go";
-import { IoSettingsOutline } from "react-icons/io5";
 import {
   FaUserFriends,
   FaPlus,
@@ -14,9 +13,10 @@ import {
 import { FaBarsStaggered } from "react-icons/fa6";
 import Container from "@/Page/Shared/Responsive/Container";
 import SidebarLink from "./Shared/SidebarLink/SidebarLink";
-import useAuth from "@/Hook/useAuth/useAuth";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import useAuth from "@/Hook/useAuth";
 
 const Dashboard = () => {
   const { user, logOutUser } = useAuth();
@@ -29,7 +29,7 @@ const Dashboard = () => {
     const commonLinks = [
       { to: "/", label: "Home", icon: GoHome },
       {
-        to: "/dashboard/CreateDonationRequest",
+        to: "/dashboard/create-donation-request",
         label: "Profile",
         icon: FaUserInjured,
       },
