@@ -14,8 +14,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cellsRef = useRef<BloodCell[]>([]);
-
-  const animationRef = useRef<number | null>(null);
+  const animationRef = useRef<number>();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -153,7 +152,6 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
         });
       });
 
-      // The requestAnimationFrame function returns a number (the animation ID)
       animationRef.current = requestAnimationFrame(animate);
     };
 
@@ -161,29 +159,27 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
 
     return () => {
       window.removeEventListener("resize", setCanvasSize);
-      // Ensure we check for null before calling cancelAnimationFrame
-      if (animationRef.current !== null) {
+      if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
   }, []);
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
+    <div className="relative min-h-screen py-10 md:pt-20 overflow-hidden">
       {/* Canvas for blood cells animation */}
       <canvas
         ref={canvasRef}
         className="fixed inset-0 z-0 pointer-events-none"
       />
 
-      {/* HTML-based effects (Pulsing circles and Floating particles) */}
-      {/* ... (rest of your component's JSX remains the same) ... */}
+      {/* HTML-based effects */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         {/* Pulsing circles */}
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
-            className="absolute rounded-full border mt-10 border-red-300/20"
+            className="absolute rounded-full border border-red-300/20"
             style={{
               width: `${200 + i * 150}px`,
               height: `${200 + i * 150}px`,
@@ -200,20 +196,13 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
         {[...Array(30)].map((_, i) => (
           <div
             key={i}
-            // Tailwind class `bg-linear-to-br from-red-400/30 to-rose-500/20` is likely not a standard Tailwind class.
-            // Assuming it's a custom class or an error, I've kept it as is for minimal change.
-            className="absolute rounded-full bg-linear-to-br from-red-400/30 to-rose-500/20"
+            className="absolute rounded-full  bg-linear-to-br from-red-400/30 to-rose-500/20"
             style={{
-              // The original code had eslint-disable-next-line comments which are removed for clarity
               // eslint-disable-next-line react-hooks/purity
-              width: `${Math.random() * 6 + 2}px`,
-              // eslint-disable-next-line react-hooks/purity
-              height: `${Math.random() * 6 + 2}px`,
-              // eslint-disable-next-line react-hooks/purity
-              left: `${Math.random() * 100}%`,
-              // eslint-disable-next-line react-hooks/purity
-              top: `${Math.random() * 100}%`,
-              // eslint-disable-next-line react-hooks/purity
+              width: `${Math.random() * 6 + 2}px`, // eslint-disable-next-line react-hooks/purity
+              height: `${Math.random() * 6 + 2}px`, // eslint-disable-next-line react-hooks/purity
+              left: `${Math.random() * 100}%`, // eslint-disable-next-line react-hooks/purity
+              top: `${Math.random() * 100}%`, // eslint-disable-next-line react-hooks/purity
               animation: `float ${Math.random() * 20 + 10}s linear infinite`,
               // eslint-disable-next-line react-hooks/purity
               animationDelay: `${Math.random() * 5}s`,
@@ -222,8 +211,43 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
           />
         ))}
       </div>
+
       {/* Content */}
       <div className="relative z-10">{children}</div>
+
+      {/* CSS Animations */}
+
+      <style>{`
+        @keyframes pulse {
+          0%,
+          100% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.2;
+          }
+          50% {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 0.4;
+          }
+        }
+
+        @keyframes float {
+          0% {
+            transform: translateY(0) rotate(0deg);
+          }
+          25% {
+            transform: translateY(-20px) rotate(90deg);
+          }
+          50% {
+            transform: translateY(-40px) rotate(180deg);
+          }
+          75% {
+            transform: translateY(-20px) rotate(270deg);
+          }
+          100% {
+            transform: translateY(0) rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 };

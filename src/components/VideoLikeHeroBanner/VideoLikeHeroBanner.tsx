@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Search, Zap, Users } from "lucide-react";
+// Updated Icons for a strong impact
+import { Search, HeartPulse, Shield, Droplet, TrendingUp } from "lucide-react";
 
 interface CtaButtonProps {
   to: string;
@@ -31,54 +32,77 @@ const CtaButton: React.FC<CtaButtonProps> = ({ to, label, Icon, variant }) => {
 const VideoLikeHeroBanner: React.FC = () => {
   return (
     <div className="mx-auto px-4 text-center max-w-7xl">
+      {/* 1. Enhanced Tagline/Pre-Header (Focus on Urgency and Trust) */}
       <div
         className="inline-flex items-center text-sm uppercase tracking-widest font-semibold mb-6 p-2 px-4 rounded-full bg-destructive/10 text-destructive border border-destructive/50"
         data-aos="fade-down"
         data-aos-duration="800"
         data-aos-delay="100">
-        <Zap className="w-4 h-4 mr-2 truncate" /> Join the Lifesaver Community.
+        <HeartPulse className="w-4 h-4 mr-2 truncate" />
+        {/* Updated Text */}
+        Connecting Hearts, Saving Futures.
       </div>
 
-      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-bold  leading-tight md:leading-tighter mb-4 md:mb-6">
+      {/* 2. Powerful Main Headline (Focus on Action and Impact) */}
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-bold leading-tight md:leading-tighter mb-4 md:mb-6">
         <span className="block">
-          Every Drop{" "}
+          Connect{" "}
           <span className="relative">
             <span className="bg-linear-to-r bg-primary bg-clip-text text-transparent">
-              Counts
+              Instantly.
             </span>
             <span className="absolute -bottom-2 left-0 w-full h-1 bg-linear-to-r bg-chart-3 rounded-full" />
           </span>
         </span>
         <span className="block mt-2 md:mt-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-          In Saving <span className="text-chart-3">Lives</span>
+          <span className="text-chart-3">Save</span> A Life Today
         </span>
       </h1>
 
-      <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-foreground/80 mb-6 md:mb-8 max-w-3xl lg:max-w-4xl mx-auto px-4">
-        Instant connection between blood donors and recipients across
-        Bangladesh's 64 districts
+      {/* 3. Detailed Sub-headline (Focus on scope and solution) */}
+      <h2 className="text-md sm:text-lg md:text-lg lg:text-xl font-medium text-foreground/ mb-8 max-w-4xl lg:max-w-5xl mx-auto px-4">
+        We bridge the critical gap between urgent patient needs and verified
+        donors, making emergency blood access simple and fast across all
+        regions.
       </h2>
 
       <div
-        className="flex flex-col md:flex-row sm:flex-row gap-5 justify-center"
+        className="flex flex-col md:flex-row sm:flex-row gap-5 justify-center mb-10"
         data-aos="fade-up"
         data-aos-duration="800"
         data-aos-delay="700">
-        {/* Primary CTA: Find Requests */}
+        {/* Primary CTA: Find Blood Requests (Urgency) */}
         <CtaButton
-          to="/find-blood-input"
-          label="Search Blood Now"
+          to="/find-blood-requests"
+          label="Urgent Blood Request" // Emphasize urgency
           Icon={Search}
           variant="primary"
         />
 
-        {/* Secondary CTA: Register */}
+        {/* Secondary CTA: Register as Donor (Community Building) */}
         <CtaButton
-          to="/volunteer-register"
-          label="Volunteer/Register"
-          Icon={Users}
+          to="/donor-registration"
+          label="Register as Donor" // Clear call to action
+          Icon={Droplet}
           variant="secondary"
         />
+      </div>
+
+      {/* New Section: Social Impact/Key Metric (for credibility) */}
+      <div className="flex justify-center mt-6">
+        <div
+          className="inline-flex items-center space-x-2 text-sm md:text-base font-semibold text-secondary-foreground/70"
+          data-aos="fade-up"
+          data-aos-duration="800"
+          data-aos-delay="900">
+          <TrendingUp className="w-5 h-5 text-chart-3" />
+          <span className="text-xl font-extrabold text-chart-3 mr-1">
+            3,500+
+          </span>
+          <span className="uppercase tracking-wide">
+            Lives Impacted Last Month
+          </span>
+        </div>
       </div>
     </div>
   );
