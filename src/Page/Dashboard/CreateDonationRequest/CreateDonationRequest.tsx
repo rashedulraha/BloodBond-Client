@@ -36,9 +36,6 @@ const requestSchema = z.object({
   recipientUpazila: z.string().min(1, "Please select an upazila"),
   hospitalName: z.string().min(3, "Hospital name is required"),
   fullAddress: z.string().min(5, "Full address is required"),
-  bloodGroup: z.enum(["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], {
-    errorMap: () => ({ message: "Please select a blood group" }),
-  }),
   donationDate: z.string().min(1, "Donation date is required"),
   donationTime: z.string().min(1, "Donation time is required"),
   requestMessage: z
@@ -53,8 +50,8 @@ const CreateDonationRequest: React.FC = () => {
 
   // Mocking logged-in user data (This should come from your AuthContext)
   const currentUser = {
-    name: "John Doe",
-    email: "john.doe@example.com",
+    name: "rashedul",
+    email: "rashedul.doe@example.com",
     status: "active", // Only active users can create requests
   };
 

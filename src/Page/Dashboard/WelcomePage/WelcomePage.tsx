@@ -73,7 +73,8 @@ const mockRequests = [
     status: "done",
     donorInfo: { name: "Volunteer X", email: "x@volunteer.org" },
   },
-];
+] as const;
+
 type DonationStatus = "pending" | "inprogress" | "done" | "canceled";
 interface DonationRequest {
   id: string;
@@ -90,7 +91,9 @@ interface DonationRequest {
 
 const WelcomePage: React.FC = () => {
   const navigate = useNavigate();
-  const [requests, setRequests] = useState<DonationRequest[]>(mockRequests);
+  const [requests, setRequests] = useState<DonationRequest[]>([
+    ...mockRequests,
+  ]);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [requestToDelete, setRequestToDelete] = useState<string | null>(null);
 

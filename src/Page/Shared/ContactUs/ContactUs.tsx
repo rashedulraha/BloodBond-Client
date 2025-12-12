@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import Container from "../Responsive/Container";
 import { Label } from "@radix-ui/react-dropdown-menu";
@@ -14,15 +14,7 @@ const ContactUs = () => {
     message: "",
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     // Form submission logic would go here
     console.log("Form submitted:", formData);
@@ -34,6 +26,11 @@ const ContactUs = () => {
       message: "",
     });
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function handleInputChange(_event: ChangeEvent<HTMLInputElement>): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <section className="my-10">
@@ -89,7 +86,6 @@ const ContactUs = () => {
                 <Label className="mb-1">Your Message</Label>
                 <Textarea
                   value={formData.message}
-                  onChange={handleInputChange}
                   rows={5}
                   placeholder="Type your message here..."></Textarea>
               </div>

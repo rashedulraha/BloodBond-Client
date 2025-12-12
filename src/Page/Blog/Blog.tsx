@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { ChevronRight, Filter, Calendar, User, BookOpen } from "lucide-react";
+import { Filter, Calendar, User, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { BlogPost } from "@/types/blog";
 import mockBlogPosts from "@/Data/MockBlogPosts/MockBlogPosts";

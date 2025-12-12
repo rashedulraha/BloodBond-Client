@@ -10,22 +10,21 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-
 import type { DonationRequest } from "@/types/donation";
 import mockDonations from "@/Data/MockDonations/MockDonations";
 
 // Constants for Pagination
 const ITEMS_PER_PAGE = 5;
-const STATUS_FILTERS: (DonationStatus | "all")[] = [
-  "all",
-  "pending",
-  "inprogress",
-  "done",
-  "canceled",
-];
+const STATUS_FILTERS: (
+  | "inprogress"
+  | "pending"
+  | "all"
+  | "done"
+  | "canceled"
+)[] = ["all", "pending", "inprogress", "done", "canceled"];
 
 // Helper function to get status badge color
-const getStatusBadge = (status: DonationStatus) => {
+const getStatusBadge = (status: string) => {
   switch (status) {
     case "pending":
       return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400";
@@ -44,9 +43,7 @@ const MyDonationRequests: React.FC = () => {
   const navigate = useNavigate();
   const [allRequests, setAllRequests] = useState<DonationRequest[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filterStatus, setFilterStatus] = useState<DonationStatus | "all">(
-    "all"
-  );
+  const [filterStatus, setFilterStatus] = useState<"all">("all");
   const [currentPage, setCurrentPage] = useState(1);
 
   // --- [ Data Fetching Simulation ] ---
@@ -187,9 +184,7 @@ const MyDonationRequests: React.FC = () => {
             </span>
             <select
               value={filterStatus}
-              onChange={(e) =>
-                setFilterStatus(e.target.value as DonationStatus | "all")
-              }
+              onChange={(e) => setFilterStatus(e.target.value as "all")}
               className="select select-bordered select-sm bg-input/20 border-border">
               {STATUS_FILTERS.map((status) => (
                 <option key={status} value={status}>
