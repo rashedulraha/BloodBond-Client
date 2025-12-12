@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
-import AuthContext from "../AuthContext/AuthContext";
-import { auth } from "@/Firebase/Firebase.init";
+
+import { auth } from "@/Firebase/Firebase.init"; // Assuming this path is correct
+
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -10,36 +11,45 @@ import {
   signOut,
   updateProfile,
   type User,
-  type UserCredential,
 } from "firebase/auth";
+import type { UserInfoType } from "../AuthContext/AuthContext";
+import AuthContext from "../AuthContext/AuthContext";
 
+// --- [ Props Type ] ---
 type AuthProviderProps = {
   children: ReactNode;
 };
+
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | undefined>(undefined);
+  // Custom user info might include database fields like 'role', 'status'
+  // const [user, setUser] = useState<(User & { role?: string, status?: string }) | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
 
-  //! --- Register User ---
-  const registerUser = async (
-    email: string,
-    password: string
-  ): Promise<UserCredential | undefined> => {
+  // 1. --- Register User ---
+  const registerUser: UserInfoType["registerUser"] = async (
+    email,
+    password
+  ) => {
     try {
       setLoading(true);
       const res = await createUserWithEmailAndPassword(auth, email, password);
       return res;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.log(error.message);
+        console.error("Register Error:", error.message);
       }
+      return undefined; // Return undefined on failure
     }
   };
 
-  // ! login user
-  const loginUser = async (email: string, password: string) => {
+  // 2. --- Login User ---
+  const loginUser: UserInfoType["loginUser"] = async (
+    email: string,
+    password: string
+  ) => {
     try {
       setLoading(true);
       const signInUser = await signInWithEmailAndPassword(
@@ -48,54 +58,61 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         password
       );
       return signInUser;
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
-        console.log(error.message);
+        console.error("Login Error:", error.message);
       }
+      return undefined; // Return undefined on failure
     }
   };
 
-  // ! signin with google
-  const signinWithGoogle = async () => {
+  // 3. --- Signin with Google ---
+  const signinWithGoogle: UserInfoType["signinWithGoogle"] = async () => {
     try {
       const loginUser = await signInWithPopup(auth, googleProvider);
       return loginUser;
     } catch (error: unknown) {
-      return error.message;
+      if (error instanceof Error) {
+        console.error("Google Signin Error:", error.message);
+        return error.message; // Return error message string
+      }
+      return undefined;
     }
   };
 
-  //! --- Logout user ---
-  const logOutUser = async () => {
+  // 4. --- Logout user ---
+  const logOutUser: UserInfoType["logOutUser"] = async () => {
     try {
       setLoading(true);
-      signOut(auth);
+      await signOut(auth); // signOut returns Promise<void>
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.log(error.message);
+        console.error("Logout Error:", error.message);
       }
     }
   };
 
-  //! --- Update profile ---
-  const profileUpdate = async (userInformation: {
-    displayName?: string;
-    photoURL?: string;
+  // 5. --- Update profile ---
+  const profileUpdate: UserInfoType["profileUpdate"] = async (userInformation: {
+    displayName?: string | null;
+    photoURL?: string | null;
   }) => {
     try {
-      const profile = await updateProfile(auth.currentUser!, userInformation);
-      return profile;
+      // Firebase updateProfile returns Promise<void>
+      await updateProfile(auth.currentUser!, userInformation);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        return error.message;
+        console.error("Profile Update Error:", error.message);
+        return error.message; // Return error message string
       }
       return String(error);
     }
   };
 
-  //! --- Track Auth State ---
+  // --- Track Auth State ---
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
+      // 💡 Better Practice: Only set loading to false after state is resolved
       setUser(currentUser || undefined);
       setLoading(false);
     });
@@ -103,8 +120,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => unsubscribe();
   }, []);
 
-  //! --- Value passed to Context ---
-  const userInfo = {
+  // --- Value passed to Context ---
+  const userInfo: UserInfoType = {
     registerUser,
     user,
     loading,
@@ -114,9 +131,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     profileUpdate,
   };
 
-  return (
-    <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext value={userInfo}>{children}</AuthContext>;
 };
 
 export default AuthProvider;

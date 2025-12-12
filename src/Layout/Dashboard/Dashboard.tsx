@@ -2,10 +2,10 @@ import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import { GoHome } from "react-icons/go";
 import {
-  FaUserFriends,
-  FaPlus,
-  FaList,
-  FaMoneyBillWave,
+  // FaUserFriends,
+  // FaPlus,
+  // FaList,
+  // FaMoneyBillWave,
   FaUserCircle,
   FaHandHoldingHeart,
 } from "react-icons/fa";
@@ -40,7 +40,7 @@ const SidebarLink: React.FC<LinkProps> = ({ to, label, Icon, isCollapsed }) => {
     <li>
       <Link
         to={to}
-        className="flex items-center space-x-3 p-3 text-sm font-medium rounded-lg text-foreground hover:bg-primary/10 transition-colors duration-200"
+        className="flex items-center space-x-3 p-3 text-sm font-medium rounded text-foreground hover:bg-primary/10 transition-colors duration-200 border border-transparent hover:border hover:border-primary"
         // Active link style should be handled by your router setup (e.g., NavLink)
       >
         <Icon className={`w-5 h-5 ${isCollapsed ? "mx-auto" : "ml-1"}`} />
@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
   const { isOpen, isCollapsed, toggleOpen, toggleCollapse } = useSidebar(); // State management
 
   const handleLogout = () => {
-    // logOutUser();
+    logOutUser();
     console.log("User logged out.");
   };
 
@@ -76,36 +76,36 @@ const Dashboard: React.FC = () => {
       },
     ];
 
-    if (user?.role === "admin") {
-      return [
-        ...commonLinks,
-        { to: "/dashboard/all-users", label: "All Users", icon: FaUserFriends },
-        {
-          to: "/dashboard/all-blood-donation-request",
-          label: "All Requests",
-          icon: FaList,
-        },
-        { to: "/dashboard/funding", label: "Funding", icon: FaMoneyBillWave },
-      ];
-    } else if (user?.role === "donor") {
-      return [
-        ...commonLinks,
-        {
-          to: "/dashboard/create-donation-request",
-          label: "Create Request",
-          icon: FaPlus,
-        },
-      ];
-    } else if (user?.role === "volunteer") {
-      return [
-        ...commonLinks,
-        {
-          to: "/dashboard/all-blood-donation-request",
-          label: "All Requests",
-          icon: FaList,
-        },
-      ];
-    }
+    // if (user?.role === "admin") {
+    //   return [
+    //     ...commonLinks,
+    //     { to: "/dashboard/all-users", label: "All Users", icon: FaUserFriends },
+    //     {
+    //       to: "/dashboard/all-blood-donation-request",
+    //       label: "All Requests",
+    //       icon: FaList,
+    //     },
+    //     { to: "/dashboard/funding", label: "Funding", icon: FaMoneyBillWave },
+    //   ];
+    // } else if (user?.role === "donor") {
+    //   return [
+    //     ...commonLinks,
+    //     {
+    //       to: "/dashboard/create-donation-request",
+    //       label: "Create Request",
+    //       icon: FaPlus,
+    //     },
+    //   ];
+    // } else if (user?.role === "volunteer") {
+    //   return [
+    //     ...commonLinks,
+    //     {
+    //       to: "/dashboard/all-blood-donation-request",
+    //       label: "All Requests",
+    //       icon: FaList,
+    //     },
+    //   ];
+    // }
     return commonLinks;
   };
 
@@ -173,7 +173,7 @@ const Dashboard: React.FC = () => {
             )}
             {!isCollapsed && (
               <span className="ml-3 font-semibold text-sm truncate">
-                {user?.name || "Dashboard User"}
+                {user?.displayName || "Dashboard User"}
               </span>
             )}
           </Link>
@@ -209,7 +209,7 @@ const Dashboard: React.FC = () => {
       {/* --- [ 3. Mobile Drawer Overlay ] --- */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-base-content/50 z-30 lg:hidden"
           onClick={toggleOpen}></div>
       )}
 

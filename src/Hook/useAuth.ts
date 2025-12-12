@@ -1,9 +1,18 @@
-import AuthContext from "@/Context/AuthContext/AuthContext";
+// src/hooks/useAuth.ts
+
+import AuthContext, {
+  type UserInfoType,
+} from "@/Context/AuthContext/AuthContext";
 import { useContext } from "react";
 
-const useAuth = () => {
-  const userInfo = useContext(AuthContext);
-  return userInfo;
+const useAuth = (): UserInfoType => {
+  const context = useContext(AuthContext);
+
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+
+  return context;
 };
 
 export default useAuth;

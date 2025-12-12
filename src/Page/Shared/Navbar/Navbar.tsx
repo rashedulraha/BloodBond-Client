@@ -105,12 +105,14 @@ const Navbar = () => {
                 <ul
                   tabIndex={0}
                   className="menu menu-sm dropdown-content bg-card rounded-box z-50 mt-3 w-56 p-3 border border-border space-y-2 shadow-lg">
-                  <li className="font-semibold text-center">{user.name}</li>
+                  <li className="font-semibold text-center">
+                    {user.displayName}
+                  </li>
                   <li className="text-center text-muted-foreground text-sm">
                     {user.email}
                   </li>
                   <li className="text-center text-muted-foreground text-sm">
-                    Role: {user.role || "User"}
+                    Role: {"User"}
                   </li>
                   <div className="divider my-1"></div>
 
