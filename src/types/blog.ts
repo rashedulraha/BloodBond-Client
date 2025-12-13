@@ -1,3 +1,5 @@
+import type { Key } from "react";
+
 export interface BlogPost {
   id: string;
   title: string;
@@ -7,4 +9,19 @@ export interface BlogPost {
   date: string;
   category: string;
   slug: string;
+}
+
+// all user data fetch type
+
+export interface AllUser {
+  _id: Key | null | undefined;
+  name: string;
+  email: string;
+  bloodGroup: string;
+  division: string;
+  createAt: string;
+  role: string;
+  imageURL: string;
+
+  district: string;
 }
