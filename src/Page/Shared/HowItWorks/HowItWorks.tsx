@@ -55,7 +55,7 @@ const HowItWorks = () => {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="bg-card rounded-md shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
+              className="p-6 rounded-md bg-card/50 border border-border  hover:-translate-y-2 transition-all duration-500">
               <div
                 className={`w-16 h-16 rounded-full ${step.color} flex items-center justify-center mx-auto mb-4`}>
                 {step.icon}
@@ -73,7 +73,7 @@ const HowItWorks = () => {
           ))}
         </div>
 
-        <div className="mt-16 bg-linear-to-r from-primary/10 to-primary/5 rounded-md p-8 md:p-12">
+        <div className="mt-16 bg-card/50 rounded-md p-8 md:p-12">
           <div className="max-w-3xl mx-auto text-center">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
               Ready to Save Lives?

@@ -31,14 +31,14 @@ const CtaButton: React.FC<CtaButtonProps> = ({ to, label, Icon, variant }) => {
 
 const VideoLikeHeroBanner: React.FC = () => {
   return (
-    <div className="mx-auto px-4 text-center max-w-7xl">
+    <div className="mx-auto text-center max-w-7xl">
       {/* 1. Enhanced Tagline/Pre-Header (Focus on Urgency and Trust) */}
       <div
-        className="inline-flex items-center text-sm uppercase tracking-widest font-semibold mb-6 p-2 px-4 rounded-full bg-destructive/10 text-destructive border border-destructive/50"
+        className="inline-flex items-center text-[10px] uppercase tracking-widest font-semibold mb-6 p-2 px-4 rounded-full bg-destructive/10 text-destructive border border-destructive/50 truncate"
         data-aos="fade-down"
         data-aos-duration="800"
         data-aos-delay="100">
-        <HeartPulse className="w-4 h-4 mr-2 truncate" />
+        <HeartPulse className="w-4 h-4 mr-2 " />
         {/* Updated Text */}
         Connecting Hearts, Saving Futures.
       </div>
@@ -60,7 +60,7 @@ const VideoLikeHeroBanner: React.FC = () => {
       </h1>
 
       {/* 3. Detailed Sub-headline (Focus on scope and solution) */}
-      <h2 className="text-md sm:text-lg md:text-lg lg:text-xl font-medium text-foreground/ mb-8 max-w-4xl lg:max-w-5xl mx-auto px-4">
+      <h2 className="text-md sm:text-lg md:text-lg lg:text-xl text-muted-foreground mb-8 max-w-4xl lg:max-w-5xl mx-auto px-4">
         We bridge the critical gap between urgent patient needs and verified
         donors, making emergency blood access simple and fast across all
         regions.

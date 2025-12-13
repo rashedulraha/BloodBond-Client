@@ -136,7 +136,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="lg:hidden mt-2 border-t border-border pt-2 flex flex-col gap-2 pb-5">
+          <div className="lg:hidden border-t border-border pt-2 flex flex-col z-5 absolute left-0 w-full backdrop-blur-3xl px-4 bg-background/90 gap-2 pb-5  ">
             {publicLinks} {user && privateLinks}
           </div>
         )}

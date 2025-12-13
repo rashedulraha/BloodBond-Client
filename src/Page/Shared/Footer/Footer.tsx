@@ -14,9 +14,7 @@ import {
   FaLinkedin,
   FaYoutube,
 } from "react-icons/fa";
-// LoadingSpinner এবং useAuth ইমপোর্ট থাকলেও, NewsletterSection এ ব্যবহার না করার জন্য কোড অপটিমাইজ করা হয়েছে।
-// import LoadingSpinner from "../Spinner/LoadingSpinner";
-// import useAuth from "@/Hook/useAuth/useAuth";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -186,7 +184,7 @@ const FooterBrand: React.FC = () => (
       {emergencyContacts.map((contact, idx) => (
         <div
           key={idx}
-          className="flex items-center gap-3 p-3 bg-card/50 rounded-lg shadow-sm">
+          className="flex items-center gap-3 bg-card/50 rounded-lg shadow-sm">
           <div className="bg-primary/30 p-2 rounded">
             <FaPhone className="w-4 h-4 text-primary/70" />
           </div>
@@ -229,7 +227,7 @@ const NewsletterSection: React.FC = () => {
   };
 
   return (
-    <div className="bg-card/50 p-6 rounded-xl shadow-sm">
+    <div className="bg-card/50">
       <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-foreground font-sans">
         <FaHeart className="text-primary" />
         Stay Connected
@@ -349,7 +347,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
         {/* Newsletter & Social */}
         <div className="mt-12 pt-8 border-t border-border grid grid-cols-1 lg:grid-cols-2 gap-8">
           <NewsletterSection />
-          <div className="bg-card/50 p-6 rounded-xl shadow-sm">
+          <div className="bg-card/50  rounded-xl shadow-sm">
             <h3 className="text-xl font-bold mb-4 text-foreground font-sans">
               Follow Our Journey
             </h3>
