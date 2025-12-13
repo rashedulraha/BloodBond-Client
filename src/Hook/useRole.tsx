@@ -14,19 +14,20 @@ const useRole = (): UseRoleResult => {
   const { user, loading } = useAuth();
 
   const {
-    data: roleData,
+    data: role = "rashedul",
     isLoading,
     isError,
     error,
   } = useQuery({
     queryKey: ["userRole", user?.email],
-
     queryFn: async () => {
       if (!user?.email) {
         throw new Error("User email not available for role query.");
       }
 
       const res = await axiosSecure.get(`/user/${user.email}/role`);
+      // console.log(res);
+
       return res.data;
     },
 
@@ -35,10 +36,8 @@ const useRole = (): UseRoleResult => {
     staleTime: 1000 * 60 * 5,
   });
 
-  const userRole: string | null = roleData?.role || null;
-
   return {
-    role: userRole,
+    role,
     isLoading,
     isError,
     error,

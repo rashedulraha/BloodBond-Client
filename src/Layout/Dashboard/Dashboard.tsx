@@ -2,12 +2,11 @@ import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import { GoHome } from "react-icons/go";
 import {
-  // FaUserFriends,
-  // FaPlus,
-  // FaList,
-  // FaMoneyBillWave,
-
+  FaUserFriends,
+  FaPlus,
+  FaMoneyBillWave,
   FaHandHoldingHeart,
+  FaList,
 } from "react-icons/fa";
 import {
   Menu,
@@ -24,11 +23,8 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area"; // Better scrolling UX
 import useAuth from "@/Hook/useAuth";
 import { useSidebar } from "@/Hook/useSidebar";
+import useRole from "@/Hook/useRole";
 
-// Assume Container component is available
-// import Container from "@/Page/Shared/Responsive/Container";
-
-// --- [ Sidebar Link Component Definition (Must be clean) ] ---
 interface LinkProps {
   to: string;
   label: string;
@@ -50,11 +46,11 @@ const SidebarLink: React.FC<LinkProps> = ({ to, label, Icon, isCollapsed }) => {
     </li>
   );
 };
-// --- [ End Sidebar Link Component ] ---
 
 const Dashboard: React.FC = () => {
-  const { user, logOutUser } = useAuth(); // Assuming logOutUser is available
-  const { isOpen, isCollapsed, toggleOpen, toggleCollapse } = useSidebar(); // State management
+  const { user, logOutUser } = useAuth();
+  const { isOpen, isCollapsed, toggleOpen, toggleCollapse } = useSidebar();
+  const { role } = useRole();
 
   const handleLogout = () => {
     logOutUser();
@@ -77,36 +73,36 @@ const Dashboard: React.FC = () => {
       },
     ];
 
-    // if (user?.role === "admin") {
-    //   return [
-    //     ...commonLinks,
-    //     { to: "/dashboard/all-users", label: "All Users", icon: FaUserFriends },
-    //     {
-    //       to: "/dashboard/all-blood-donation-request",
-    //       label: "All Requests",
-    //       icon: FaList,
-    //     },
-    //     { to: "/dashboard/funding", label: "Funding", icon: FaMoneyBillWave },
-    //   ];
-    // } else if (user?.role === "donor") {
-    //   return [
-    //     ...commonLinks,
-    //     {
-    //       to: "/dashboard/create-donation-request",
-    //       label: "Create Request",
-    //       icon: FaPlus,
-    //     },
-    //   ];
-    // } else if (user?.role === "volunteer") {
-    //   return [
-    //     ...commonLinks,
-    //     {
-    //       to: "/dashboard/all-blood-donation-request",
-    //       label: "All Requests",
-    //       icon: FaList,
-    //     },
-    //   ];
-    // }
+    if (role === "admin") {
+      return [
+        ...commonLinks,
+        { to: "/dashboard/all-users", label: "All Users", icon: FaUserFriends },
+        {
+          to: "/dashboard/all-blood-donation-request",
+          label: "All Requests",
+          icon: FaList,
+        },
+        { to: "/dashboard/funding", label: "Funding", icon: FaMoneyBillWave },
+      ];
+    } else if (role === "donor") {
+      return [
+        ...commonLinks,
+        {
+          to: "/dashboard/create-donation-request",
+          label: "Create Request",
+          icon: FaPlus,
+        },
+      ];
+    } else if (role === "volunteer") {
+      return [
+        ...commonLinks,
+        {
+          to: "/dashboard/all-blood-donation-request",
+          label: "All Requests",
+          icon: FaList,
+        },
+      ];
+    }
     return commonLinks;
   };
 

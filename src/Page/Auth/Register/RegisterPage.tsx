@@ -123,7 +123,7 @@ const RegisterPage = () => {
         name: userData.displayName,
         email: userData.email,
         photo: userData.photoURL,
-        role: "userData",
+        role: "donor",
         provider: "google",
       };
 
