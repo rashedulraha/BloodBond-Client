@@ -20,8 +20,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import type { AllUser } from "@/types/blog";
 import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 
 const AllRegisterUser = () => {
   const axiosSecure = useAxiosSecure();
@@ -46,7 +52,22 @@ const AllRegisterUser = () => {
 
   return (
     <div>
-      <h1>All user {users.length}</h1>
+      <div className="flex items-center justify-between pb-5">
+        <div>
+          <h1>All user</h1>
+        </div>
+        <div>
+          <InputGroup>
+            <InputGroupInput placeholder="Search..." />
+            <InputGroupAddon>
+              <Search />
+            </InputGroupAddon>
+            <InputGroupAddon align="inline-end">
+              {users?.length} results
+            </InputGroupAddon>
+          </InputGroup>
+        </div>
+      </div>
 
       <Table>
         <TableCaption>A list of all users.</TableCaption>

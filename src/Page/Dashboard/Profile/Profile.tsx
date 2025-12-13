@@ -156,7 +156,11 @@ const Profile: React.FC = () => {
                   <Label className="flex items-center">
                     <UserIcon className="w-4 h-4 mr-2" /> Name
                   </Label>
-                  <Input type="text" disabled={!isEditing || loading} />
+                  <Input
+                    type="text"
+                    defaultValue={userData?.name}
+                    disabled={!isEditing || loading}
+                  />
                 </div>
 
                 {/* Field 2: Email (Read-Only) */}
@@ -164,7 +168,7 @@ const Profile: React.FC = () => {
                   <Label className="flex items-center">
                     <Mail className="w-4 h-4 mr-2" /> Email (Non-Editable)
                   </Label>
-                  <Input type="email" disabled />
+                  <Input type="email" value={userData?.email} disabled />
                 </div>
 
                 {/* Field 3: Blood Group */}
@@ -175,7 +179,7 @@ const Profile: React.FC = () => {
                   </Label>
                   <Select disabled={!isEditing || loading}>
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select your blood" />
+                      <SelectValue placeholder="Select your blood group" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
@@ -198,15 +202,23 @@ const Profile: React.FC = () => {
                   <Label className=" flex items-center">
                     <MapPin className="w-4 h-4 mr-2" /> District
                   </Label>
-                  <Input type="text" disabled={!isEditing || loading} />
+                  <Input
+                    type="text"
+                    defaultValue={userData?.district}
+                    disabled={!isEditing || loading}
+                  />
                   {/* Note: This should ideally be a select input fetching data from API */}
                 </div>
 
                 <div className="space-y-2">
                   <Label className="flex items-center">
-                    <MapPin className="w-4 h-4 mr-2" /> Upazila
+                    <MapPin className="w-4 h-4 mr-2" /> Division
                   </Label>
-                  <Input type="text" disabled={!isEditing || loading} />
+                  <Input
+                    type="text"
+                    defaultValue={userData?.division}
+                    disabled={!isEditing || loading}
+                  />
                   {/* Note: This should ideally be a select input fetching data from API */}
                 </div>
               </div>
