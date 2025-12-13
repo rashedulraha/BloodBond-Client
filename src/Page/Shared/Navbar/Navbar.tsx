@@ -6,10 +6,28 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import useAuth from "@/Hook/useAuth";
+import useRole from "@/Hook/useRole";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "@/Hook/useAxiosSecure";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logOutUser } = useAuth();
+  const { role } = useRole();
+  const axiosSecure = useAxiosSecure();
+
+  const { data: profileInfo = [] } = useQuery({
+    queryKey: ["profile-data"],
+    queryFn: async () => {
+      if (!user?.email) {
+        throw new Error("User email not available for role query.");
+      }
+      const result = await axiosSecure.get(`/profile/${user.email}/data`);
+      return result.data;
+    },
+  });
+
+  const userData = profileInfo[0];
 
   const handleUserLogout = () => {
     logOutUser();
@@ -109,9 +127,22 @@ const Navbar = () => {
                   <li className="text-center text-muted-foreground text-sm">
                     {user.email}
                   </li>
-                  <li className="text-center text-muted-foreground text-sm">
-                    Role: {"User"}
-                  </li>
+                  <ul>
+                    <li className="text-center text-muted-foreground text-sm flex items-center justify-center flex-row capitalize">
+                      Role: <span className="text-green-500">{role}</span>
+                    </li>
+                    <li className="text-center text-muted-foreground text-sm flex items-center justify-center flex-row capitalize">
+                      Status:{" "}
+                      <span
+                        className={
+                          userData?.status === "block"
+                            ? "text-red-500"
+                            : "text-green-500"
+                        }>
+                        {userData.status}
+                      </span>
+                    </li>
+                  </ul>
                   <div className="divider my-1"></div>
 
                   <Link to="/dashboard">
