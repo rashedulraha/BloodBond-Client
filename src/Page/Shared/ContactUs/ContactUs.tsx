@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -26,11 +26,6 @@ const ContactUs = () => {
     });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function handleInputChange(_event: ChangeEvent<HTMLInputElement>): void {
-    throw new Error("Function not implemented.");
-  }
-
   return (
     <section className="my-10">
       <div className="text-center">
@@ -52,38 +47,22 @@ const ContactUs = () => {
           <form onSubmit={handleSubmit} className="space-y-4 w-full">
             <div>
               <Label className="mb-1">Your Name</Label>
-              <Input
-                type="text"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Rashedul Islam"
-              />
+              <Input type="text" placeholder="Rashedul Islam" />
             </div>
 
             <div>
               <Label className="mb-1">Email Address</Label>
-              <Input
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="rashedul@example.com"
-              />
+              <Input type="email" placeholder="rashedul@example.com" />
             </div>
 
             <div>
               <Label className=" mb-1">Subject</Label>
-              <Input
-                type="text"
-                value={formData.subject}
-                onChange={handleInputChange}
-                placeholder="How can we help?"
-              />
+              <Input type="text" placeholder="How can we help?" />
             </div>
 
             <div>
               <Label className="mb-1">Your Message</Label>
               <Textarea
-                value={formData.message}
                 rows={5}
                 placeholder="Type your message here..."></Textarea>
             </div>

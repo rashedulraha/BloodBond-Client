@@ -208,7 +208,8 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
     <Pagination className="mt-6">
       <PaginationContent>
         {/* Previous Button */}
-        <PaginationItem>``
+        <PaginationItem>
+          ``
           <PaginationPrevious
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}

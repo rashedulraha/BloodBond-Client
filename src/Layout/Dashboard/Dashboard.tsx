@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
   UserCircle,
+  Users,
 } from "lucide-react";
 
 // Shadcn UI Components
@@ -68,6 +69,11 @@ const Dashboard: React.FC = () => {
         to: "/dashboard/my-donation-requests",
         label: "My Requests",
         icon: FaHandHoldingHeart,
+      },
+      {
+        to: "/dashboard/all-register-user",
+        label: "All User",
+        icon: Users,
       },
     ];
 
@@ -196,7 +202,7 @@ const Dashboard: React.FC = () => {
         </header>
 
         {/* --- [ Page Outlet ] --- */}
-        <div className="grow p-4 md:p-6 lg:p-8">
+        <div className="grow p-4 md:p-6 lg:p-8 overflow-scroll">
           <Outlet />
         </div>
       </main>
@@ -215,7 +221,7 @@ const Dashboard: React.FC = () => {
         }`}>
         <div className="flex flex-col h-full">
           {/* Drawer Header (Close Button) */}
-          <div className="p-4 flex items-center justify-between border-b border-border h-16">
+          <div className="p-4 flex items-center justify-between border-b border-border max-h-screen">
             <h3 className="text-xl font-bold text-primary">Menu</h3>
             <Button variant="ghost" size="icon" onClick={toggleOpen}>
               <X className="w-6 h-6" />
@@ -225,7 +231,6 @@ const Dashboard: React.FC = () => {
           {/* Mobile Links */}
           <ScrollArea className="grow p-2">
             <ul className="space-y-1" onClick={toggleOpen}>
-              {" "}
               {/* Close drawer on link click */}
               {sidebarLinks.map((link, index) => (
                 <SidebarLink

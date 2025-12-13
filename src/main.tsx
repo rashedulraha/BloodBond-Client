@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { RouterProvider } from "react-router-dom";
 import router from "./Routes/Routes";
 import AuthProvider from "./Context/AuthProvider/AuthProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 AOS.init({
   duration: 1000,
@@ -17,13 +18,18 @@ AOS.init({
   easing: "ease-in-out",
 });
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+
     <ToastContainer />
   </StrictMode>
 );

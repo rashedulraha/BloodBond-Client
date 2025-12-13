@@ -6,6 +6,7 @@ import LoginPage from "@/Page/Auth/Login/Login";
 import RegisterPage from "@/Page/Auth/Register/RegisterPage";
 import Blog from "@/Page/Blog/Blog";
 import Contact from "@/Page/Contact/Contact";
+import AllRegisterUser from "@/Page/Dashboard/AllRegisterUser/AllRegisterUser";
 import CreateDonationRequest from "@/Page/Dashboard/CreateDonationRequest/CreateDonationRequest";
 import MyDonationRequests from "@/Page/Dashboard/MyDonationRequests/MyDonationRequests";
 import Profile from "@/Page/Dashboard/Profile/Profile";
@@ -109,6 +110,10 @@ const router = createBrowserRouter([
       {
         path: "my-donation-requests",
         Component: MyDonationRequests,
+      },
+      {
+        path: "all-register-user",
+        Component: AllRegisterUser,
       },
     ],
   },
