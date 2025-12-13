@@ -68,7 +68,7 @@ const Navbar = () => {
       <Container>
         <div className="flex items-center justify-between py-3">
           {/* Logo */}
-          <div className=" items-center gap-2 flex">
+          <div className=" items-center gap-2 flex flex-1">
             <Link to="/" className="text-2xl font-bold hidden lg:flex">
               Blood <span className="text-primary">Bond</span>
             </Link>
@@ -84,13 +84,13 @@ const Navbar = () => {
           </div>
 
           {/* Center Nav Links */}
-          <div className="hidden lg:flex gap-6 font-medium">
+          <div className="hidden lg:flex gap-6 font-medium flex-1">
             {/* {user ? privateLinks : publicLinks} */}
             {publicLinks} {user && privateLinks}
           </div>
 
           {/* Right Side: Mode Toggle + Avatar */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-2 md:flex-1 justify-end">
             {!user && (
               <Link to="/login">
                 <Button className="cursor-pointer">Login</Button>
@@ -98,8 +98,10 @@ const Navbar = () => {
             )}
 
             {user && (
-              <Link to="/donation-requests">
-                <Button className="cursor-pointer">Donation Requests</Button>
+              <Link to="/dashboard/donation-requests">
+                <Button className="cursor-pointer hidden lg:flex">
+                  Donation Requests
+                </Button>
               </Link>
             )}
 
@@ -139,7 +141,7 @@ const Navbar = () => {
                             ? "text-red-500"
                             : "text-green-500"
                         }>
-                        {userData.status}
+                        {userData?.status}
                       </span>
                     </li>
                   </ul>

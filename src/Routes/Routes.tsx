@@ -12,6 +12,7 @@ import Profile from "@/Page/Dashboard/Profile/Profile";
 
 import WelcomePage from "@/Page/Dashboard/WelcomePage/WelcomePage";
 import DonationRequest from "@/Page/DonationRequest/DonationRequest";
+
 import FindBloodInput from "@/Page/FindBloodInput/FindBloodInput";
 import Funding from "@/Page/Funding/Funding";
 import Home from "@/Page/Home/Home";
@@ -54,14 +55,7 @@ const router = createBrowserRouter([
           </PrivetRoute>
         ),
       },
-      {
-        path: "donation-requests",
-        element: (
-          <PrivetRoute>
-            <DonationRequest />
-          </PrivetRoute>
-        ),
-      },
+
       {
         path: "funding",
         element: (
@@ -103,6 +97,10 @@ const router = createBrowserRouter([
         Component: Profile,
       },
 
+      {
+        path: "donation-requests",
+        Component: DonationRequest,
+      },
       {
         path: "my-donation-requests",
         Component: MyDonationRequests,

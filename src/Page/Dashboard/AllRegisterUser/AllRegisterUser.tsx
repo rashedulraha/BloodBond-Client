@@ -9,6 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import {
   AlertDialog,
@@ -27,10 +35,11 @@ import {
 } from "@/components/ui/input-group";
 import type { AllUser } from "@/types/blog";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, Users } from "lucide-react";
 
 const AllRegisterUser = () => {
   const axiosSecure = useAxiosSecure();
+
   const { data: users = [], refetch } = useQuery({
     queryKey: ["register-user"],
     queryFn: async () => {
@@ -54,7 +63,16 @@ const AllRegisterUser = () => {
     <div>
       <div className="flex items-center justify-between pb-5">
         <div>
-          <h1>All user</h1>
+          <header className="max-w-7xl mx-auto mb-8">
+            <h1 className="text-4xl font-extrabold text-foreground flex items-center capitalize">
+              <Users className="w-8 h-8 mr-3 text-primary" />
+              all registered user
+            </h1>
+            <p className="mt-1  text-md sm:text-lg md:text-lg  text-muted-foreground mb-8 max-w-4xl lg:max-w-4xl mx-auto px-4">
+              Manage registered users, including blocking or unblocking access
+              when needed.
+            </p>
+          </header>
         </div>
         <div>
           <InputGroup>
@@ -76,11 +94,9 @@ const AllRegisterUser = () => {
             <TableHead className="w-[100px]">User profile </TableHead>
             <TableHead className="w-[100px]">User name</TableHead>
             <TableHead>Email</TableHead>
-            <TableHead>Blood Group</TableHead>
-            <TableHead>Division</TableHead>
-            <TableHead>District</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Action</TableHead>
+            <TableHead>Authorization</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -93,9 +109,7 @@ const AllRegisterUser = () => {
               </TableCell>
               <TableCell className="font-medium">{user.name}</TableCell>
               <TableCell className="font-medium">{user.email}</TableCell>
-              <TableCell>{user.bloodGroup}</TableCell>
-              <TableCell>{user.division}</TableCell>
-              <TableCell className="text-right">{user.district}</TableCell>
+
               <TableCell
                 className={
                   user.status === "active"
@@ -107,7 +121,7 @@ const AllRegisterUser = () => {
               <TableCell>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline">Change Status</Button>
+                    <Button variant="outline">Status</Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -123,6 +137,7 @@ const AllRegisterUser = () => {
                     <AlertDialogFooter>
                       {user.status === "block" ? (
                         <AlertDialogAction
+                          className="bg-green-500 text-white hover:bg-green-600"
                           onClick={() =>
                             handleToggleUserStatus(`${user._id}`, "active")
                           }>
@@ -139,6 +154,24 @@ const AllRegisterUser = () => {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
+              </TableCell>
+              <TableCell className="font-medium">
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    className="min-w-[100px] capitalize"
+                    asChild>
+                    <Button>{user?.role}</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuLabel>Authorization Level</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuCheckboxItem>Admin</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem>
+                      volunteer
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem>Donor</DropdownMenuCheckboxItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TableCell>
             </TableRow>
           ))}

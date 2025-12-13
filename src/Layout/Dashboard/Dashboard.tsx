@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
       { to: "/", label: "Home", icon: GoHome },
       {
         to: "/dashboard/my-donation-requests",
-        label: "My Requests",
+        label: "My Donation Requests",
         icon: FaHandHoldingHeart,
       },
     ];
@@ -87,7 +87,7 @@ const Dashboard: React.FC = () => {
       return [
         ...commonLinks,
         {
-          to: "/donation-requests",
+          to: "/dashboard/donation-requests",
           label: "Create Request",
           icon: FaPlus,
         },

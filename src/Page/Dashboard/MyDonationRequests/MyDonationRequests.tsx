@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"; // Assuming you have a Badge component
+import Container from "@/Page/Shared/Responsive/Container";
 
 // ---------------------------------------------------
 // 1. DATA AND TYPE DEFINITIONS
@@ -209,7 +210,6 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
       <PaginationContent>
         {/* Previous Button */}
         <PaginationItem>
-          ``
           <PaginationPrevious
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
@@ -317,8 +317,8 @@ const MyDonationRequestsPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground py-10 px-4 sm:px-6 lg:px-8">
-      <header className="max-w-7xl mx-auto mb-8">
+    <div className=" py-10">
+      <header className="Container mx-auto mb-8">
         <h1 className="text-4xl font-extrabold text-foreground flex items-center">
           <List className="w-8 h-8 mr-3 text-primary" />
           My Donation Requests
@@ -328,9 +328,9 @@ const MyDonationRequestsPage: React.FC = () => {
         </p>
       </header>
 
-      <div className="max-w-7xl mx-auto bg-card p-6 rounded-xl shadow-lg border border-border">
+      <Container>
         {/* --- Filtering Control --- */}
-        <div className="flex justify-between items-center mb-6 border-b border-border/70 pb-4">
+        <div className="flex justify-between items-center mb-6 pb-4">
           <h2 className="text-xl font-semibold text-foreground flex items-center">
             <Filter className="w-5 h-5 mr-2 text-primary" />
             Filter Requests ({totalItems} total)
@@ -426,7 +426,7 @@ const MyDonationRequestsPage: React.FC = () => {
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
-      </div>
+      </Container>
     </div>
   );
 };
