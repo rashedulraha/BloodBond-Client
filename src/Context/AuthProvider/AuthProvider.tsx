@@ -89,7 +89,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   // ------------------
-  // Update Profile
+  //! Update Profile
   // ------------------
   const profileUpdate: UserInfoType["profileUpdate"] = async (
     userInformation
@@ -106,7 +106,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   // ------------------
-  // Auth State Observer
+  //! Auth State Observer
   // ------------------
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -118,7 +118,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   // ------------------
-  // Context Value
+  //! Context Value
   // ------------------
   const userInfo: UserInfoType = {
     user,
