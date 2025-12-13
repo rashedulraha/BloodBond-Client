@@ -212,7 +212,6 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
         <PaginationItem>
           <PaginationPrevious
             onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage === 1}
             className={
               currentPage === 1
                 ? "pointer-events-none opacity-50"
@@ -241,7 +240,6 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
         <PaginationItem>
           <PaginationNext
             onClick={() => onPageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
             className={
               currentPage === totalPages
                 ? "pointer-events-none opacity-50"

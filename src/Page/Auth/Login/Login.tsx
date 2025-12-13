@@ -61,7 +61,6 @@ const LoginPage = () => {
   const handleLoginWithGoogle = async () => {
     try {
       const result = await signinWithGoogle();
-      navigate(location.state || "/");
 
       const userData = result?.user;
 
@@ -74,14 +73,13 @@ const LoginPage = () => {
         provider: "google",
       };
 
-      axiosSecure
-        .post("/register-user", userInfo)
-        .then(() => console.log("user add"));
+      await axiosSecure.post("/register-user", userInfo);
+
+      navigate(location.state || "/");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
-
   return (
     <div className="min-h-screen bg-background py-12">
       <Container>

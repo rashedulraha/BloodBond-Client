@@ -111,7 +111,7 @@ const RegisterPage = () => {
       const result = await signinWithGoogle();
       navigate(location.state || "/");
 
-      const userData = result?.user;
+      const userData = result.user;
 
       const userInfo = {
         name: userData.displayName,
