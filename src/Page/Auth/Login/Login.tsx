@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import useAuth from "@/Hook/useAuth";
+import useAxiosSecure from "@/Hook/useAxiosSecure";
 
 type Inputs = {
   email: string;
@@ -28,6 +29,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  const axiosSecure = useAxiosSecure();
 
   const onInputSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
@@ -56,11 +58,27 @@ const LoginPage = () => {
     }
   };
 
-  const handleLoginWithGoogle = () => {
-    signinWithGoogle().then(() => {
+  const handleLoginWithGoogle = async () => {
+    try {
+      const result = await signinWithGoogle();
       navigate(location.state || "/");
-      toast.success("Account has been created");
-    });
+
+      const userData = result?.user;
+
+      const userInfo = {
+        name: userData.displayName,
+        email: userData.email,
+        photo: userData.photoURL,
+        role: "donor",
+        provider: "google",
+      };
+
+      axiosSecure
+        .post("/register-user", userInfo)
+        .then(() => console.log("user add"));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

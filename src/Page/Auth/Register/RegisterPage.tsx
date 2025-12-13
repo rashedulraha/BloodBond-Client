@@ -86,6 +86,7 @@ const RegisterPage = () => {
             ...data,
             createAt,
             role: "donor",
+            provider: "normal-register",
             imageURL: res.data.data.url,
             status: "active",
           };
@@ -107,17 +108,9 @@ const RegisterPage = () => {
   const handleLoginWithGoogle = async () => {
     try {
       const result = await signinWithGoogle();
+      navigate(location.state || "/");
 
-      if (!result) {
-        throw new Error("Google login failed");
-      }
       const userData = result?.user;
-
-      if (!userData) {
-        throw new Error("User data not found");
-      }
-
-      console.log(userData);
 
       const userInfo = {
         name: userData.displayName,

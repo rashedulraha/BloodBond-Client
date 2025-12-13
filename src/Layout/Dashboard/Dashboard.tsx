@@ -58,6 +58,7 @@ const Dashboard: React.FC = () => {
   };
 
   // --- [ Dynamic Link Generation ] ---
+  
   const getSidebarLinks = () => {
     const commonLinks = [
       { to: "/", label: "Home", icon: GoHome },
@@ -66,17 +67,16 @@ const Dashboard: React.FC = () => {
         label: "My Requests",
         icon: FaHandHoldingHeart,
       },
-      {
-        to: "/dashboard/all-register-user",
-        label: "All User",
-        icon: Users,
-      },
     ];
 
     if (role === "admin") {
       return [
         ...commonLinks,
-        { to: "/dashboard/all-users", label: "All Users", icon: FaUserFriends },
+        {
+          to: "/dashboard/all-register-user",
+          label: "All Users",
+          icon: FaUserFriends,
+        },
         {
           to: "/dashboard/all-blood-donation-request",
           label: "All Requests",
