@@ -51,7 +51,6 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const password = watch("password");
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -105,10 +104,35 @@ const RegisterPage = () => {
       });
   };
 
-  const handleLoginWithGoogle = () => {
-    signinWithGoogle().then(() => {
-      navigate(location.state || "/");
-    });
+  const handleLoginWithGoogle = async () => {
+    try {
+      const result = await signinWithGoogle();
+
+      if (!result) {
+        throw new Error("Google login failed");
+      }
+      const userData = result?.user;
+
+      if (!userData) {
+        throw new Error("User data not found");
+      }
+
+      console.log(userData);
+
+      const userInfo = {
+        name: userData.displayName,
+        email: userData.email,
+        photo: userData.photoURL,
+        role: "userData",
+        provider: "google",
+      };
+
+      axiosSecure
+        .post("/register-user", userInfo)
+        .then(() => console.log("user add"));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

@@ -73,8 +73,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return loginUser;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.error("Google Signin Error:", error.message);
-        return error.message; // Return error message string
+        console.error("Google Signin Error:", error);
+        throw error;
       }
       return undefined;
     }

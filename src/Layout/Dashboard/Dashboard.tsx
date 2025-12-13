@@ -249,7 +249,7 @@ const Dashboard: React.FC = () => {
             <Button
               variant="destructive"
               onClick={handleLogout}
-              className="w-full">
+              className="w-full ">
               <LogOut className="w-5 h-5 mr-2" /> Logout
             </Button>
           </div>

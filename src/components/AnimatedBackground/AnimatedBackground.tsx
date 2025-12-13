@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
+// Blood Cells (আগের মতোই)
 interface BloodCell {
   x: number;
   y: number;
@@ -9,11 +10,21 @@ interface BloodCell {
   angle: number;
 }
 
+// Floating Particles (HTML থেকে ক্যানভাসে আনা হয়েছে)
+interface Particle {
+  x: number;
+  y: number;
+  size: number;
+  speed: number;
+  angle: number;
+}
+
 const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cellsRef = useRef<BloodCell[]>([]);
+  const particlesRef = useRef<Particle[]>([]); // নতুন রেফারেন্স
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -23,7 +34,6 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set canvas size
     const setCanvasSize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -31,7 +41,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
     setCanvasSize();
     window.addEventListener("resize", setCanvasSize);
 
-    // Create blood cells
+    // Blood Cells তৈরি করা
     const createCells = () => {
       const cells: BloodCell[] = [];
       const cellCount = Math.min(
@@ -52,9 +62,27 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
       cellsRef.current = cells;
     };
 
-    createCells();
+    // Floating Particles তৈরি করা (আগে যা HTML এ ছিল)
+    const createParticles = () => {
+      const particles: Particle[] = [];
+      const particleCount = 30;
 
-    // Draw a blood cell
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 6 + 2,
+          speed: Math.random() * 0.3 + 0.1, // হালকা নড়াচড়া
+          angle: Math.random() * Math.PI * 2,
+        });
+      }
+      particlesRef.current = particles;
+    };
+
+    createCells();
+    createParticles();
+
+    // Draw a blood cell (আগের মতোই)
     const drawCell = (cell: BloodCell) => {
       ctx.beginPath();
       ctx.ellipse(
@@ -83,7 +111,6 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
       ctx.fillStyle = gradient;
       ctx.fill();
 
-      // Add glow
       ctx.shadowColor = `rgba(220, 38, 38, ${cell.opacity * 0.5})`;
       ctx.shadowBlur = cell.size * 2;
       ctx.fill();
@@ -91,10 +118,11 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
     };
 
     // Animation loop
-    const animate = () => {
+    const animate = (time: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw subtle gradient background
+      // ... (Background logic remains the same) ...
       const bgGradient = ctx.createLinearGradient(
         0,
         0,
@@ -107,46 +135,97 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
       ctx.fillStyle = bgGradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Update and draw cells
+      // পালসিং ইফেক্টের জন্য Opacity ফ্যাক্টর
+      const pulseFactor = Math.sin(time / 500) * 0.5 + 0.5;
+      const baseOpacity = 0.1;
+      const pulsingOpacity = baseOpacity + baseOpacity * 2 * pulseFactor;
+
+      // --- 1. Update and draw Blood Cells ---
       cellsRef.current.forEach((cell) => {
-        // Move cell in a gentle floating motion
+        // ... (Cell movement logic remains the same) ...
         cell.x += Math.cos(cell.angle) * cell.speed;
         cell.y += Math.sin(cell.angle) * cell.speed * 0.5;
-
-        // Gentle rotation
         cell.angle += 0.01;
-
-        // Bounce off edges with smooth turn
         if (cell.x < 0 || cell.x > canvas.width) {
           cell.angle = Math.PI - cell.angle;
         }
         if (cell.y < 0 || cell.y > canvas.height) {
           cell.angle = -cell.angle;
         }
-
-        // Keep within bounds
         cell.x = Math.max(0, Math.min(canvas.width, cell.x));
         cell.y = Math.max(0, Math.min(canvas.height, cell.y));
-
-        // Draw the cell
         drawCell(cell);
       });
 
-      // Draw connection lines between close cells
+      // --- 2. Update and draw Floating Particles (New) ---
+      particlesRef.current.forEach((particle) => {
+        // Simple floating movement
+        particle.x += Math.cos(particle.angle) * particle.speed * 0.5;
+        particle.y += Math.sin(particle.angle) * particle.speed * 0.5;
+
+        // Bounce off edges
+        if (particle.x < 0 || particle.x > canvas.width) {
+          particle.angle = Math.PI - particle.angle;
+        }
+        if (particle.y < 0 || particle.y > canvas.height) {
+          particle.angle = -particle.angle;
+        }
+
+        particle.x = Math.max(0, Math.min(canvas.width, particle.x));
+        particle.y = Math.max(0, Math.min(canvas.height, particle.y));
+
+        // Draw particle (white/light color)
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size / 2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, 0.3)`; // Light, subtle color
+        ctx.shadowColor = `rgba(255, 255, 255, 0.5)`;
+        ctx.shadowBlur = 1;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      // --- 3. Auto Connection: Cell to Cell (আগের মতোই) ---
+      const MAX_CELL_DISTANCE = 150;
       cellsRef.current.forEach((cell1, i) => {
         cellsRef.current.slice(i + 1).forEach((cell2) => {
           const dx = cell1.x - cell2.x;
           const dy = cell1.y - cell2.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 150) {
+          if (distance < MAX_CELL_DISTANCE) {
             ctx.beginPath();
             ctx.moveTo(cell1.x, cell1.y);
             ctx.lineTo(cell2.x, cell2.y);
-            ctx.strokeStyle = `rgba(220, 38, 38, ${
-              0.1 * (1 - distance / 150)
-            })`;
+
+            const connectionStrength = 1 - distance / MAX_CELL_DISTANCE;
+            const finalOpacity = pulsingOpacity * connectionStrength;
+
+            ctx.strokeStyle = `rgba(220, 38, 38, ${finalOpacity})`;
             ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        });
+      });
+
+      // --- 4. Auto Connection: Cell to Particle (NEW CONNECTION) ---
+      const MAX_MIXED_DISTANCE = 120;
+      cellsRef.current.forEach((cell) => {
+        particlesRef.current.forEach((particle) => {
+          const dx = cell.x - particle.x;
+          const dy = cell.y - particle.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < MAX_MIXED_DISTANCE) {
+            ctx.beginPath();
+            ctx.moveTo(cell.x, cell.y);
+            ctx.lineTo(particle.x, particle.y);
+
+            const connectionStrength = 1 - distance / MAX_MIXED_DISTANCE;
+            // লাল সার্কেল থেকে সাদা পার্টিকলের সংযোগ, হালকা সাদা পালসিং
+            const finalOpacity = pulsingOpacity * connectionStrength * 0.8;
+
+            ctx.strokeStyle = `rgba(255, 255, 255, ${finalOpacity})`;
+            ctx.lineWidth = 0.3;
             ctx.stroke();
           }
         });
@@ -155,7 +234,11 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    const animateWrapper = (time: number) => {
+      animate(time);
+    };
+
+    animateWrapper(0);
 
     return () => {
       window.removeEventListener("resize", setCanvasSize);
@@ -166,16 +249,16 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   return (
-    <div className="relative  py-10 md:pt-20 overflow-hidden">
-      {/* Canvas for blood cells animation */}
+    <div className="relative py-10 md:pt-20 overflow-hidden">
+      {/* Canvas for all animations */}
       <canvas
         ref={canvasRef}
         className="fixed inset-0 z-0 pointer-events-none"
       />
 
-      {/* HTML-based effects */}
+      {/* HTML-based effects (Only Pulsing Circles remain) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Pulsing circles */}
+        {/* Pulsing circles (আগের মতোই) */}
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
@@ -192,31 +275,13 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
           />
         ))}
 
-        {/* Floating particles */}
-        {[...Array(30)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full  bg-linear-to-br from-red-400/30 to-rose-500/20"
-            style={{
-              // eslint-disable-next-line react-hooks/purity
-              width: `${Math.random() * 6 + 2}px`, // eslint-disable-next-line react-hooks/purity
-              height: `${Math.random() * 6 + 2}px`, // eslint-disable-next-line react-hooks/purity
-              left: `${Math.random() * 100}%`, // eslint-disable-next-line react-hooks/purity
-              top: `${Math.random() * 100}%`, // eslint-disable-next-line react-hooks/purity
-              animation: `float ${Math.random() * 20 + 10}s linear infinite`,
-              // eslint-disable-next-line react-hooks/purity
-              animationDelay: `${Math.random() * 5}s`,
-              filter: "blur(0.5px)",
-            }}
-          />
-        ))}
+        {/* Floating particles অংশটি এখান থেকে সরানো হয়েছে! */}
       </div>
 
       {/* Content */}
       <div className="relative z-10">{children}</div>
 
-      {/* CSS Animations */}
-
+      {/* CSS Animations (আগের মতোই) */}
       <style>{`
         @keyframes pulse {
           0%,
@@ -230,7 +295,9 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
           }
         }
 
-        @keyframes float {
+        /* floating particles যেহেতু JS/Canvas এ সরানো হয়েছে, তাই float keyframe এখানে তেমন কাজ করবে না,
+           কিন্তু আগের কোডবেসের সামঞ্জস্যের জন্য এটি রাখা হলো। */
+        @keyframes float { 
           0% {
             transform: translateY(0) rotate(0deg);
           }
