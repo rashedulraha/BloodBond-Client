@@ -59,6 +59,15 @@ const AllRegisterUser = () => {
     });
   };
 
+  const handleToggleUserRole = (_id: string, userRole: string) => {
+    const userInfo = {
+      id: _id,
+      role: userRole,
+    };
+
+    console.log(userInfo);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between pb-5">
@@ -165,11 +174,24 @@ const AllRegisterUser = () => {
                   <DropdownMenuContent className="w-56">
                     <DropdownMenuLabel>Authorization Level</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem>Admin</DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                      onClick={() =>
+                        handleToggleUserRole(`${user?._id}`, "admin")
+                      }>
+                      Admin
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                      onClick={() =>
+                        handleToggleUserRole(`${user?._id}`, "volunteer")
+                      }>
                       volunteer
                     </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>Donor</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                      onClick={() =>
+                        handleToggleUserRole(`${user?._id}`, "donor")
+                      }>
+                      Donor
+                    </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
