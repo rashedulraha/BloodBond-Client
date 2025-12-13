@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Pencil,
   Save,
@@ -21,47 +21,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { ModeToggle } from "@/components/mode-toggle";
-
-interface UserProfile {
-  name: string;
-  email: string;
-  photoURL: string;
-  bloodGroup: string;
-  district: string;
-  upazila: string;
-  role: "donor" | "volunteer" | "admin";
-  status: "active" | "blocked";
-}
+import useRole from "@/Hook/useRole";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "@/Hook/useAxiosSecure";
+import useAuth from "@/Hook/useAuth";
 
 // --- [ 2. Mock Data ] ---
-const mockUser: UserProfile = {
-  name: "Rashedul",
-  email: "rashedul.doe@example.com",
-  photoURL: "https://i.ibb.co/3d9cT9k/avatar.png",
-  bloodGroup: "A+",
-  district: "Dhaka",
-  upazila: "Gulshan",
-  role: "donor",
-  status: "active",
-};
 
 const Profile: React.FC = () => {
-  const [user, setUser] = useState<UserProfile>(mockUser);
-  const [formData, setFormData] = useState<UserProfile>(mockUser);
+  const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { role } = useRole();
+  const axiosSecure = useAxiosSecure();
 
-  useEffect(() => {
-    setFormData(mockUser);
-    setUser(mockUser);
-  }, []);
+  const { data: profileInfo = [] } = useQuery({
+    queryKey: ["profile-data"],
+    queryFn: async () => {
+      if (!user?.email) {
+        throw new Error("User email not available for role query.");
+      }
+      const result = await axiosSecure.get(`/profile/${user.email}/data`);
+      return result.data;
+    },
+  });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const userData = profileInfo[0];
+
+  console.log(profileInfo);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -70,7 +57,6 @@ const Profile: React.FC = () => {
   const handleCancel = () => {
     setIsEditing(false);
     // Reset form data to the last saved user state
-    setFormData(user);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,11 +65,11 @@ const Profile: React.FC = () => {
 
     try {
       // ---  API Call Placeholder: PUT/PATCH  ---
-      console.log("Updating user data:", formData);
+      console.log("Updating user data:");
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // On success:
-      setUser(formData);
+
       setIsEditing(false);
     } catch (error) {
       console.error("Update failed:", error);
@@ -139,25 +125,27 @@ const Profile: React.FC = () => {
               {/* Left Side: Avatar & Basic Info */}
               <div className="w-full md:w-1/4 flex flex-col items-center mb-8 md:mb-0">
                 <img
-                  src={user.photoURL}
-                  alt={user.name}
+                  src={userData?.photoURL}
+                  alt={userData?.name}
                   className="w-32 h-32 rounded-full object-cover border-4 border-primary shadow-lg"
                 />
                 <h3 className="text-xl font-semibold mt-4 text-foreground">
-                  {user.name}
+                  {userData?.name}
                 </h3>
                 <p
                   className={`text-sm font-medium mt-1 p-1 px-3 rounded-full ${
-                    user.status === "active"
+                    userData?.status === "active"
                       ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                       : "bg-destructive/10 text-destructive"
                   }`}>
-                  Status:{" "}
-                  {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                  Status:
+                  {userData?.status.charAt(0).toUpperCase() +
+                    userData?.status.slice(1)}
                 </p>
-                <p className="text-sm mt-2 text-muted-foreground flex items-center">
+                <p className="text-sm mt-2 text-muted-foreground flex items-center capitalize">
                   <UserIcon className="w-4 h-4 mr-1 text-primary" /> Role:{" "}
-                  {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                  {role}
+                  {/* {user.role.charAt(0).toUpperCase() + user.role.slice(1)} */}
                 </p>
               </div>
 
@@ -168,12 +156,7 @@ const Profile: React.FC = () => {
                   <Label className="flex items-center">
                     <UserIcon className="w-4 h-4 mr-2" /> Name
                   </Label>
-                  <Input
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    disabled={!isEditing || loading}
-                  />
+                  <Input type="text" disabled={!isEditing || loading} />
                 </div>
 
                 {/* Field 2: Email (Read-Only) */}
@@ -181,7 +164,7 @@ const Profile: React.FC = () => {
                   <Label className="flex items-center">
                     <Mail className="w-4 h-4 mr-2" /> Email (Non-Editable)
                   </Label>
-                  <Input type="email" value={formData.email} disabled />
+                  <Input type="email" disabled />
                 </div>
 
                 {/* Field 3: Blood Group */}
@@ -215,12 +198,7 @@ const Profile: React.FC = () => {
                   <Label className=" flex items-center">
                     <MapPin className="w-4 h-4 mr-2" /> District
                   </Label>
-                  <Input
-                    type="text"
-                    value={formData.district}
-                    onChange={handleChange}
-                    disabled={!isEditing || loading}
-                  />
+                  <Input type="text" disabled={!isEditing || loading} />
                   {/* Note: This should ideally be a select input fetching data from API */}
                 </div>
 
@@ -228,12 +206,7 @@ const Profile: React.FC = () => {
                   <Label className="flex items-center">
                     <MapPin className="w-4 h-4 mr-2" /> Upazila
                   </Label>
-                  <Input
-                    type="text"
-                    value={formData.upazila}
-                    onChange={handleChange}
-                    disabled={!isEditing || loading}
-                  />
+                  <Input type="text" disabled={!isEditing || loading} />
                   {/* Note: This should ideally be a select input fetching data from API */}
                 </div>
               </div>

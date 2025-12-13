@@ -15,7 +15,6 @@ import {
   ChevronLeft,
   ChevronRight,
   UserCircle,
-  Users,
 } from "lucide-react";
 
 // Shadcn UI Components
