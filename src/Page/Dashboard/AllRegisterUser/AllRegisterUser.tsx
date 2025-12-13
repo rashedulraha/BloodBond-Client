@@ -9,6 +9,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import type { AllUser } from "@/types/blog";
 import { Button } from "@/components/ui/button";
 
@@ -72,25 +83,41 @@ const AllRegisterUser = () => {
                 }>
                 {user.status}
               </TableCell>
-              <TableCell className="text-right">
-                {user.status === "block" ? (
-                  <Button
-                    className="cursor-pointer"
-                    onClick={() =>
-                      handleToggleUserStatus(`${user._id}`, "active")
-                    }>
-                    Unblock
-                  </Button>
-                ) : (
-                  <Button
-                    variant={"accent"}
-                    className="cursor-pointer"
-                    onClick={() =>
-                      handleToggleUserStatus(`${user._id}`, "block")
-                    }>
-                    Block
-                  </Button>
-                )}
+              <TableCell>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline">Change Status</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {user.status === "block"
+                          ? "This action will restore the user's access to the system. They will be able to log in and use all features again."
+                          : "This action will block the user from accessing the system. They will not be able to log in or perform any actions until unblocked."}
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      {user.status === "block" ? (
+                        <AlertDialogAction
+                          onClick={() =>
+                            handleToggleUserStatus(`${user._id}`, "active")
+                          }>
+                          Unblock
+                        </AlertDialogAction>
+                      ) : (
+                        <AlertDialogAction
+                          onClick={() =>
+                            handleToggleUserStatus(`${user._id}`, "block")
+                          }>
+                          Block
+                        </AlertDialogAction>
+                      )}
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </TableCell>
             </TableRow>
           ))}
