@@ -80,10 +80,8 @@ const Navbar = () => {
             )}
 
             {user && (
-              <Link
-                to="/donation-requests"
-                className="btn bg-primary rounded shadow-none border-none  transition-all hidden lg:flex">
-                Donation Requests
+              <Link to="/donation-requests">
+                <Button className="cursor-pointer">Donation Requests</Button>
               </Link>
             )}
 

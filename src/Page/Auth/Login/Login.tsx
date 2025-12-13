@@ -70,6 +70,7 @@ const LoginPage = () => {
         email: userData.email,
         photo: userData.photoURL,
         role: "donor",
+        status: "active",
         provider: "google",
       };
 

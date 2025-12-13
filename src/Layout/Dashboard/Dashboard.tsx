@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
   };
 
   // --- [ Dynamic Link Generation ] ---
-  
+
   const getSidebarLinks = () => {
     const commonLinks = [
       { to: "/", label: "Home", icon: GoHome },
@@ -88,7 +88,7 @@ const Dashboard: React.FC = () => {
       return [
         ...commonLinks,
         {
-          to: "/dashboard/create-donation-request",
+          to: "/donation-requests",
           label: "Create Request",
           icon: FaPlus,
         },

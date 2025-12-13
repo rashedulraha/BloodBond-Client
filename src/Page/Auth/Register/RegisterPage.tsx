@@ -51,6 +51,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const password = watch("password");
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -117,6 +118,7 @@ const RegisterPage = () => {
         email: userData.email,
         photo: userData.photoURL,
         role: "donor",
+        status: "active",
         provider: "google",
       };
 

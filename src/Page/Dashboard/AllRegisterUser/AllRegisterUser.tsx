@@ -10,16 +10,29 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { AllUser } from "@/types/blog";
+import { Button } from "@/components/ui/button";
 
 const AllRegisterUser = () => {
   const axiosSecure = useAxiosSecure();
-  const { data: users = [] } = useQuery({
+  const { data: users = [], refetch } = useQuery({
     queryKey: ["register-user"],
     queryFn: async () => {
       const res = await axiosSecure.get(`/register-user`);
       return res.data;
     },
   });
+
+  //! block and unblock user
+  const handleToggleUserStatus = (_id: string, status: string) => {
+    const userInformation = {
+      id: _id,
+      status,
+    };
+    axiosSecure.patch(`register-user`, userInformation).then(() => {
+      refetch();
+    });
+  };
+
   return (
     <div>
       <h1>All user {users.length}</h1>
@@ -34,12 +47,14 @@ const AllRegisterUser = () => {
             <TableHead>Blood Group</TableHead>
             <TableHead>Division</TableHead>
             <TableHead>District</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {users.map((user: AllUser) => (
             <TableRow key={user._id}>
-              <TableCell className="font-medium">
+              <TableCell className="font-medium capitalize">
                 <figure className="w-10 h-10 rounded-full border border-primary overflow-hidden">
                   <img src={user.imageURL} alt={user.name} />
                 </figure>
@@ -49,6 +64,34 @@ const AllRegisterUser = () => {
               <TableCell>{user.bloodGroup}</TableCell>
               <TableCell>{user.division}</TableCell>
               <TableCell className="text-right">{user.district}</TableCell>
+              <TableCell
+                className={
+                  user.status === "active"
+                    ? "text-green-400 capitalize"
+                    : "text-red-500 capitalize"
+                }>
+                {user.status}
+              </TableCell>
+              <TableCell className="text-right">
+                {user.status === "block" ? (
+                  <Button
+                    className="cursor-pointer"
+                    onClick={() =>
+                      handleToggleUserStatus(`${user._id}`, "active")
+                    }>
+                    Unblock
+                  </Button>
+                ) : (
+                  <Button
+                    variant={"accent"}
+                    className="cursor-pointer"
+                    onClick={() =>
+                      handleToggleUserStatus(`${user._id}`, "block")
+                    }>
+                    Block
+                  </Button>
+                )}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

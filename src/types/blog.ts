@@ -14,6 +14,7 @@ export interface BlogPost {
 // all user data fetch type
 
 export interface AllUser {
+  status: ReactNode;
   _id: Key | null | undefined;
   name: string;
   email: string;

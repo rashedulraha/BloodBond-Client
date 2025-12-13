@@ -489,10 +489,9 @@ const DonationRequest: React.FC = () => {
               )}
 
               {/* Submit Button */}
-              <div className="form-control mt-8">
+              <div className="form-control mt-8 flex item-center justify-center">
                 <Button
                   type="submit"
-                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-6 text-lg shadow-lg"
                   // Disable button while submitting
                   disabled={form.formState.isSubmitting}>
                   <HeartPulse className="w-6 h-6 mr-3" />
