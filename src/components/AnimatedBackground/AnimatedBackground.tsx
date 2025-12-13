@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 
-// Blood Cells (আগের মতোই)
 interface BloodCell {
   x: number;
   y: number;
@@ -10,7 +9,6 @@ interface BloodCell {
   angle: number;
 }
 
-// Floating Particles (HTML থেকে ক্যানভাসে আনা হয়েছে)
 interface Particle {
   x: number;
   y: number;
@@ -24,7 +22,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cellsRef = useRef<BloodCell[]>([]);
-  const particlesRef = useRef<Particle[]>([]); // নতুন রেফারেন্স
+  const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -41,7 +39,6 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
     setCanvasSize();
     window.addEventListener("resize", setCanvasSize);
 
-    // Blood Cells তৈরি করা
     const createCells = () => {
       const cells: BloodCell[] = [];
       const cellCount = Math.min(
@@ -62,7 +59,6 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
       cellsRef.current = cells;
     };
 
-    // Floating Particles তৈরি করা (আগে যা HTML এ ছিল)
     const createParticles = () => {
       const particles: Particle[] = [];
       const particleCount = 30;
@@ -72,7 +68,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           size: Math.random() * 6 + 2,
-          speed: Math.random() * 0.3 + 0.1, // হালকা নড়াচড়া
+          speed: Math.random() * 0.3 + 0.1,
           angle: Math.random() * Math.PI * 2,
         });
       }
@@ -82,7 +78,6 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
     createCells();
     createParticles();
 
-    // Draw a blood cell (আগের মতোই)
     const drawCell = (cell: BloodCell) => {
       ctx.beginPath();
       ctx.ellipse(
@@ -135,7 +130,6 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
       ctx.fillStyle = bgGradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // পালসিং ইফেক্টের জন্য Opacity ফ্যাক্টর
       const pulseFactor = Math.sin(time / 500) * 0.5 + 0.5;
       const baseOpacity = 0.1;
       const pulsingOpacity = baseOpacity + baseOpacity * 2 * pulseFactor;
@@ -184,7 +178,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
         ctx.shadowBlur = 0;
       });
 
-      // --- 3. Auto Connection: Cell to Cell (আগের মতোই) ---
+      // --- 3. Auto Connection: Cell to Cel ---
       const MAX_CELL_DISTANCE = 150;
       cellsRef.current.forEach((cell1, i) => {
         cellsRef.current.slice(i + 1).forEach((cell2) => {
@@ -221,7 +215,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
             ctx.lineTo(particle.x, particle.y);
 
             const connectionStrength = 1 - distance / MAX_MIXED_DISTANCE;
-            // লাল সার্কেল থেকে সাদা পার্টিকলের সংযোগ, হালকা সাদা পালসিং
+
             const finalOpacity = pulsingOpacity * connectionStrength * 0.8;
 
             ctx.strokeStyle = `rgba(255, 255, 255, ${finalOpacity})`;
@@ -258,7 +252,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
 
       {/* HTML-based effects (Only Pulsing Circles remain) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Pulsing circles (আগের মতোই) */}
+        {/* Pulsing circles*/}
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
@@ -275,13 +269,13 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
           />
         ))}
 
-        {/* Floating particles অংশটি এখান থেকে সরানো হয়েছে! */}
+        {/* Floating particles */}
       </div>
 
       {/* Content */}
       <div className="relative z-10">{children}</div>
 
-      {/* CSS Animations (আগের মতোই) */}
+      {/* CSS Animations */}
       <style>{`
         @keyframes pulse {
           0%,
@@ -295,8 +289,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
           }
         }
 
-        /* floating particles যেহেতু JS/Canvas এ সরানো হয়েছে, তাই float keyframe এখানে তেমন কাজ করবে না,
-           কিন্তু আগের কোডবেসের সামঞ্জস্যের জন্য এটি রাখা হলো। */
+     
         @keyframes float { 
           0% {
             transform: translateY(0) rotate(0deg);
