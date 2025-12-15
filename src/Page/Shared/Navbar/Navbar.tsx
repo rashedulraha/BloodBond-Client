@@ -57,7 +57,7 @@ const Navbar = () => {
       <Link to="/funding" className="hover:text-primary transition-colors">
         Funding
       </Link>
-      <Link to="/donation-requests" className="lg:hidden">
+      <Link to="/dashboard/donation-requests" className="lg:hidden">
         <Button>Donation request</Button>
       </Link>
     </>
