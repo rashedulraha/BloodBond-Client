@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
 
   const getSidebarLinks = () => {
     const commonLinks = [
-      { to: "/", label: "Home", icon: GoHome },
+      { to: "/dashboard", label: "Home", icon: GoHome },
       {
         to: "/dashboard/my-donation-requests",
         label: "My Donation Requests",
@@ -116,7 +116,7 @@ const Dashboard: React.FC = () => {
         <div className="p-4 flex items-center justify-between border-b border-border h-16">
           {!isCollapsed && (
             <h3 className="text-xl font-bold text-primary truncate">
-              BloodBond
+              <Link to={"/"}> BloodBond</Link>
             </h3>
           )}
           <Button

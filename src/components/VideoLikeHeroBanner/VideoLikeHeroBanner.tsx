@@ -73,8 +73,8 @@ const VideoLikeHeroBanner: React.FC = () => {
         data-aos-delay="700">
         {/* Primary CTA: Find Blood Requests (Urgency) */}
         <CtaButton
-          to="/find-blood-requests"
-          label="Urgent Blood Request" // Emphasize urgency
+          to="/search-page"
+          label="Search Donors" // Emphasize urgency
           Icon={Search}
           variant="primary"
         />
@@ -82,7 +82,7 @@ const VideoLikeHeroBanner: React.FC = () => {
         {/* Secondary CTA: Register as Donor (Community Building) */}
         <CtaButton
           to="/donor-registration"
-          label="Register as Donor" // Clear call to action
+          label="Join as a donor" // Clear call to action
           Icon={Droplet}
           variant="secondary"
         />

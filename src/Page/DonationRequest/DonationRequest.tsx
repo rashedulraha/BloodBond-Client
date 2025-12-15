@@ -190,8 +190,8 @@ const DonationRequest: React.FC = () => {
           className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* --- LEFT COLUMN: Requester Information (Read-Only) --- */}
-            <div className="lg:col-span-1 bg-card p-6 rounded-xl shadow-lg h-fit border-l-4 border-primary">
-              <h2 className="text-2xl font-bold text-primary mb-4 flex items-center">
+            <div className="lg:col-span-1 bg-card p-6 rounded-xl shadow-lg h-fit border-l-4 border-primary ">
+              <h2 className="text-2xl font-bold text-primary mb-4 flex items-center truncate">
                 <User className="w-5 h-5 mr-2" />
                 Requester Information
               </h2>
