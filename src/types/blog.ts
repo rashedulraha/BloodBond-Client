@@ -46,6 +46,13 @@ export interface Donor {
 }
 
 export type bloodDonation = {
-  example: string;
-  exampleRequired: string;
+  recipientName: string;
+  bloodGroup: string;
+  donationDate?: string;
+  donationTime?: string;
+  hospitalName?: string;
+  recipientDistrict?: string;
+  recipientUpazila?: string;
+  fullAddressLine?: string;
+  requestMessage?: string;
 };

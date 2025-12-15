@@ -10,7 +10,7 @@ import {
   PlusCircle,
 } from "lucide-react";
 
-// Assuming these are imported from your shadcn/ui setup
+// shadcn/ui components
 import {
   Select,
   SelectContent,
@@ -21,8 +21,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea"; // Added Textarea for consistency
-import { Button } from "@/components/ui/button"; // Changed to Button for consistency
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -31,14 +31,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Label } from "recharts";
+import { Label } from "@/components/ui/label";
+
 import useAuth from "@/Hook/useAuth";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { bloodDonation } from "@/types/blog";
-import { useNavigate } from "react-router-dom";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-
 const locationData: { [key: string]: string[] } = {
   Dhaka: ["Savar", "Dhamrai", "Tejgaon", "Mirpur"],
   Chittagong: ["Hathazari", "Panchlaish", "Patenga", "Kotwali"],
@@ -46,16 +45,13 @@ const locationData: { [key: string]: string[] } = {
 };
 
 const DonationRequest: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<bloodDonation>();
-  const navigate = useNavigate();
+  const form = useForm<bloodDonation>();
+  const { handleSubmit } = form;
   const { user } = useAuth();
 
-  // --- 3.3 Blocked User Check (Themed) ---
+  const onSubmit: SubmitHandler<bloodDonation> = (data) => console.log(data);
+
+  // Block inactive users
   if (user?.status === "active") {
     return (
       <div className="p-12 min-h-screen flex items-center justify-center bg-background text-foreground">
@@ -73,9 +69,6 @@ const DonationRequest: React.FC = () => {
     );
   }
 
-  const onSubmit: SubmitHandler<bloodDonation> = (data) => console.log(data);
-
-  // 3.4 Render Form with Shadcn/UI and RHF
   return (
     <div className="min-h-screen bg-background text-foreground py-10 px-4 sm:px-6 lg:px-8">
       <header className="max-w-6xl mx-auto mb-10">
@@ -89,23 +82,22 @@ const DonationRequest: React.FC = () => {
         </p>
       </header>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* --- LEFT COLUMN: Requester Information (Read-Only) --- */}
-          <div className="lg:col-span-1 bg-card p-6 rounded-xl shadow-lg h-fit border-l-4 border-primary ">
-            <h2 className="text-2xl font-bold text-primary mb-4 flex items-center truncate">
-              <User className="w-5 h-5 mr-2" />
-              Requester Information
-            </h2>
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit)} className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* LEFT COLUMN: Requester Info */}
+            <div className="lg:col-span-1 bg-card p-6 rounded-xl shadow-lg h-fit border-l-4 border-primary">
+              <h2 className="text-2xl font-bold text-primary mb-4 flex items-center truncate">
+                <User className="w-5 h-5 mr-2" />
+                Requester Information
+              </h2>
 
-            <div className="space-y-4">
-              {/* Requester Name (Read Only) */}
               <div className="space-y-4">
+                {/* Name */}
                 <div className="space-y-2">
                   <Label className="flex items-center text-muted-foreground">
                     <User className="w-4 h-4 mr-1" /> Requester Name
                   </Label>
-
                   {user && (
                     <Input
                       defaultValue={user.displayName ?? ""}
@@ -114,170 +106,76 @@ const DonationRequest: React.FC = () => {
                     />
                   )}
                 </div>
+
+                {/* Email */}
+                <div className="space-y-2">
+                  <Label className="flex items-center text-muted-foreground">
+                    <Mail className="w-4 h-4 mr-1" /> Email Address
+                  </Label>
+                  {user && (
+                    <Input
+                      defaultValue={user.email ?? ""}
+                      readOnly
+                      className="cursor-not-allowed bg-muted/50 border-border"
+                    />
+                  )}
+                </div>
               </div>
 
-              {/* Requester Email (Read Only) */}
-              <div className="space-y-2">
-                <Label className="flex items-center text-muted-foreground">
-                  <Mail className="w-4 h-4 mr-1" /> Email Address
-                </Label>
-                {user && (
-                  <Input
-                    defaultValue={user.email ?? ""}
-                    readOnly
-                    className="cursor-not-allowed bg-muted/50 border-border"
-                  />
-                )}
-              </div>
-            </div>
-            <p className="mt-5 text-sm text-muted-foreground border-t border-border pt-4">
-              These fields are locked as you are logged in as the requester.
-            </p>
-          </div>
-
-          {/* --- RIGHT COLUMN: Recipient and Donation Details (Main Form) --- */}
-          <div className="lg:col-span-2 bg-card p-8 rounded-xl shadow-2xl border border-border">
-            <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center">
-              <HeartPulse className="w-5 h-5 mr-2 text-primary" />
-              Donation & Recipient Details
-            </h2>
-
-            {/* Recipient Name and Blood Group */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-              {/* 1. Recipient Name */}
-              <FormField
-                name="recipientName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Recipient Name <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter full name of the recipient"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* 2. Blood Group (Select Component) */}
-              <FormField
-                name="bloodGroup"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Required Blood Group{" "}
-                      <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select blood group" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Available Blood Groups</SelectLabel>
-                          {bloodGroups.map((group) => (
-                            <SelectItem key={group} value={group}>
-                              {group}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <p className="mt-5 text-sm text-muted-foreground border-t border-border pt-4">
+                These fields are locked as you are logged in as the requester.
+              </p>
             </div>
 
-            {/* Donation Date and Time */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-              {/* 3. Donation Date (Input type="date") */}
-              <FormField
-                name="donationDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center">
-                      <Calendar className="w-4 h-4 mr-2 text-muted-foreground" />{" "}
-                      Donation Date <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      {/* Ensure date input only allows today or future dates */}
-                      <Input
-                        type="date"
-                        min={new Date().toISOString().split("T")[0]}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            {/* RIGHT COLUMN: Recipient & Donation */}
+            <div className="lg:col-span-2 bg-card p-8 rounded-xl shadow-2xl border border-border">
+              <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center">
+                <HeartPulse className="w-5 h-5 mr-2 text-primary" />
+                Donation & Recipient Details
+              </h2>
 
-              {/* 4. Donation Time (Input type="time") */}
-              <FormField
-                name="donationTime"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center">
-                      <Clock className="w-4 h-4 mr-2 text-muted-foreground" />{" "}
-                      Donation Time
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="time" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/* 5. Hospital Name */}
-            <div className="flex items-center gap-5 mb-5">
-              <div className="flex-1">
+              {/* Recipient Name & Blood Group */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                 <FormField
-                  name="hospitalName"
+                  control={form.control}
+                  name="recipientName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Hospital Name</FormLabel>
+                      <FormLabel>
+                        Recipient Name{" "}
+                        <span className="text-destructive">*</span>
+                      </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="e.g., Dhaka Medical College Hospital"
-                          {...field}
-                        />
+                        <Input placeholder="Enter full name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              </div>
-              <div className="flex-1">
+
                 <FormField
-                  name="recipientDistrict"
+                  control={form.control}
+                  name="bloodGroup"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center">
-                        <MapPin className="w-4 h-4 mr-2 text-muted-foreground" />
-                        Recipient Division
+                      <FormLabel>
+                        Required Blood Group{" "}
                         <span className="text-destructive">*</span>
                       </FormLabel>
-                      <Select value={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select District" />
+                            <SelectValue placeholder="Select blood group" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>Available Districts</SelectLabel>
-                            {Object.keys(locationData).map((district) => (
-                              <SelectItem key={district} value={district}>
-                                {district}
+                            <SelectLabel>Available Blood Groups</SelectLabel>
+                            {bloodGroups.map((group) => (
+                              <SelectItem key={group} value={group}>
+                                {group}
                               </SelectItem>
                             ))}
                           </SelectGroup>
@@ -288,123 +186,183 @@ const DonationRequest: React.FC = () => {
                   )}
                 />
               </div>
-            </div>
 
-            {/* Location Details (District and Upazila) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-              {/* 6. Recipient District (Select Component) */}
+              {/* Date & Time */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                <FormField
+                  control={form.control}
+                  name="donationDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2 text-muted-foreground" />{" "}
+                        Donation Date{" "}
+                        <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="date"
+                          min={new Date().toISOString().split("T")[0]}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="donationTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center">
+                        <Clock className="w-4 h-4 mr-2 text-muted-foreground" />{" "}
+                        Donation Time
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="time" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Hospital & District */}
+              <div className="flex items-center gap-5 mb-5">
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name="hospitalName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Hospital Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="e.g., Dhaka Medical College"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name="recipientDistrict"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center">
+                          <MapPin className="w-4 h-4 mr-2 text-muted-foreground" />{" "}
+                          Recipient Division{" "}
+                          <span className="text-destructive">*</span>
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select District" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Available Districts</SelectLabel>
+                              {Object.keys(locationData).map((district) => (
+                                <SelectItem key={district} value={district}>
+                                  {district}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Upazila & Full Address */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                <FormField
+                  control={form.control}
+                  name="recipientUpazila"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Recipient Upazila</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="disabled:cursor-not-allowed disabled:bg-muted/50">
+                            <SelectValue placeholder="Select Upazila" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Available Upazilas</SelectLabel>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="fullAddressLine"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Address Line</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g., Zahir Raihan Rd, Dhaka"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Request Message */}
               <FormField
-                name="recipientDistrict"
+                control={form.control}
+                name="requestMessage"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mb-6">
                     <FormLabel className="flex items-center">
-                      <MapPin className="w-4 h-4 mr-2 text-muted-foreground" />{" "}
-                      Recipient District
-                      <span className="text-destructive">*</span>
+                      <MessageSquare className="w-4 h-4 mr-2 text-muted-foreground" />{" "}
+                      Request Message (Reason for need)
                     </FormLabel>
-                    <Select value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select District" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Available Districts</SelectLabel>
-                          {Object.keys(locationData).map((district) => (
-                            <SelectItem key={district} value={district}>
-                              {district}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Explain why blood is needed..."
+                        {...field}
+                        className="min-h-[100px] resize-none"
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/* 7. Recipient Upazila (Select Component) */}
-              <FormField
-                name="recipientUpazila"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Recipient Upazila</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      // Disable if no district is selected
-                    >
-                      <FormControl>
-                        <SelectTrigger className="disabled:cursor-not-allowed disabled:bg-muted/50">
-                          <SelectValue placeholder="Select Upazila" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Available Upazilas</SelectLabel>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/* 8. Full Address Line */}
-            <FormField
-              name="fullAddressLine"
-              render={({ field }) => (
-                <FormItem className="mb-6">
-                  <FormLabel>Full Address Line</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="e.g., Zahir Raihan Rd, Dhaka"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* 9. Request Message (Textarea Component) */}
-            <FormField
-              name="requestMessage"
-              render={({ field }) => (
-                <FormItem className="mb-6">
-                  <FormLabel className="flex items-center">
-                    <MessageSquare className="w-4 h-4 mr-2 text-muted-foreground" />{" "}
-                    Request Message (Reason for need)
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Write in detail why blood is needed and any critical information..."
-                      {...field}
-                      className="min-h-[100px] resize-none"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Submit Button */}
-            <div className="form-control mt-8 flex item-center justify-center">
-              <Button
-                type="submit"
-                // Disable button while submitting
-                disabled={form.formState.isSubmitting}>
-                <HeartPulse className="w-6 h-6 mr-3" />
-                {form.formState.isSubmitting
-                  ? "Submitting..."
-                  : "Submit Donation Request"}
-              </Button>
+              {/* Submit Button */}
+              <div className="form-control mt-8 flex justify-center">
+                <Button type="submit">
+                  <HeartPulse className="w-6 h-6 mr-3" /> Submit
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </Form>
     </div>
   );
 };
