@@ -118,7 +118,7 @@ const Dashboard: React.FC = () => {
         <div className="p-4 flex items-center justify-between border-b border-border h-16">
           {!isCollapsed && (
             <h3 className="text-xl font-bold text-primary truncate">
-              BloodConnect
+              BloodBond
             </h3>
           )}
           <Button

@@ -26,3 +26,10 @@ export interface AllUser {
 
   district: string;
 }
+
+export type Inputs = {
+  userName: string;
+  bloodGroup: string;
+  district: string;
+  division: string;
+};
