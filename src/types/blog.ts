@@ -44,3 +44,8 @@ export interface Donor {
   avatar?: string;
   phone?: string;
 }
+
+export type bloodDonation = {
+  example: string;
+  exampleRequired: string;
+};
