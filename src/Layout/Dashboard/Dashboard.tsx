@@ -19,7 +19,7 @@ import {
 
 // Shadcn UI Components
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area"; // Better scrolling UX
+import { ScrollArea } from "@/components/ui/scroll-area";
 import useAuth from "@/Hook/useAuth";
 import { useSidebar } from "@/Hook/useSidebar";
 import useRole from "@/Hook/useRole";
@@ -36,9 +36,7 @@ const SidebarLink: React.FC<LinkProps> = ({ to, label, Icon, isCollapsed }) => {
     <li>
       <Link
         to={to}
-        className="flex items-center space-x-3 p-3 text-sm font-medium rounded text-foreground hover:bg-primary/10 transition-colors duration-200 border border-transparent hover:border hover:border-primary"
-        // Active link style should be handled by your router setup (e.g., NavLink)
-      >
+        className="flex items-center space-x-3 p-3 text-sm font-medium rounded text-foreground hover:bg-primary/10 transition-colors duration-200 border border-transparent hover:border hover:border-primary">
         <Icon className={`w-5 h-5 ${isCollapsed ? "mx-auto" : "ml-1"}`} />
         {!isCollapsed && <span className="truncate">{label}</span>}
       </Link>
@@ -113,7 +111,7 @@ const Dashboard: React.FC = () => {
     <div className="flex min-h-screen bg-background">
       {/* --- [ 1. Desktop Sidebar ] --- */}
       <aside
-        className={`hidden lg:flex flex-col border-r border-border bg-card shadow-xl transition-all duration-300 ${sidebarWidth}`}>
+        className={`hidden lg:flex flex-col border-r border-border bg-card shadow-xl transition-all duration-300 fixed top-0 left-0 min-h-screen z-50 ${sidebarWidth}`}>
         {/* Sidebar Header & Collapse Toggle */}
         <div className="p-4 flex items-center justify-between border-b border-border h-16">
           {!isCollapsed && (
@@ -187,7 +185,10 @@ const Dashboard: React.FC = () => {
       </aside>
 
       {/* --- [ 2. Main Content Area ] --- */}
-      <main className="flex flex-col grow">
+      <main
+        className={`flex flex-col grow transition-all duration-300 ${
+          isCollapsed ? "lg:ml-20" : "lg:ml-64"
+        }`}>
         {/* --- [ Mobile Header/Toggle ] --- */}
         <header className="lg:hidden p-4 flex items-center justify-between border-b border-border bg-card sticky top-0 z-20 shadow-sm">
           <h1 className="text-lg font-bold text-primary">Dashboard</h1>
@@ -197,7 +198,7 @@ const Dashboard: React.FC = () => {
         </header>
 
         {/* --- [ Page Outlet ] --- */}
-        <div className="grow p-4 md:p-6 lg:p-8 overflow-scroll">
+        <div className="grow p-4 md:p-6 lg:p-8 overflow-auto">
           <Outlet />
         </div>
       </main>
@@ -216,7 +217,7 @@ const Dashboard: React.FC = () => {
         }`}>
         <div className="flex flex-col h-full">
           {/* Drawer Header (Close Button) */}
-          <div className="p-4 flex items-center justify-between border-b border-border max-h-screen">
+          <div className="p-4 flex items-center justify-between border-b border-border">
             <h3 className="text-xl font-bold text-primary">Menu</h3>
             <Button variant="ghost" size="icon" onClick={toggleOpen}>
               <X className="w-6 h-6" />
@@ -226,14 +227,13 @@ const Dashboard: React.FC = () => {
           {/* Mobile Links */}
           <ScrollArea className="grow p-2">
             <ul className="space-y-1" onClick={toggleOpen}>
-              {/* Close drawer on link click */}
               {sidebarLinks.map((link, index) => (
                 <SidebarLink
                   key={index}
                   to={link.to}
                   label={link.label}
                   Icon={link.icon}
-                  isCollapsed={false} // Always open in mobile drawer
+                  isCollapsed={false}
                 />
               ))}
             </ul>
@@ -244,7 +244,7 @@ const Dashboard: React.FC = () => {
             <Button
               variant="destructive"
               onClick={handleLogout}
-              className="w-full ">
+              className="w-full">
               <LogOut className="w-5 h-5 mr-2" /> Logout
             </Button>
           </div>
