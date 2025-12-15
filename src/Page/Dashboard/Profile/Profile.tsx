@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   Pencil,
   Save,
@@ -11,221 +12,205 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-dropdown-menu";
+import { Label } from "@/components/ui/label";
 import { ModeToggle } from "@/components/mode-toggle";
+
 import useRole from "@/Hook/useRole";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
 import useAuth from "@/Hook/useAuth";
-
-// --- [ 2. Mock Data ] ---
+import type { Inputs } from "@/types/blog";
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
   const { role } = useRole();
   const axiosSecure = useAxiosSecure();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const { register, handleSubmit, control, reset } = useForm<Inputs>({
+    defaultValues: {
+      userName: "",
+      bloodGroup: "",
+      district: "",
+      division: "",
+    },
+  });
 
   const { data: profileInfo = [] } = useQuery({
     queryKey: ["profile-data"],
     queryFn: async () => {
-      if (!user?.email) {
-        throw new Error("User email not available for role query.");
-      }
-      const result = await axiosSecure.get(`/profile/${user.email}/data`);
-      return result.data;
+      if (!user?.email) throw new Error("User email not found");
+      const res = await axiosSecure.get(`/profile/${user.email}/data`);
+      return res.data;
     },
   });
 
   const userData = profileInfo[0];
 
-  console.log(profileInfo);
+  // ✅ Populate form once data loads
+  useEffect(() => {
+    if (userData) {
+      reset({
+        userName: userData.name,
+        bloodGroup: userData.bloodGroup,
+        district: userData.district,
+        division: userData.division,
+      });
+    }
+  }, [userData, reset]);
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
+  const handleEdit = () => setIsEditing(true);
 
   const handleCancel = () => {
+    reset();
     setIsEditing(false);
-    // Reset form data to the last saved user state
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const updateProfile = async (data: Inputs) => {
     setLoading(true);
-
     try {
-      // ---  API Call Placeholder: PUT/PATCH  ---
-      console.log("Updating user data:");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // On success:
-
+      console.log("Updated Data:", data);
+      // await axiosSecure.put(`/profile/update`, data);
       setIsEditing(false);
     } catch (error) {
       console.error("Update failed:", error);
-      // Display a toast/notification on failure
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-4 sm:p-8 bg-background ">
-      <div className="max-w-6xl mx-auto">
-        {/* --- [ 3. Header & Action Buttons ] --- */}
-        <div className="flex items-center justify-between mb-8 border-b pb-4 border-border">
-          <h2 className="text-4xl font-extrabold text-primary">User Profile</h2>
+    <div className="p-4 sm:p-8 bg-background">
+      <form onSubmit={handleSubmit(updateProfile)}>
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8 border-b pb-4">
+            <h2 className="text-4xl font-extrabold text-primary">
+              User Profile
+            </h2>
 
-          <div className="flex space-x-3">
-            <ModeToggle />
-            {isEditing ? (
-              <>
-                <Button
-                  onClick={handleCancel}
-                  type="button"
-                  className="rounded"
-                  disabled={loading}>
-                  <XCircle className="w-4 h-4 mr-1" /> Cancel
+            <div className="flex space-x-3">
+              <ModeToggle />
+              {isEditing ? (
+                <>
+                  <Button
+                    type="button"
+                    onClick={handleCancel}
+                    disabled={loading}>
+                    <XCircle className="w-4 h-4 mr-1" /> Cancel
+                  </Button>
+                  <Button type="submit" disabled={loading}>
+                    <Save className="w-4 h-4 mr-1" />
+                    {loading ? "Saving..." : "Save"}
+                  </Button>
+                </>
+              ) : (
+                <Button variant="outline" onClick={handleEdit}>
+                  <Pencil className="w-4 h-4 mr-1" /> Edit Profile
                 </Button>
-                <Button
-                  onClick={handleSubmit}
-                  type="submit"
-                  variant={"secondary"}
-                  className="rounded"
-                  disabled={loading}>
-                  <Save className="w-4 h-4 mr-1" />
-                  {loading ? "Saving..." : "Save Changes"}
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant={"outline"}
-                onClick={handleEdit}
-                className="rounded cursor-pointer">
-                <Pencil className="w-4 h-4 mr-1" /> Edit Profile
-              </Button>
-            )}
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* ---  4. Profile Card Layout  --- */}
-        <div className="bg-card p-8 rounded-md border border-border">
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-col md:flex-row items-start md:space-x-8">
-              {/* Left Side: Avatar & Basic Info */}
-              <div className="w-full md:w-1/4 flex flex-col items-center mb-8 md:mb-0">
+          {/* Card */}
+          <div className="bg-card p-8 rounded-md border">
+            <div className="flex flex-col md:flex-row gap-8">
+              {/* Left */}
+              <div className="w-full md:w-1/4 text-center">
                 <img
                   src={userData?.photoURL}
-                  alt={userData?.name}
-                  className="w-32 h-32 rounded-full object-cover border-4 border-primary shadow-lg"
+                  className="w-32 h-32 mx-auto rounded-full border"
                 />
-                <h3 className="text-xl font-semibold mt-4 text-foreground">
-                  {userData?.name}
-                </h3>
-                <p
-                  className={`text-sm font-medium mt-1 p-1 px-3 rounded-full ${
-                    userData?.status === "active"
-                      ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                      : "bg-destructive/10 text-destructive"
-                  }`}>
-                  Status:
-                  {userData?.status.charAt(0).toUpperCase() +
-                    userData?.status.slice(1)}
-                </p>
-                <p className="text-sm mt-2 text-muted-foreground flex items-center capitalize">
-                  <UserIcon className="w-4 h-4 mr-1 text-primary" /> Role:{" "}
-                  {role}
-                  {/* {user.role.charAt(0).toUpperCase() + user.role.slice(1)} */}
-                </p>
+                <h3 className="mt-4 font-semibold">{userData?.name}</h3>
+                <p className="text-sm mt-1 capitalize">Role: {role}</p>
               </div>
 
-              {/* Right Side: Form Fields */}
-              <div className="w-full md:w-3/4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-                {/* Field 1: Name */}
-                <div className="space-y-2">
+              {/* Right */}
+              <div className="w-full md:w-3/4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* Name */}
+                <div>
                   <Label className="flex items-center">
                     <UserIcon className="w-4 h-4 mr-2" /> Name
                   </Label>
-                  <Input
-                    type="text"
-                    defaultValue={userData?.name}
-                    disabled={!isEditing || loading}
+                  <Input {...register("userName")} disabled={!isEditing} />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <Label className="flex items-center">
+                    <Mail className="w-4 h-4 mr-2" /> Email
+                  </Label>
+                  <Input value={userData?.email} disabled />
+                </div>
+
+                {/* Blood Group */}
+                <div>
+                  <Label className="flex items-center">
+                    <Droplet className="w-4 h-4 mr-2 text-destructive" />
+                    Blood Group
+                  </Label>
+
+                  <Controller
+                    name="bloodGroup"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        disabled={!isEditing}
+                        value={field.value}
+                        onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select blood group" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[
+                            "A+",
+                            "A-",
+                            "B+",
+                            "B-",
+                            "AB+",
+                            "AB-",
+                            "O+",
+                            "O-",
+                          ].map((bg) => (
+                            <SelectItem key={bg} value={bg}>
+                              {bg}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                   />
                 </div>
 
-                {/* Field 2: Email (Read-Only) */}
-                <div className="space-y-2">
+                {/* District */}
+                <div>
                   <Label className="flex items-center">
-                    <Mail className="w-4 h-4 mr-2" /> Email (Non-Editable)
-                  </Label>
-                  <Input type="email" value={userData?.email} disabled />
-                </div>
-
-                {/* Field 3: Blood Group */}
-                <div className="space-y-2">
-                  <Label className=" flex items-center">
-                    <Droplet className="w-4 h-4 mr-2 text-destructive" /> Blood
-                    Group
-                  </Label>
-                  <Select disabled={!isEditing || loading}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select your blood group" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Select your blood group</SelectLabel>
-                        <SelectItem value="A+">A+</SelectItem>
-                        <SelectItem value="A-">A-</SelectItem>
-                        <SelectItem value="B+">B+</SelectItem>
-                        <SelectItem value="B-">B-</SelectItem>
-                        <SelectItem value="AB+">AB+</SelectItem>
-                        <SelectItem value="AB-">AB-</SelectItem>
-                        <SelectItem value="O+">O+</SelectItem>
-                        <SelectItem value="O-">O-</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Field 4: District */}
-                <div className="space-y-2">
-                  <Label className=" flex items-center">
                     <MapPin className="w-4 h-4 mr-2" /> District
                   </Label>
-                  <Input
-                    type="text"
-                    defaultValue={userData?.district}
-                    disabled={!isEditing || loading}
-                  />
-                  {/* Note: This should ideally be a select input fetching data from API */}
+                  <Input {...register("district")} disabled={!isEditing} />
                 </div>
 
-                <div className="space-y-2">
+                {/* Division */}
+                <div>
                   <Label className="flex items-center">
                     <MapPin className="w-4 h-4 mr-2" /> Division
                   </Label>
-                  <Input
-                    type="text"
-                    defaultValue={userData?.division}
-                    disabled={!isEditing || loading}
-                  />
-                  {/* Note: This should ideally be a select input fetching data from API */}
+                  <Input {...register("division")} disabled={!isEditing} />
                 </div>
               </div>
             </div>
-          </form>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

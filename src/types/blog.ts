@@ -26,3 +26,21 @@ export interface AllUser {
 
   district: string;
 }
+
+export type Inputs = {
+  userName: string;
+  bloodGroup: string;
+  district: string;
+  division: string;
+};
+
+export interface Donor {
+  _id: string;
+  name: string;
+  email: string;
+  bloodGroup: string;
+  district: string;
+  upazila: string;
+  avatar?: string;
+  phone?: string;
+}

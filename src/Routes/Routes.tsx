@@ -44,9 +44,10 @@ const router = createBrowserRouter([
         Component: Contact,
       },
       {
-        path: "find-blood-input",
+        path: "search-page",
         Component: FindBloodInput,
       },
+
       {
         path: "volunteer-register",
         element: (

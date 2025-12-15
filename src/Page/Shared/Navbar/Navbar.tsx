@@ -46,7 +46,7 @@ const Navbar = () => {
         Blog
       </Link>
       <Link to="/contact" className="hover:text-primary transition-colors">
-        Contact
+        Contact Us
       </Link>
     </>
   );

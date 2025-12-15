@@ -178,7 +178,6 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
         ctx.shadowBlur = 0;
       });
 
-      // --- 3. Auto Connection: Cell to Cel ---
       const MAX_CELL_DISTANCE = 150;
       cellsRef.current.forEach((cell1, i) => {
         cellsRef.current.slice(i + 1).forEach((cell2) => {
@@ -289,7 +288,6 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
           }
         }
 
-     
         @keyframes float { 
           0% {
             transform: translateY(0) rotate(0deg);

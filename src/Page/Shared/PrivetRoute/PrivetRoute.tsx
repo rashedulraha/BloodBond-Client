@@ -6,7 +6,7 @@ type Children = {
 };
 
 const PrivetRoute = ({ children }: Children) => {
-  const { user, loading } = useAuth();
+const { user, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
