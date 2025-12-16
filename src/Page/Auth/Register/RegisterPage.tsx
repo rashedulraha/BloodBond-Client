@@ -1,8 +1,7 @@
 import Container from "@/Page/Shared/Responsive/Container";
-
 import { useForm, type SubmitHandler, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaUser, FaMapMarkerAlt, FaTint, FaUserPlus } from "react-icons/fa";
 import {
   Select,
@@ -16,10 +15,8 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import { Label } from "@/components/ui/label";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
-// import useAxiosSecure from "@/Hook/useAxiosSecure";
 import useAuth from "@/Hook/useAuth";
 import axios from "axios";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
@@ -31,10 +28,32 @@ type Inputs = {
   bloodGroup: string;
   division: string;
   district: string;
-  upazila: string;
   password: string;
   confirmPassword: string;
 };
+
+interface District {
+  id: string;
+  division_id: string;
+  name: string;
+  bn_name: string;
+  lat: string;
+  lon: string;
+  url: string;
+}
+
+const DIVISIONS = [
+  { id: "1", name: "Chattogram" },
+  { id: "2", name: "Rajshahi" },
+  { id: "3", name: "Khulna" },
+  { id: "4", name: "Barisal" },
+  { id: "5", name: "Sylhet" },
+  { id: "6", name: "Dhaka" },
+  { id: "7", name: "Rangpur" },
+  { id: "8", name: "Mymensingh" },
+];
+
+const DISTRICTS_JSON_URL = "/districts.json";
 
 const RegisterPage = () => {
   const {
@@ -43,76 +62,108 @@ const RegisterPage = () => {
     formState: { errors },
     watch,
     control,
+    setValue,
   } = useForm<Inputs>();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [filteredDistricts, setFilteredDistricts] = useState<District[]>([]);
+  const [loadingDistricts, setLoadingDistricts] = useState(true);
+  const [districtError, setDistrictError] = useState<string | null>(null);
+
   const { registerUser, profileUpdate, signinWithGoogle } = useAuth();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const password = watch("password");
+  const selectedDivision = watch("division");
+
+  useEffect(() => {
+    const fetchDistricts = async () => {
+      setLoadingDistricts(true);
+      setDistrictError(null);
+      try {
+        const response = await axios.get<District[]>(DISTRICTS_JSON_URL);
+
+        setDistricts(response.data);
+      } catch (err) {
+        console.error("Failed to load districts:", err);
+        setDistrictError("Failed to load district information.");
+        setDistricts([]);
+      } finally {
+        setLoadingDistricts(false);
+      }
+    };
+    fetchDistricts();
+  }, []);
+
+  useEffect(() => {
+    setValue("district", "");
+
+    if (selectedDivision && districts.length > 0) {
+      const divisionObj = DIVISIONS.find((d) => d.name === selectedDivision);
+      if (divisionObj) {
+        const filtered = districts.filter(
+          (d) => d.division_id === divisionObj.id
+        );
+        setFilteredDistricts(filtered);
+      } else {
+        setFilteredDistricts([]);
+      }
+    } else {
+      setFilteredDistricts([]);
+    }
+  }, [selectedDivision, districts, setValue]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
-
-    console.log("Form Data:", data);
-
     const profileImage = data.avatar[0];
 
-    registerUser(data.email, data.password)
-      .then(() => {
-        navigate(location.state || "/");
-        toast.success("Signup successfully");
+    try {
+      await registerUser(data.email, data.password);
 
-        //? store the image and get the photo url
+      const formData = new FormData();
+      formData.append("image", profileImage);
+      const image_Api_Url = `https://api.imgbb.com/1/upload?key=${
+        import.meta.env.VITE_IMAGE_HOST_KEY
+      }`;
+      const res = await axios.post(image_Api_Url, formData);
 
-        const formData = new FormData();
-        formData.append("image", profileImage);
+      const imageURL = res.data.data.url;
 
-        const image_Api_Url = `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_IMAGE_HOST_KEY
-        }`;
+      await profileUpdate(data.name, imageURL);
 
-        axios.post(image_Api_Url, formData).then((res) => {
-          //! update profile here
-          const userProfile = {
-            displayName: data.name,
-            photoURL: res.data.data.url,
-          };
+      const createAt = new Date();
+      const userInfo = {
+        name: data.name,
+        email: data.email,
+        bloodGroup: data.bloodGroup,
+        division: data.division,
+        district: data.district,
+        imageURL,
+        createAt,
+        role: "donor",
+        provider: "normal-register",
+        status: "active",
+      };
 
-          const createAt = new Date();
-          const userInfo = {
-            ...data,
-            createAt,
-            role: "donor",
-            provider: "normal-register",
-            imageURL: res.data.data.url,
-            status: "active",
-          };
+      await axiosSecure.post("/register-user", userInfo);
 
-          axiosSecure.post("/register-user", userInfo).then(() => {
-            profileUpdate(userProfile)
-              .then()
-              .catch((error: { message: unknown }) => {
-                console.log(error.message);
-              });
-          });
-        });
-      })
-      .catch(() => {
-        toast.error("Network error please try again");
-      });
+      toast.success("Registration successful!");
+      navigate(location.state || "/");
+    } catch (error) {
+      toast.error("Registration failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleLoginWithGoogle = async () => {
     try {
       const result = await signinWithGoogle();
       navigate(location.state || "/");
-
       const userData = result.user;
-
       const userInfo = {
         name: userData.displayName,
         email: userData.email,
@@ -121,10 +172,7 @@ const RegisterPage = () => {
         status: "active",
         provider: "google",
       };
-
-      axiosSecure
-        .post("/register-user", userInfo)
-        .then(() => console.log("user add"));
+      await axiosSecure.post("/register-user", userInfo);
     } catch (error) {
       console.log(error);
     }
@@ -134,7 +182,7 @@ const RegisterPage = () => {
     <div className="py-10">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl">
-          {/* ... Left Column (unchanged) ... */}
+          {/* Left Column */}
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary mb-6">
               <FaUserPlus className="text-3xl" />
@@ -149,7 +197,7 @@ const RegisterPage = () => {
             </p>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full  flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center">
                   <FaTint />
                 </div>
                 <span className="text-foreground">
@@ -173,11 +221,22 @@ const RegisterPage = () => {
             </div>
           </div>
 
-          {/* Right Column - Registration Form (FIXED) */}
+          {/* Right Column - Form */}
           <div className="bg-card rounded-md shadow-lg p-8 border border-border">
+            {loadingDistricts && (
+              <p className="text-center text-primary mb-4">
+                Loading districts...
+              </p>
+            )}
+            {districtError && (
+              <p className="text-center text-destructive mb-4">
+                {districtError}
+              </p>
+            )}
+
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="flex items-center justify-between gap-5 flex-col md:flex-row">
-                {/* Name Field (OK) */}
+              {/* Name & Email */}
+              <div className="flex flex-col md:flex-row gap-5">
                 <div className="w-full">
                   <Label>Full Name</Label>
                   <Input
@@ -191,8 +250,6 @@ const RegisterPage = () => {
                     </p>
                   )}
                 </div>
-
-                {/* Email Field (Assuming InputGroupInput handles forwardRef, otherwise switch to standard Input) */}
                 <div className="w-full">
                   <Label>Email</Label>
                   <InputGroup>
@@ -216,30 +273,25 @@ const RegisterPage = () => {
                 </div>
               </div>
 
-              <div className="flex items-center flex-col md:flex-row gap-5 ">
-                {/* Avatar Upload (FIXED Validation) */}
+              {/* Avatar & Blood Group */}
+              <div className="flex flex-col md:flex-row gap-5">
                 <div className="w-full">
                   <Label>Profile Photo</Label>
-                  <div className="relative">
-                    <Input
-                      type="file"
-                      // Correct validation for FileList
-                      {...register("avatar", {
-                        required: "Profile photo is required",
-                        validate: (value) =>
-                          (value && value.length > 0) ||
-                          "Profile photo is required",
-                      })}
-                    />
-                  </div>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    {...register("avatar", {
+                      required: "Profile photo is required",
+                      validate: (value) =>
+                        value.length > 0 || "Profile photo is required",
+                    })}
+                  />
                   {errors.avatar && (
                     <p className="mt-1 text-sm text-destructive">
                       {errors.avatar.message}
                     </p>
                   )}
                 </div>
-
-                {/* Blood Group (FIXED: Using Controller with Select) */}
                 <div className="w-full">
                   <Label>Blood Group</Label>
                   <Controller
@@ -247,9 +299,7 @@ const RegisterPage = () => {
                     control={control}
                     rules={{ required: "Blood group is required" }}
                     render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}>
+                      <Select onValueChange={field.onChange}>
                         <SelectTrigger
                           className={
                             errors.bloodGroup ? "border-destructive" : ""
@@ -258,15 +308,21 @@ const RegisterPage = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel> Select your blood group</SelectLabel>
-                            <SelectItem value="A+">A+</SelectItem>
-                            <SelectItem value="A-">A-</SelectItem>
-                            <SelectItem value="B+">B+</SelectItem>
-                            <SelectItem value="B-">B-</SelectItem>
-                            <SelectItem value="AB+">AB+</SelectItem>
-                            <SelectItem value="AB-">AB-</SelectItem>
-                            <SelectItem value="O+">O+</SelectItem>
-                            <SelectItem value="O-">O-</SelectItem>
+                            <SelectLabel>Select your blood group</SelectLabel>
+                            {[
+                              "A+",
+                              "A-",
+                              "B+",
+                              "B-",
+                              "AB+",
+                              "AB-",
+                              "O+",
+                              "O-",
+                            ].map((group) => (
+                              <SelectItem key={group} value={group}>
+                                {group}
+                              </SelectItem>
+                            ))}
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -280,18 +336,18 @@ const RegisterPage = () => {
                 </div>
               </div>
 
+              {/* Division & District */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Division (FIXED: Using Controller and name="division") */}
                 <div className="w-full">
                   <Label>Division</Label>
                   <Controller
-                    name="division" // Corrected field name
+                    name="division"
                     control={control}
                     rules={{ required: "Division is required" }}
                     render={({ field }) => (
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}>
+                        disabled={loadingDistricts}>
                         <SelectTrigger
                           className={
                             errors.division ? "border-destructive" : ""
@@ -300,19 +356,12 @@ const RegisterPage = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel> Select your division </SelectLabel>
-                            <SelectItem value="Dhaka">Dhaka</SelectItem>
-                            <SelectItem value="Chattogram">
-                              Chattogram
-                            </SelectItem>
-                            <SelectItem value="Rajshahi">Rajshahi</SelectItem>
-                            <SelectItem value="Khulna">Khulna</SelectItem>
-                            <SelectItem value="Barisal">Barisal</SelectItem>
-                            <SelectItem value="Sylhet">Sylhet</SelectItem>
-                            <SelectItem value="Rangpur">Rangpur</SelectItem>
-                            <SelectItem value="Mymensingh">
-                              Mymensingh
-                            </SelectItem>
+                            <SelectLabel>Select your division</SelectLabel>
+                            {DIVISIONS.map((div) => (
+                              <SelectItem key={div.id} value={div.name}>
+                                {div.name}
+                              </SelectItem>
+                            ))}
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -325,20 +374,20 @@ const RegisterPage = () => {
                   )}
                 </div>
 
-                {/* District (FIXED: Still need to filter options based on 'division') */}
                 <div className="w-full">
                   <Label>District</Label>
                   <Controller
-                    name="district" // Corrected field name
+                    name="district"
                     control={control}
                     rules={{ required: "District is required" }}
                     render={({ field }) => (
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        // Disable district selection until division is selected
-                        // disabled={!selectedDivision}
-                      >
+                        disabled={
+                          !selectedDivision ||
+                          loadingDistricts ||
+                          districtError !== null
+                        }>
                         <SelectTrigger
                           className={
                             errors.district ? "border-destructive" : ""
@@ -347,14 +396,19 @@ const RegisterPage = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel> Select your district </SelectLabel>
-                            {/* You need to dynamically load district options here based on the selected division */}
-                            <SelectItem value="Placeholder_DHA_1">
-                              Dhanmondi (Needs Dynamic Data)
-                            </SelectItem>
-                            <SelectItem value="Placeholder_DHA_2">
-                              Mirpur (Needs Dynamic Data)
-                            </SelectItem>
+                            <SelectLabel>Select your district</SelectLabel>
+                            {filteredDistricts.length === 0 &&
+                              selectedDivision &&
+                              !loadingDistricts && (
+                                <p className="px-4 py-2 text-muted-foreground italic">
+                                  No districts found
+                                </p>
+                              )}
+                            {filteredDistricts.map((dist) => (
+                              <SelectItem key={dist.id} value={dist.name}>
+                                {dist.name}
+                              </SelectItem>
+                            ))}
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -368,87 +422,56 @@ const RegisterPage = () => {
                 </div>
               </div>
 
-              {/* ... Password Fields and Submit Button (unchanged) ... */}
-              {/* Password Fields */}
+              {/* Passwords */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="w-full">
                   <Label>Password</Label>
-                  <div>
-                    <Input
-                      type="password"
-                      placeholder="Enter your password"
-                      {...register("password", {
-                        required: "Password is required",
-                        minLength: {
-                          value: 6,
-                          message: "Password must be at least 6 characters",
-                        },
-                      })}
-                    />
-                    {errors.password && (
-                      <p className="mt-1 text-sm text-destructive">
-                        {errors.password.message}
-                      </p>
-                    )}
-                  </div>
+                  <Input
+                    type="password"
+                    placeholder="Enter your password"
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 6,
+                        message: "Password must be at least 6 characters",
+                      },
+                    })}
+                  />
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-destructive">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
                 <div className="w-full">
                   <Label>Confirm Password</Label>
-                  <div>
-                    <Input
-                      type="password"
-                      placeholder="Enter your password"
-                      {...register("confirmPassword", {
-                        required: "Please confirm your password",
-                        validate: (value) =>
-                          value === password || "Passwords do not match",
-                      })}
-                    />
-                    {errors.confirmPassword && (
-                      <p className="mt-1 text-sm text-destructive">
-                        {errors.confirmPassword.message}
-                      </p>
-                    )}
-                  </div>
+                  <Input
+                    type="password"
+                    placeholder="Confirm your password"
+                    {...register("confirmPassword", {
+                      required: "Please confirm your password",
+                      validate: (value) =>
+                        value === password || "Passwords do not match",
+                    })}
+                  />
+                  {errors.confirmPassword && (
+                    <p className="mt-1 text-sm text-destructive">
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              {/* Submit Button */}
+              {/* Buttons */}
               <div className="flex items-center gap-5">
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className=" flex-1  flex items-center justify-center">
-                  {isLoading ? (
-                    <>
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Creating Account...
-                    </>
-                  ) : (
-                    "Register"
-                  )}
+                <Button type="submit" disabled={isLoading} className="flex-1">
+                  {isLoading ? "Creating Account..." : "Register"}
                 </Button>
                 <Button
                   type="button"
                   onClick={handleLoginWithGoogle}
                   variant="outline"
-                  className="flex-1 rounded">
+                  className="flex-1">
                   Login with Google
                 </Button>
               </div>

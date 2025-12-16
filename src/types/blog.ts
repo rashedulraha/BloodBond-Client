@@ -1,4 +1,5 @@
 import type { Key, ReactNode } from "react";
+import type { JSX } from "react/jsx-runtime";
 
 export interface BlogPost {
   id: string;
@@ -75,3 +76,24 @@ export interface DonationRequest {
   donorName?: string;
   donorEmail?: string;
 }
+
+export type RegisterInput = {
+  name: string;
+  email: string;
+  avatar: FileList;
+  bloodGroup: string;
+  division: string;
+  district: string;
+  upazila: string;
+  password: string;
+  confirmPassword: string;
+};
+
+//  bangla division type
+export type banglaDivision = {
+  map(arg0: (d: any) => JSX.Element): ReactNode;
+  id: string;
+  name: string;
+  bn_name: string;
+  url: string;
+};

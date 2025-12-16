@@ -96,11 +96,13 @@ const DonationRequestDetails = () => {
     return <LoadingSpinner />;
   }
 
+  //? !if id to navigate search page
+
   // Error state
   if (error || !donationRequest) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="max-w-md mx-4 border-destructive">
+      <div className="flex items-center justify-center">
+        <Card className="max-w-md mx-4 border-destructive bg-card/50 ">
           <CardContent className="p-8 text-center">
             <AlertCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-foreground mb-2">
@@ -325,7 +327,7 @@ const DonationRequestDetails = () => {
 
           {/* Donate Button - Only show if status is pending */}
           {donationStatus === "pending" && user && (
-            <Card className="border-2 border-primary bg-linear-to-br from-primary/5 to-destructive/5">
+            <Card className="border border-primary rounded-md bg-linear-to-br from-primary/5 to-destructive/5">
               <CardContent className="p-6 flex items-center justify-center flex-col">
                 <div className="text-center mb-4">
                   <h3 className="text-xl font-bold text-foreground mb-2">
