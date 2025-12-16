@@ -36,6 +36,8 @@ import { Label } from "@/components/ui/label";
 import useAuth from "@/Hook/useAuth";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { bloodDonation } from "@/types/blog";
+import useAxiosSecure from "@/Hook/useAxiosSecure";
+import { toast } from "react-toastify";
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const locationData: { [key: string]: string[] } = {
@@ -48,9 +50,15 @@ const DonationRequest: React.FC = () => {
   const form = useForm<bloodDonation>();
   const { handleSubmit } = form;
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
-  const onSubmit: SubmitHandler<bloodDonation> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<bloodDonation> = (data) => {
+    console.log(data);
 
+    axiosSecure.post("/donation-request", data).then(() => {
+      toast.success("Donation request successfully");
+    });
+  };
   // Block inactive users
   if (user?.status === "active") {
     return (
@@ -321,7 +329,7 @@ const DonationRequest: React.FC = () => {
                       <FormLabel>Full Address Line</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="e.g., Zahir Raihan Rd, Dhaka"
+                          placeholder="Naogaon Dhaka bangladesh"
                           {...field}
                         />
                       </FormControl>

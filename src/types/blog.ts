@@ -46,6 +46,7 @@ export interface Donor {
 }
 
 export type bloodDonation = {
+  _id: Key | null | undefined;
   recipientName: string;
   bloodGroup: string;
   donationDate?: string;
