@@ -31,6 +31,7 @@ import useAuth from "@/Hook/useAuth";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
 import Container from "@/Page/Shared/Responsive/Container";
 import type { DonationRequest } from "@/types/blog";
+import LoadingSpinner from "@/Page/Shared/Spinner/LoadingSpinner";
 
 const DonationRequestDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -92,16 +93,7 @@ const DonationRequestDetails = () => {
 
   // Loading state
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-muted-foreground text-lg">
-            Loading request details...
-          </p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   // Error state
@@ -145,7 +137,7 @@ const DonationRequestDetails = () => {
     donationStatus,
     donorName,
     donorEmail,
-  } = donationRequest;
+  } = donationRequest || {};
 
   return (
     <div className="min-h-screen bg-background py-8 md:py-12">
@@ -161,13 +153,12 @@ const DonationRequestDetails = () => {
 
         {/* Page Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-primary to-destructive mb-4 shadow-xl">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary mb-4 shadow-xl">
             <Droplet className="w-10 h-10 text-primary-foreground" />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
             Blood Donation Request Details
           </h1>
-          <p className="text-muted-foreground">Request ID: {id}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
@@ -183,8 +174,8 @@ const DonationRequestDetails = () => {
                   <Badge
                     className={`${getStatusColor(
                       donationStatus
-                    )} text-white text-lg px-6 py-2`}>
-                    {donationStatus?.toUpperCase()}
+                    )} text-lg px-6 py-1 bg-green-400/10 border border-green-400 text-green-600`}>
+                    {donationStatus?.toUpperCase() || "pending"}
                   </Badge>
                 </div>
 
@@ -338,7 +329,7 @@ const DonationRequestDetails = () => {
             {/* Donate Button - Only show if status is pending */}
             {donationStatus === "pending" && user && (
               <Card className="border-2 border-primary bg-linear-to-br from-primary/5 to-destructive/5">
-                <CardContent className="p-6">
+                <CardContent className="p-6 flex items-center justify-center flex-col">
                   <div className="text-center mb-4">
                     <h3 className="text-xl font-bold text-foreground mb-2">
                       Ready to Save a Life?
@@ -351,7 +342,7 @@ const DonationRequestDetails = () => {
                   <Button
                     onClick={() => setIsModalOpen(true)}
                     size="lg"
-                    className="w-full bg-linear-to-r from-primary to-destructive hover:from-primary/90 hover:to-destructive/90 text-primary-foreground font-bold text-lg py-6 shadow-lg">
+                    className="rounded-md cursor-pointer">
                     <Heart className="w-6 h-6 mr-3" />I Want to Donate Blood
                   </Button>
                 </CardContent>

@@ -55,7 +55,14 @@ const DonationRequest: React.FC = () => {
   const onSubmit: SubmitHandler<bloodDonation> = (data) => {
     console.log(data);
 
-    axiosSecure.post("/donation-request", data).then(() => {
+    const donationInfo = {
+      ...data,
+      requesterEmail: user?.email,
+      requesterName: user?.displayName,
+      donationStatus: "pending",
+    };
+
+    axiosSecure.post("/donation-request", donationInfo).then(() => {
       toast.success("Donation request successfully");
     });
   };
