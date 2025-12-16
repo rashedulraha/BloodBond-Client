@@ -9,6 +9,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 import {
   InputGroup,
@@ -32,7 +43,7 @@ const AllDonationRequest = () => {
   });
 
   const handleDeleDonationRequester = (id: string) => {
-    axiosSecure.delete(`/donation-request-delete/${id}`).then((res) => {
+    axiosSecure.delete(`/donation-request-delete/${id}`).then(() => {
       refetch();
       console.log("donation requester deleted");
     });
@@ -98,11 +109,34 @@ const AllDonationRequest = () => {
               <TableCell className="font-medium">
                 {user.donationStatus}
               </TableCell>
+
               <TableCell className="font-medium">
-                <Button
-                  onClick={() => handleDeleDonationRequester(`${user._id}`)}>
-                  Delete
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline">Delete</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your account and remove your data from our
+                        servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() =>
+                          handleDeleDonationRequester(`${user._id}`)
+                        }>
+                        Continue
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </TableCell>
             </TableRow>
           ))}
