@@ -7,6 +7,7 @@ import {
   Users,
   Droplet,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const About: React.FC = () => {
   const mission =
@@ -44,10 +45,10 @@ const About: React.FC = () => {
   ];
 
   return (
-    <div className="p-4 sm:p-8 bg-background min-h-screen">
+    <div className="p-4 sm:p-8 min-h-screen">
       <div className="max-w-6xl mx-auto space-y-12">
         {/* --- [ 1. Header & Mission ] --- */}
-        <div className="text-center pt-8 pb-4 border-b border-border">
+        <div className="text-center pb-4 border-b border-border">
           <h1 className="text-5xl font-extrabold text-primary mb-4 animate-in fade-in zoom-in duration-500">
             Our Mission: Saving Lives Together
           </h1>
@@ -65,7 +66,7 @@ const About: React.FC = () => {
             {principles.map((p, index) => (
               <div
                 key={index}
-                className="bg-card p-6 rounded-xl shadow-lg border border-border text-center transition-all duration-300 hover:shadow-xl hover:border-primary/50 animate-in slide-in-from-bottom-8"
+                className="p-6 rounded-md bg-card/50 border border-border  hover:-translate-y-2 transition-all duration-500"
                 style={{ animationDelay: `${index * 100}ms` }}>
                 <p.icon className="w-10 h-10 mx-auto text-primary mb-3" />
                 <h3 className="text-xl font-semibold text-foreground mb-2">
@@ -78,7 +79,7 @@ const About: React.FC = () => {
         </div>
 
         {/* --- [ 3. Impact & Statistics Section ] --- */}
-        <div className="bg-secondary/50 p-8 rounded-xl shadow-xl border border-secondary/80">
+        <div className="bg-card/50 p-8 rounded-xl shadow-xl border border-secondary/80">
           <h2 className="text-3xl font-bold text-center text-foreground mb-8">
             Our Impact at a Glance
           </h2>
@@ -106,13 +107,13 @@ const About: React.FC = () => {
             Join our mission. Whether you need blood, can donate, or want to
             volunteer, your contribution saves lives.
           </p>
-          <button
+          <Button
             onClick={() => {
               /* Navigate to Registration or Donor Search page */
             }}
-            className="btn btn-primary btn-lg shadow-2xl transition-transform duration-300 hover:scale-[1.03]">
+            className="cursor-pointer">
             Join Our Donor Community
-          </button>
+          </Button>
         </div>
       </div>
     </div>
