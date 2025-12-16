@@ -20,6 +20,7 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import useAuth from "@/Hook/useAuth";
 import axios from "axios";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
+import type { District } from "@/types/blog";
 
 type Inputs = {
   name: string;
@@ -31,16 +32,6 @@ type Inputs = {
   password: string;
   confirmPassword: string;
 };
-
-interface District {
-  id: string;
-  division_id: string;
-  name: string;
-  bn_name: string;
-  lat: string;
-  lon: string;
-  url: string;
-}
 
 const DIVISIONS = [
   { id: "1", name: "Chattogram" },
@@ -118,45 +109,59 @@ const RegisterPage = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
+
+    console.log("Form Data:", data);
+
     const profileImage = data.avatar[0];
 
-    try {
-      await registerUser(data.email, data.password);
+    registerUser(data.email, data.password)
+      .then(() => {
+        navigate(location.state || "/");
+        toast.success("Signup successfully");
 
-      const formData = new FormData();
-      formData.append("image", profileImage);
-      const image_Api_Url = `https://api.imgbb.com/1/upload?key=${
-        import.meta.env.VITE_IMAGE_HOST_KEY
-      }`;
-      const res = await axios.post(image_Api_Url, formData);
+        //? store the image and get the photo url
 
-      const imageURL = res.data.data.url;
+        const formData = new FormData();
+        formData.append("image", profileImage);
 
-      await profileUpdate(data.name, imageURL);
+        const image_Api_Url = `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_IMAGE_HOST_KEY
+        }`;
 
-      const createAt = new Date();
-      const userInfo = {
-        name: data.name,
-        email: data.email,
-        bloodGroup: data.bloodGroup,
-        division: data.division,
-        district: data.district,
-        imageURL,
-        createAt,
-        role: "donor",
-        provider: "normal-register",
-        status: "active",
-      };
+        axios.post(image_Api_Url, formData).then((res) => {
+          //! update profile here
+          const userProfile = {
+            displayName: data.name,
+            photoURL: res.data.data.url,
+          };
 
-      await axiosSecure.post("/register-user", userInfo);
+          const createAt = new Date();
 
-      toast.success("Registration successful!");
-      navigate(location.state || "/");
-    } catch (error) {
-      toast.error("Registration failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+          const userInfo = {
+            name: data.name,
+            email: data.email,
+            bloodGroup: data.bloodGroup,
+            division: data.division,
+            district: data.district,
+            createAt,
+            photoURL: res.data.data.url,
+            role: "donor",
+            provider: "normal-register",
+            status: "active",
+          };
+
+          axiosSecure.post("/register-user", userInfo).then(() => {
+            profileUpdate(userProfile)
+              .then()
+              .catch((error: { message: unknown }) => {
+                console.log(error.message);
+              });
+          });
+        });
+      })
+      .catch(() => {
+        toast.error("Network error please try again");
+      });
   };
 
   const handleLoginWithGoogle = async () => {

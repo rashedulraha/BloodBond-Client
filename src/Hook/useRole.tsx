@@ -14,7 +14,7 @@ const useRole = (): UseRoleResult => {
   const { user, loading } = useAuth();
 
   const {
-    data: role = "rashedul",
+    data: role = "donor",
     isLoading,
     isError,
     error,
@@ -26,7 +26,6 @@ const useRole = (): UseRoleResult => {
       }
 
       const res = await axiosSecure.get(`/user/${user.email}/role`);
-      // console.log(res);
 
       return res.data;
     },

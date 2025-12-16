@@ -122,18 +122,15 @@ const Navbar = () => {
                 </Label>
                 <ul
                   tabIndex={0}
-                  className="menu menu-sm dropdown-content bg-card rounded-box z-50 mt-3 w-56 p-3 border border-border space-y-2 shadow-lg">
+                  className="menu menu-sm dropdown-content bg-card rounded-box z-50 mt-3 w-56 p-3 border border-border space-y-2 shadow-lg ">
                   <li className="font-semibold text-center">
                     {user.displayName}
-                  </li>
-                  <li className="text-center text-muted-foreground text-sm">
-                    {user.email}
                   </li>
                   <ul>
                     <li className="text-center text-muted-foreground text-sm flex items-center justify-center flex-row capitalize">
                       Role: <span className="text-green-500">{role}</span>
                     </li>
-                    <li className="text-center text-muted-foreground text-sm flex items-center justify-center flex-row capitalize">
+                    <li className="text-center text-muted-foreground text-sm flex items-center justify-center flex-row capitalize"> 
                       Status:{" "}
                       <span
                         className={
@@ -141,7 +138,7 @@ const Navbar = () => {
                             ? "text-red-500"
                             : "text-green-500"
                         }>
-                        {userData?.status}
+                        {userData?.status || "active"}
                       </span>
                     </li>
                   </ul>

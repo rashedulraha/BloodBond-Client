@@ -47,7 +47,7 @@ const FindBloodInput: React.FC = () => {
 
   const axiosSecure = useAxiosSecure();
 
-  // Fetch all donation requests
+  //! Fetch all donation requests
   const { data: donationCardData = [], isLoading } = useQuery({
     queryKey: ["card-data"],
     queryFn: async () => {
@@ -83,7 +83,7 @@ const FindBloodInput: React.FC = () => {
   // Handle district change
   const handleDistrictChange = (value: string) => {
     setDistrict(value);
-    setUpazila(""); // Reset upazila when district changes
+    setUpazila("");
   };
 
   // Handle search

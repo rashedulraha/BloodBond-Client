@@ -27,6 +27,22 @@ export interface AllUser {
 
   district: string;
 }
+export interface AllRequester {
+  recipientName: string;
+  _id: string;
+  imageURL: string;
+  recipientEmail: string;
+  donationDate: string;
+  donationTime: string;
+  hospitalName: string;
+  recipientDistrict: string;
+  fullAddressLine: string;
+  requestMessage: string;
+  requesterEmail: string;
+  bloodGroup: string;
+  requesterName: string;
+  donationStatus: string;
+}
 
 export type Inputs = {
   userName: string;
@@ -97,3 +113,13 @@ export type banglaDivision = {
   bn_name: string;
   url: string;
 };
+
+export interface District {
+  id: string;
+  division_id: string;
+  name: string;
+  bn_name: string;
+  lat: string;
+  lon: string;
+  url: string;
+}
