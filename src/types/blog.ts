@@ -57,3 +57,21 @@ export type bloodDonation = {
   fullAddressLine?: string;
   requestMessage?: string;
 };
+
+export interface DonationRequest {
+  _id: string;
+  requesterName: string;
+  requesterEmail: string;
+  recipientName: string;
+  recipientDistrict: string;
+  recipientUpazila: string;
+  hospitalName: string;
+  fullAddressLine: string;
+  bloodGroup: string;
+  donationDate: string;
+  donationTime: string;
+  requestMessage: string;
+  donationStatus: "pending" | "inprogress" | "done" | "canceled";
+  donorName?: string;
+  donorEmail?: string;
+}

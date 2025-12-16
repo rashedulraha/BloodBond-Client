@@ -1,0 +1,455 @@
+import { useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Droplet,
+  MapPin,
+  Calendar,
+  Clock,
+  User,
+  Mail,
+  Building2,
+  MessageSquare,
+  AlertCircle,
+  ArrowLeft,
+  Heart,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import useAuth from "@/Hook/useAuth";
+import useAxiosSecure from "@/Hook/useAxiosSecure";
+import Container from "@/Page/Shared/Responsive/Container";
+import type { DonationRequest } from "@/types/blog";
+
+const DonationRequestDetails = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Fetch donation request details
+  const {
+    data: donationRequest,
+    isLoading,
+    error,
+  } = useQuery<DonationRequest>({
+    queryKey: ["donation-request", id],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/donation-requests-details/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+
+  // Format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  // Format time
+  const formatTime = (timeString: string) => {
+    const [hours, minutes] = timeString.split(":");
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minutes} ${ampm}`;
+  };
+
+  // Get status badge color
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-500";
+      case "inprogress":
+        return "bg-blue-500";
+      case "done":
+        return "bg-green-500";
+      case "canceled":
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-muted-foreground text-lg">
+            Loading request details...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error || !donationRequest) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="max-w-md mx-4 border-destructive">
+          <CardContent className="p-8 text-center">
+            <AlertCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-foreground mb-2">
+              Request Not Found
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              The donation request you're looking for doesn't exist or has been
+              removed.
+            </p>
+            <Link to={"/dashboard/donation-requests"}>
+              <Button className="cursor-pointer">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Requests
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const {
+    requesterName,
+    requesterEmail,
+    recipientName,
+    recipientDistrict,
+    recipientUpazila,
+    hospitalName,
+    fullAddressLine,
+    bloodGroup,
+    donationDate,
+    donationTime,
+    requestMessage,
+    donationStatus,
+    donorName,
+    donorEmail,
+  } = donationRequest;
+
+  return (
+    <div className="min-h-screen bg-background py-8 md:py-12">
+      <Container>
+        {/* Back Button */}
+        <Button
+          variant="outline"
+          onClick={() => navigate(-1)}
+          className="mb-6 border-2 cursor-pointer">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
+
+        {/* Page Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-primary to-destructive mb-4 shadow-xl">
+            <Droplet className="w-10 h-10 text-primary-foreground" />
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+            Blood Donation Request Details
+          </h1>
+          <p className="text-muted-foreground">Request ID: {id}</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {/* Left Column - Status & Blood Group */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Status Card */}
+            <Card className="border-2 border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-xl">Request Status</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-center">
+                  <Badge
+                    className={`${getStatusColor(
+                      donationStatus
+                    )} text-white text-lg px-6 py-2`}>
+                    {donationStatus?.toUpperCase()}
+                  </Badge>
+                </div>
+
+                {/* Blood Group */}
+                <div className="text-center pt-4 border-t">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Required Blood Group
+                  </p>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-linear-to-r from-primary to-destructive text-primary-foreground rounded-full font-bold text-xl shadow-lg">
+                    <Droplet className="w-6 h-6" />
+                    {bloodGroup}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Requester Info Card */}
+            <Card className="border-2 border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-xl flex items-center gap-2">
+                  <User className="w-5 h-5 text-primary" />
+                  Requester Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Name</p>
+                  <p className="font-semibold text-foreground">
+                    {requesterName}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Email</p>
+                  <p className="text-sm text-foreground break-all">
+                    {requesterEmail}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Donor Info Card (if status is inprogress) */}
+            {donationStatus === "inprogress" && donorName && (
+              <Card className="border-2 border-blue-500/50 bg-blue-50 dark:bg-blue-950">
+                <CardHeader>
+                  <CardTitle className="text-xl flex items-center gap-2">
+                    <Heart className="w-5 h-5 text-blue-500" />
+                    Donor Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      Donor Name
+                    </p>
+                    <p className="font-semibold text-foreground">{donorName}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">
+                      Donor Email
+                    </p>
+                    <p className="text-sm text-foreground break-all">
+                      {donorEmail}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Right Column - Request Details */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Recipient Details Card */}
+            <Card className="border-2 border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-2xl">Recipient Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Recipient Name */}
+                <div>
+                  <Label className="text-sm text-muted-foreground flex items-center gap-2 mb-2">
+                    <User className="w-4 h-4" />
+                    Recipient Name
+                  </Label>
+                  <p className="text-lg font-semibold text-foreground">
+                    {recipientName}
+                  </p>
+                </div>
+
+                {/* Date & Time */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm text-muted-foreground flex items-center gap-2 mb-2">
+                      <Calendar className="w-4 h-4" />
+                      Donation Date
+                    </Label>
+                    <p className="text-base font-medium text-foreground">
+                      {formatDate(donationDate)}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-muted-foreground flex items-center gap-2 mb-2">
+                      <Clock className="w-4 h-4" />
+                      Donation Time
+                    </Label>
+                    <p className="text-base font-medium text-foreground">
+                      {formatTime(donationTime)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Hospital Name */}
+                <div>
+                  <Label className="text-sm text-muted-foreground flex items-center gap-2 mb-2">
+                    <Building2 className="w-4 h-4" />
+                    Hospital Name
+                  </Label>
+                  <p className="text-base font-medium text-foreground">
+                    {hospitalName}
+                  </p>
+                </div>
+
+                {/* Location */}
+                <div>
+                  <Label className="text-sm text-muted-foreground flex items-center gap-2 mb-2">
+                    <MapPin className="w-4 h-4" />
+                    Location
+                  </Label>
+                  <p className="text-base font-medium text-foreground mb-1">
+                    {recipientUpazila}, {recipientDistrict}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {fullAddressLine}
+                  </p>
+                </div>
+
+                {/* Request Message */}
+                <div>
+                  <Label className="text-sm text-muted-foreground flex items-center gap-2 mb-2">
+                    <MessageSquare className="w-4 h-4" />
+                    Request Message
+                  </Label>
+                  <div className="bg-muted/50 p-4 rounded-lg border">
+                    <p className="text-foreground leading-relaxed whitespace-pre-wrap">
+                      {requestMessage}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Donate Button - Only show if status is pending */}
+            {donationStatus === "pending" && user && (
+              <Card className="border-2 border-primary bg-linear-to-br from-primary/5 to-destructive/5">
+                <CardContent className="p-6">
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-bold text-foreground mb-2">
+                      Ready to Save a Life?
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Click the button below to confirm your donation and help{" "}
+                      {recipientName}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => setIsModalOpen(true)}
+                    size="lg"
+                    className="w-full bg-linear-to-r from-primary to-destructive hover:from-primary/90 hover:to-destructive/90 text-primary-foreground font-bold text-lg py-6 shadow-lg">
+                    <Heart className="w-6 h-6 mr-3" />I Want to Donate Blood
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Already Donated Message */}
+            {donationStatus === "inprogress" && (
+              <Card className="border-2 border-blue-500 bg-blue-50 dark:bg-blue-950">
+                <CardContent className="p-6 text-center">
+                  <Heart className="w-12 h-12 text-blue-500 mx-auto mb-3" />
+                  <h3 className="text-xl font-bold text-foreground mb-2">
+                    Donation In Progress
+                  </h3>
+                  <p className="text-muted-foreground">
+                    This request is currently being fulfilled. Thank you for
+                    your interest!
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+
+        {/* Donation Confirmation Modal */}
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-2xl flex items-center gap-2">
+                <Heart className="w-6 h-6 text-primary" />
+                Confirm Blood Donation
+              </DialogTitle>
+              <DialogDescription className="text-base pt-2">
+                Please review your information before confirming the donation.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4 py-4">
+              {/* Donor Name (Read Only) */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2 text-sm font-medium">
+                  <User className="w-4 h-4 text-primary" />
+                  Donor Name
+                </Label>
+                <Input
+                  value={user?.displayName || ""}
+                  readOnly
+                  className="cursor-not-allowed bg-muted/50"
+                />
+              </div>
+
+              {/* Donor Email (Read Only) */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2 text-sm font-medium">
+                  <Mail className="w-4 h-4 text-primary" />
+                  Donor Email
+                </Label>
+                <Input
+                  value={user?.email || ""}
+                  readOnly
+                  className="cursor-not-allowed bg-muted/50"
+                />
+              </div>
+
+              {/* Info Alert */}
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-4">
+                <div className="flex gap-3">
+                  <AlertCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                  <div className="text-sm text-foreground">
+                    <p className="font-semibold mb-1">Important:</p>
+                    <p>
+                      By confirming, you agree to donate blood on{" "}
+                      <strong>{formatDate(donationDate)}</strong> at{" "}
+                      <strong>{formatTime(donationTime)}</strong> at{" "}
+                      <strong>{hospitalName}</strong>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter className="gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setIsModalOpen(false)}
+                // disabled={isSubmitting}
+                className="flex-1">
+                Cancel
+              </Button>
+              <Button className="flex-1 bg-linear-to-r from-primary to-destructive hover:from-primary/90 hover:to-destructive/90">
+                confirm donation
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </Container>
+    </div>
+  );
+};
+
+export default DonationRequestDetails;

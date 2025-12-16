@@ -14,6 +14,7 @@ import WelcomePage from "@/Page/Dashboard/WelcomePage/WelcomePage";
 import DonationRequest from "@/Page/DonationRequest/DonationRequest";
 
 import FindBloodInput from "@/Page/FindBloodInput/FindBloodInput";
+import DonationRequestDetails from "@/Page/FindBloodInput/Shared/DonationRequestDetails/DonationRequestDetails";
 import Funding from "@/Page/Funding/Funding";
 import Home from "@/Page/Home/Home";
 
@@ -46,6 +47,14 @@ const router = createBrowserRouter([
       {
         path: "search-page",
         Component: FindBloodInput,
+      },
+      {
+        path: "donation-request-details/:id",
+        element: (
+          <PrivetRoute>
+            <DonationRequestDetails />
+          </PrivetRoute>
+        ),
       },
 
       {

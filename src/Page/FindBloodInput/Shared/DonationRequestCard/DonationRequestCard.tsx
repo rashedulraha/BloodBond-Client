@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Droplet, MapPin, Calendar, Clock, Eye } from "lucide-react";
 import type { bloodDonation } from "@/types/blog";
+import { Link } from "react-router-dom";
 
 // Type Definition
 interface DonationRequestCardProps {
@@ -52,14 +53,14 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-primary/30 group">
+    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-primary/30 group rounded-md">
       <CardContent>
         <div className="flex  flex-col">
           {/* Blood Group Badge - Top */}
           <div className="flex-1">
             <div className="flex justify-between items-start mb-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-linear-to-r from-primary to-destructive text-primary-foreground rounded-full font-bold shadow-lg">
-                <Droplet className="w-5 h-5" />
+              <div className="inline-flex items-center gap-2 px-4 py-1 bg-linear-to-r from-primary to-destructive text-primary-foreground rounded-full font-bold shadow-lg">
+                <Droplet className="w-4 h-4" />
                 {bloodGroup || "N/A"}
               </div>
             </div>
@@ -101,12 +102,12 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({
             </div>
           </div>
           {/* View Details Button */}
-          <Button
-            onClick={handleViewDetails}
-            className="w-full cursor-pointer ">
-            <Eye className="w-4 h-4 mr-2" />
-            View Details
-          </Button>
+          <Link to={`/donation-request-details/${_id}`}>
+            <Button className="w-full cursor-pointer ">
+              <Eye className="w-4 h-4 mr-2" />
+              View Details
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>
