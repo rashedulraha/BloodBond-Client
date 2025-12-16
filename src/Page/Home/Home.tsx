@@ -4,7 +4,6 @@ import Features from "../Shared/Feature/Feature";
 import HowItWorks from "../Shared/HowItWorks/HowItWorks";
 import Container from "../Shared/Responsive/Container";
 import LoadingSpinner from "../Shared/Spinner/LoadingSpinner";
-// import AnimatedBackground from "@/components/AnimatedBackground/AnimatedBackground";
 import VideoLikeHeroBanner from "@/components/VideoLikeHeroBanner/VideoLikeHeroBanner";
 
 const Home = () => {
@@ -16,9 +15,6 @@ const Home = () => {
 
   return (
     <div>
-      {/* Hero Banner Section */}
-      {/* <AnimatedBackground></AnimatedBackground> */}
-
       <Container>
         <VideoLikeHeroBanner />
       </Container>

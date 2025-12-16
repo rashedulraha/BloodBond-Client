@@ -44,16 +44,8 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({
     return `${formattedHour}:${minutes} ${ampm}`;
   };
 
-  // Handle view details
-  const handleViewDetails = () => {
-    // Navigate to details page or open modal
-    console.log("View details for:", _id);
-    // You can add navigation here:
-    // navigate(`/donation-request/${_id}`);
-  };
-
   return (
-    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-primary/30 group rounded-md">
+    <Card className="overflow-hidden  rounded-md bg-card/50  hover:-translate-y-2 transition-all duration-300 border-2 border-secondary hover:border-primary/30 group">
       <CardContent>
         <div className="flex  flex-col">
           {/* Blood Group Badge - Top */}

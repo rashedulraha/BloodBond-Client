@@ -8,6 +8,7 @@ import {
   Droplet,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Container from "../Shared/Responsive/Container";
 
 const About: React.FC = () => {
   const mission =
@@ -45,8 +46,8 @@ const About: React.FC = () => {
   ];
 
   return (
-    <div className="p-4 sm:p-8 min-h-screen">
-      <div className="max-w-6xl mx-auto space-y-12">
+    <Container>
+      <div className="space-y-12">
         {/* --- [ 1. Header & Mission ] --- */}
         <div className="text-center pb-4 border-b border-border">
           <h1 className="text-5xl font-extrabold text-primary mb-4 animate-in fade-in zoom-in duration-500">
@@ -116,7 +117,7 @@ const About: React.FC = () => {
           </Button>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 
