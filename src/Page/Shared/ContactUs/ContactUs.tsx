@@ -40,7 +40,7 @@ const ContactUs = () => {
 
       <div className="flex items-center justify-between flex-col md:flex-row gap-12 pt-10">
         {/* Contact Form */}
-        <div className="bg-card/50 rounded-md shadow-lg flex-1 w-full p-4 md:p-6">
+        <div className="bg-card/50 border border-secondary rounded-md shadow-lg flex-1 w-full p-4 md:p-6">
           <h3 className="text-xl font-semibold text-foreground mb-6">
             Send us a message
           </h3>
