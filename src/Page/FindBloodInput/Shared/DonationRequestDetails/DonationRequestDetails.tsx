@@ -129,7 +129,6 @@ const DonationRequestDetails = () => {
     requesterEmail,
     recipientName,
     recipientDistrict,
-    recipientUpazila,
     hospitalName,
     fullAddressLine,
     bloodGroup,
@@ -303,7 +302,7 @@ const DonationRequestDetails = () => {
                   Location
                 </Label>
                 <p className="text-base font-medium text-foreground mb-1">
-                  {recipientUpazila}, {recipientDistrict}
+                  {recipientDistrict}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {fullAddressLine}

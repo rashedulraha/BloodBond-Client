@@ -1,73 +1,88 @@
-# React + TypeScript + Vite
+# 🩸 BloodBond | Blood Donation & Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**BloodBond** is a robust and user-friendly MERN stack application designed to streamline blood donation activities. It bridges the gap between donors and recipients while providing administrative tools for managing users, requests, and community funding.
 
-Currently, two official plugins are available:
+## 🚀 Live Links
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Client Live URL:** [bloodbond-red.vercel.app]
+- **Server API URL:** []
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Key Features
 
-## Expanding the ESLint configuration
+### 👤 Role-Based Access Control (RBAC)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Donor:** Can create donation requests, manage their profile, and track their donation history.
+- **Volunteer:** Can manage all donation requests and update statuses, but cannot delete users or manage funding.
+- **Admin:** Full control over the system, including user status management (Block/Unblock), role assignments, and content moderation.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 📊 Advanced Dashboard
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Interactive Stats:** Visualized data using **Recharts** for donation trends.
+- **Dynamic Filtering:** Filter donation requests by status (Pending, In-Progress, Done, Canceled).
+- **Profile Management:** Fully editable profile with district and upazila selection.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 🩸 Donation Features
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Public Search:** Search for donors by blood group, district, and upazila.
+- **Real-time Status:** Donation process workflow from `Pending` -> `In-Progress` -> `Done/Canceled`.
+- **Location Specific:** Integrated Bangladesh Geocode for precise district/upazila selection.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 💳 Additional Modules
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Stripe Funding:** Secure payment integration for organizational support.
+- **Animations:** Smooth UI transitions using **Framer Motion** and **AOS**.
+- **Responsive UI:** Crafted with **Tailwind CSS v4** and **Shadcn UI** for all device sizes.
+
+---
+
+## 💻 Tech Stack
+
+**Frontend:**
+
+- React 19 (Vite), TypeScript, Tailwind CSS v4, Shadcn UI, Framer Motion, TanStack Query.
+
+**Backend:**
+
+- Node.js, Express.js, MongoDB, JWT (JSON Web Token).
+
+**Authentication & Storage:**
+
+- Firebase Auth, ImgBB API (Avatar Upload).
+
+---
+
+## 📦 Major Packages Used
+
+| Package                        | Purpose                                    |
+| :----------------------------- | :----------------------------------------- |
+| `@tanstack/react-table`        | For advanced tabular data and pagination   |
+| `react-hook-form` & `zod`      | Efficient form handling and validation     |
+| `recharts`                     | Data visualization on Admin Dashboard      |
+| `framer-motion` & `aos`        | Sleek UI animations                        |
+| `axios`                        | Secure API communication                   |
+| `lucide-react` & `react-icons` | Premium iconography                        |
+| `sweetalert2` & `sonner`       | Interactive modals and toast notifications |
+
+---
+
+## ⚙️ Environment Variables Setup
+
+Create a `.env` file in the root and add:
+
+```env
+# Firebase
+VITE_FIREBASE_API_KEY=your_key
+VITE_FIREBASE_AUTH_DOMAIN=your_domain
+
+# APIs
+VITE_IMGBB_API_KEY=your_key
+VITE_STRIPE_PUBLIC_KEY=your_key
+
+# Database & JWT (Server Side)
+DB_USER=your_db_user
+DB_PASS=your_db_password
+JWT_ACCESS_TOKEN=your_secret_token
+
 ```
