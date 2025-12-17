@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +20,18 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import useAuth from "@/Hook/useAuth";
 import axios from "axios";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
-import type { District, registration } from "@/types/blog";
+import type { District } from "@/types/blog";
+
+type Inputs = {
+  name: string;
+  email: string;
+  avatar: FileList;
+  bloodGroup: string;
+  division: string;
+  district: string;
+  password: string;
+  confirmPassword: string;
+};
 
 const DIVISIONS = [
   { id: "1", name: "Chattogram" },
@@ -33,17 +44,6 @@ const DIVISIONS = [
   { id: "8", name: "Mymensingh" },
 ];
 
-const selectBloodGroup = [
-                            "A+",
-                            "A-",
-                            "B+",
-                            "B-",
-                            "AB+",
-                            "AB-",
-                            "O+",
-                            "O-"
-                          ]
-
 const DISTRICTS_JSON_URL = "/districts.json";
 
 const RegisterPage = () => {
@@ -54,8 +54,7 @@ const RegisterPage = () => {
     watch,
     control,
     setValue,
-  } = useForm<registration>();
-  const { registerUser, profileUpdate, signinWithGoogle, user } = useAuth();
+  } = useForm<Inputs>();
 
   const [isLoading, setIsLoading] = useState(false);
   const [districts, setDistricts] = useState<District[]>([]);
@@ -63,6 +62,7 @@ const RegisterPage = () => {
   const [loadingDistricts, setLoadingDistricts] = useState(true);
   const [districtError, setDistrictError] = useState<string | null>(null);
 
+  const { registerUser, profileUpdate, signinWithGoogle } = useAuth();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,7 +107,7 @@ const RegisterPage = () => {
     }
   }, [selectedDivision, districts, setValue]);
 
-  const onSubmit: SubmitHandler<registration> = async (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
 
     console.log("Form Data:", data);
@@ -183,10 +183,6 @@ const RegisterPage = () => {
     }
   };
 
-  if (user) {
-    return <Navigate to={location.state || "/"} />;
-  }
-
   return (
     <Container>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
@@ -227,7 +223,7 @@ const RegisterPage = () => {
         </div>
 
         {/* Right Column - Form */}
-        <div className="bg-card/50 rounded-md shadow-lg p-8 border border-secondary">
+        <div className="bg-card rounded-md shadow-lg p-8 border border-border">
           {loadingDistricts && (
             <p className="text-center text-primary mb-4">
               Loading districts...
@@ -312,7 +308,16 @@ const RegisterPage = () => {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Select your blood group</SelectLabel>
-                          {selectBloodGroup.map((group) => (
+                          {[
+                            "A+",
+                            "A-",
+                            "B+",
+                            "B-",
+                            "AB+",
+                            "AB-",
+                            "O+",
+                            "O-",
+                          ].map((group) => (
                             <SelectItem key={group} value={group}>
                               {group}
                             </SelectItem>
