@@ -156,6 +156,7 @@ const DonationRequest: React.FC = () => {
   const { control, handleSubmit, watch, setValue, formState } = form;
 
   // Watch selected division
+  // eslint-disable-next-line react-hooks/incompatible-library
   const selectedDivision = watch("recipientDistrict");
 
   // Update districts when division changes

@@ -113,7 +113,7 @@ const AllDonationRequest = () => {
               <TableCell className="font-medium">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline">Delete</Button>
+                    <Button>Delete</Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>

@@ -40,9 +40,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"; // Assuming you have a Badge component
 import Container from "@/Page/Shared/Responsive/Container";
 
-// ---------------------------------------------------
-// 1. DATA AND TYPE DEFINITIONS
-// ---------------------------------------------------
+
 
 type DonationStatus = "pending" | "inprogress" | "done" | "canceled";
 
