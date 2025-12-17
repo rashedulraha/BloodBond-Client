@@ -40,6 +40,7 @@ import { Label } from "@/components/ui/label";
 import useAuth from "@/Hook/useAuth";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
 import type { bloodDonation } from "@/types/blog";
+import useRole from "@/Hook/useRole";
 
 // Blood Groups
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -132,6 +133,7 @@ const DISTRICTS_BY_DIVISION: { [key: string]: string[] } = {
 
 const DonationRequest: React.FC = () => {
   const { user } = useAuth();
+  const { status } = useRole();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
 
@@ -197,7 +199,7 @@ const DonationRequest: React.FC = () => {
   };
 
   // Block check - user status should be "blocked" to show blocked message
-  if (user?.status === "block") {
+  if (status === "block") {
     return (
       <div className="p-12 min-h-screen flex items-center justify-center bg-background text-foreground">
         <div className="max-w-xl mx-auto bg-card shadow-2xl rounded-xl p-10 text-center border-t-4 border-destructive">
