@@ -2,13 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 // Updated Icons for a strong impact
 import { Search, HeartPulse, Droplet, TrendingUp } from "lucide-react";
-
-interface CtaButtonProps {
-  to: string;
-  label: string;
-  Icon: React.ElementType;
-  variant: "primary" | "secondary";
-}
+import type { CtaButtonProps } from "@/types/blog";
+import useAuth from "@/Hook/useAuth";
 
 const CtaButton: React.FC<CtaButtonProps> = ({ to, label, Icon, variant }) => {
   const isPrimary = variant === "primary";
@@ -30,6 +25,7 @@ const CtaButton: React.FC<CtaButtonProps> = ({ to, label, Icon, variant }) => {
 };
 
 const VideoLikeHeroBanner: React.FC = () => {
+  const { user } = useAuth();
   return (
     <div className="mx-auto text-center max-w-7xl">
       {/* 1. Enhanced Tagline/Pre-Header (Focus on Urgency and Trust) */}
@@ -80,12 +76,21 @@ const VideoLikeHeroBanner: React.FC = () => {
         />
 
         {/* Secondary CTA: Register as Donor (Community Building) */}
-        <CtaButton
-          to="/donor-registration"
-          label="Join as a donor" // Clear call to action
-          Icon={Droplet}
-          variant="secondary"
-        />
+        {user ? (
+          <CtaButton
+            to="/volunteer"
+            label="Join as a Volunteer" // Clear call to action
+            Icon={Droplet}
+            variant="secondary"
+          />
+        ) : (
+          <CtaButton
+            to="/register"
+            label="Join as donor" // Clear call to action
+            Icon={Droplet}
+            variant="secondary"
+          />
+        )}
       </div>
 
       {/* New Section: Social Impact/Key Metric (for credibility) */}

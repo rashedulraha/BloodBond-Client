@@ -136,3 +136,10 @@ export type registration = {
   password: string;
   confirmPassword: string;
 };
+
+export interface CtaButtonProps {
+  to: string;
+  label: string;
+  Icon: React.ElementType;
+  variant: "primary" | "secondary";
+}

@@ -8,6 +8,7 @@ import Blog from "@/Page/Blog/Blog";
 import Contact from "@/Page/Contact/Contact";
 import AllDonationRequest from "@/Page/Dashboard/AllDonationRequest/AllDonationRequest";
 import AllRegisterUser from "@/Page/Dashboard/AllRegisterUser/AllRegisterUser";
+import AllVolunteerRequest from "@/Page/Dashboard/AllVolunteerRequest/AllVolunteerRequest";
 import MyDonationRequests from "@/Page/Dashboard/MyDonationRequests/MyDonationRequests";
 import Profile from "@/Page/Dashboard/Profile/Profile";
 
@@ -20,6 +21,7 @@ import Funding from "@/Page/Funding/Funding";
 import Home from "@/Page/Home/Home";
 
 import PrivetRoute from "@/Page/Shared/PrivetRoute/PrivetRoute";
+import Volunteer from "@/Page/Volunteer/Volunteer";
 import VolunteerRegister from "@/Page/VolunteerRegister/VolunteerRegister";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -75,6 +77,14 @@ const router = createBrowserRouter([
           </PrivetRoute>
         ),
       },
+      {
+        path: "volunteer",
+        element: (
+          <PrivetRoute>
+            <Volunteer />
+          </PrivetRoute>
+        ),
+      },
     ],
   },
 
@@ -127,6 +137,10 @@ const router = createBrowserRouter([
       {
         path: "all-blood-donation-request",
         Component: AllDonationRequest,
+      },
+      {
+        path: "all-volunteer-request",
+        Component: AllVolunteerRequest,
       },
     ],
   },

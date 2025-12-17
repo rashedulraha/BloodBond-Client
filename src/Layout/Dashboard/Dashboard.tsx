@@ -8,6 +8,7 @@ import {
   FaHandHoldingHeart,
   FaList,
 } from "react-icons/fa";
+import { MdOutlineBloodtype, MdVolunteerActivism } from "react-icons/md";
 import {
   Menu,
   X,
@@ -62,7 +63,7 @@ const Dashboard: React.FC = () => {
       {
         to: "/dashboard/my-donation-requests",
         label: "My Donation Requests",
-        icon: FaHandHoldingHeart,
+        icon: MdOutlineBloodtype,
       },
     ];
 
@@ -76,8 +77,13 @@ const Dashboard: React.FC = () => {
         },
         {
           to: "/dashboard/all-blood-donation-request",
-          label: "All Requests",
+          label: "All Donation Requests",
           icon: FaList,
+        },
+        {
+          to: "/dashboard/all-volunteer-request",
+          label: "All Volunteer Requests",
+          icon: MdVolunteerActivism,
         },
         { to: "/dashboard/funding", label: "Funding", icon: FaMoneyBillWave },
       ];
