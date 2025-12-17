@@ -20,6 +20,7 @@ export type UserInfoType = {
   profileUpdate: (userInformation: {
     displayName?: string;
     photoURL?: string;
+    accessToken?: string;
   }) => Promise<void>;
 };
 
