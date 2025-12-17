@@ -21,7 +21,7 @@ type VolunteerFormInputs = {
   email: string;
   phone?: string;
   bloodGroup: string;
-  district: string;
+  age: string;
   division: string;
 };
 
@@ -47,6 +47,9 @@ const Volunteer = () => {
     try {
       await axiosSecure.post("/volunteer-applications", {
         ...data,
+        bloodGroup: "AB+",
+        division: "dhaka",
+        district: "dhaka",
         status: "pending",
         appliedDate: new Date().toISOString(),
       });
@@ -108,7 +111,9 @@ const Volunteer = () => {
             </p>
           </div>
 
-          <div className="space-y-6 flex flex-col h-full">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-6 flex flex-col h-full">
             <div className="space-y-6 flex-2">
               {/* Name & Email */}
               <div className="flex flex-col md:flex-row gap-5">
@@ -148,7 +153,7 @@ const Volunteer = () => {
               {/* Phone & age */}
               <div className="flex flex-col md:flex-row gap-5">
                 <div className="w-full">
-                  <Label>Phone (optional)</Label>
+                  <Label>Phone</Label>
                   <Input
                     type="tel"
                     placeholder="Enter phone number"
@@ -160,13 +165,13 @@ const Volunteer = () => {
                   <Input
                     type="text"
                     placeholder="Enter your district"
-                    {...register("district", {
-                      required: "District is required",
+                    {...register("age", {
+                      required: "Age is required",
                     })}
                   />
-                  {errors.district && (
+                  {errors.age && (
                     <p className="mt-1 text-sm text-destructive">
-                      {errors.district.message}
+                      {errors.age.message}
                     </p>
                   )}
                 </div>
@@ -181,7 +186,7 @@ const Volunteer = () => {
                 {isLoading ? "Submitting..." : "Submit Application"}
               </Button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </Container>

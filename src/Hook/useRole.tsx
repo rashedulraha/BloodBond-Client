@@ -21,8 +21,6 @@ const useRole = () => {
       .finally(() => setLoading(false));
   }, [user?.email]);
 
-  console.log(role, status, loading);
-
   return { role, status, loading };
 };
 
