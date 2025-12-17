@@ -7,33 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import useAuth from "@/Hook/useAuth";
 import useRole from "@/Hook/useRole";
-import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "@/Hook/useAxiosSecure";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logOutUser } = useAuth();
   const { role, status } = useRole();
-  const axiosSecure = useAxiosSecure();
-
-  const { data: profileInfo = [] } = useQuery({
-    queryKey: ["profile-data"],
-    queryFn: async () => {
-      if (!user?.email) {
-        throw new Error("User email not available for role query.");
-      }
-      const result = await axiosSecure.get(`/profile/${user.email}/data`);
-      return result.data;
-    },
-  });
-
-  const userData = profileInfo[0];
 
   const handleUserLogout = () => {
     logOutUser();
   };
 
-  // Public Links (Icons removed)
+  //! Public Links (Icons removed)
   const publicLinks = (
     <>
       <Link to="/" className="hover:text-primary transition-colors">

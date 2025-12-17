@@ -63,6 +63,7 @@ import { Input } from "@/components/ui/input";
 import Container from "@/Page/Shared/Responsive/Container";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
 import type { AllUser } from "@/types/blog";
+import LoadingSpinner from "@/Page/Shared/Spinner/LoadingSpinner";
 
 type UserStatus = "active" | "block";
 type UserRole = "admin" | "volunteer" | "donor";
@@ -132,7 +133,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            onClick={() => onPageChange(currentPage - 1)}
+            onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
             className={
               currentPage === 1
                 ? "pointer-events-none opacity-50"
@@ -158,7 +159,9 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
 
         <PaginationItem>
           <PaginationNext
-            onClick={() => onPageChange(currentPage + 1)}
+            onClick={() =>
+              currentPage < totalPages && onPageChange(currentPage + 1)
+            }
             className={
               currentPage === totalPages
                 ? "pointer-events-none opacity-50"
@@ -188,12 +191,11 @@ const AllRegisterUser: React.FC = () => {
     data: allUsers = [],
     isLoading,
     error,
-    refetch,
-  } = useQuery<AllUser[]>({
+  } = useQuery<AllUser[], Error>({
     queryKey: ["register-user"],
     queryFn: async () => {
       const response = await axiosSecure.get("/register-user");
-      return response.data;
+      return response.data as AllUser[];
     },
   });
 
@@ -208,9 +210,8 @@ const AllRegisterUser: React.FC = () => {
       setStatusDialogOpen(false);
       setSelectedUser(null);
     },
-    onError: (error) => {
-      console.error("Error updating status:", error);
-      toast.error("Failed to update user status. Please try again.");
+    onError: () => {
+      toast.error("Failed to update user status.");
     },
   });
 
@@ -223,39 +224,36 @@ const AllRegisterUser: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["register-user"] });
       toast.success("User role updated successfully!");
     },
-    onError: (error) => {
-      console.error("Error updating role:", error);
-      toast.error("Failed to update user role. Please try again.");
+    onError: () => {
+      toast.error("Failed to update user role.");
     },
   });
 
-  // Filtering and Search Logic
+  // Filtering and Search
   const filteredUsers = useMemo(() => {
     let filtered = [...allUsers];
 
-    // Filter by status
     if (filterStatus !== "all") {
       filtered = filtered.filter((user) => user.status === filterStatus);
     }
 
-    // Filter by role
     if (filterRole !== "all") {
       filtered = filtered.filter((user) => user.role === filterRole);
     }
 
-    // Filter by search term
     if (searchTerm) {
+      const lowerSearch = searchTerm.toLowerCase();
       filtered = filtered.filter(
         (user) =>
-          user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+          user.name.toLowerCase().includes(lowerSearch) ||
+          user.email.toLowerCase().includes(lowerSearch)
       );
     }
 
     return filtered;
   }, [allUsers, filterStatus, filterRole, searchTerm]);
 
-  // Pagination Logic
+  // Pagination
   const totalItems = filteredUsers.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
@@ -265,7 +263,6 @@ const AllRegisterUser: React.FC = () => {
     return filteredUsers.slice(startIndex, endIndex);
   }, [filteredUsers, currentPage]);
 
-  // Reset page when filter changes
   React.useEffect(() => {
     setCurrentPage(1);
   }, [filterStatus, filterRole, searchTerm]);
@@ -279,7 +276,6 @@ const AllRegisterUser: React.FC = () => {
     [totalPages]
   );
 
-  // Handle Status Change
   const handleStatusClick = (user: AllUser) => {
     setSelectedUser(user);
     setStatusDialogOpen(true);
@@ -293,37 +289,27 @@ const AllRegisterUser: React.FC = () => {
     }
   };
 
-  // Handle Role Change
   const handleRoleChange = (userId: string, newRole: UserRole) => {
     roleMutation.mutate({ id: userId, role: newRole });
   };
 
   const statusOptions = [
-    { value: "all", label: "All Status" },
-    { value: "active", label: "Active" },
-    { value: "block", label: "Blocked" },
+    { value: "all" as const, label: "All Status" },
+    { value: "active" as const, label: "Active" },
+    { value: "block" as const, label: "Blocked" },
   ];
 
   const roleOptions = [
-    { value: "all", label: "All Roles" },
-    { value: "admin", label: "Admin" },
-    { value: "volunteer", label: "Volunteer" },
-    { value: "donor", label: "Donor" },
+    { value: "all" as const, label: "All Roles" },
+    { value: "admin" as const, label: "Admin" },
+    { value: "volunteer" as const, label: "Volunteer" },
+    { value: "donor" as const, label: "Donor" },
   ];
 
-  // Loading State
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-muted-foreground">Loading registered users...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
-  // Error State
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -355,7 +341,7 @@ const AllRegisterUser: React.FC = () => {
           </p>
         </header>
 
-        {/* Filter and Search Controls */}
+        {/* Filters & Search */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 pb-4 border-b">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1">
             <h2 className="text-lg md:text-xl font-semibold text-foreground flex items-center gap-2">
@@ -363,12 +349,11 @@ const AllRegisterUser: React.FC = () => {
               Filter Users ({totalItems} total)
             </h2>
 
-            {/* Status Filter */}
             <Select
-              onValueChange={(value: UserStatus | "all") =>
-                setFilterStatus(value)
-              }
-              value={filterStatus}>
+              value={filterStatus}
+              onValueChange={(value) =>
+                setFilterStatus(value as UserStatus | "all")
+              }>
               <SelectTrigger className="w-full sm:w-40 bg-card border-2">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -383,10 +368,11 @@ const AllRegisterUser: React.FC = () => {
               </SelectContent>
             </Select>
 
-            {/* Role Filter */}
             <Select
-              onValueChange={(value: UserRole | "all") => setFilterRole(value)}
-              value={filterRole}>
+              value={filterRole}
+              onValueChange={(value) =>
+                setFilterRole(value as UserRole | "all")
+              }>
               <SelectTrigger className="w-full sm:w-40 bg-card border-2">
                 <SelectValue placeholder="Role" />
               </SelectTrigger>
@@ -402,7 +388,6 @@ const AllRegisterUser: React.FC = () => {
             </Select>
           </div>
 
-          {/* Search Input */}
           <div className="relative w-full lg:w-auto">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
@@ -415,7 +400,7 @@ const AllRegisterUser: React.FC = () => {
           </div>
         </div>
 
-        {/* Data Table - Desktop */}
+        {/* Desktop Table */}
         <div className="hidden md:block overflow-x-auto rounded-lg border border-border">
           <Table>
             <TableHeader>
@@ -443,7 +428,7 @@ const AllRegisterUser: React.FC = () => {
                     <TableCell>
                       <figure className="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
                         <img
-                          src={user.imageURL || "/default-avatar.png"}
+                          src={user.imageURL ?? "/default-avatar.png"}
                           alt={user.name}
                           className="w-full h-full object-cover"
                         />
@@ -461,7 +446,6 @@ const AllRegisterUser: React.FC = () => {
                     </TableCell>
                     <TableCell className="text-center">
                       <div className="flex justify-center gap-2">
-                        {/* Status Toggle Button */}
                         <Button
                           variant="outline"
                           size="sm"
@@ -484,7 +468,6 @@ const AllRegisterUser: React.FC = () => {
                           )}
                         </Button>
 
-                        {/* Role Dropdown */}
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm">
@@ -500,24 +483,21 @@ const AllRegisterUser: React.FC = () => {
                             <DropdownMenuItem
                               onClick={() =>
                                 handleRoleChange(`${user._id}`, "admin")
-                              }
-                              className="cursor-pointer">
+                              }>
                               <Shield className="w-4 h-4 mr-2 text-purple-600" />
                               Admin
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() =>
                                 handleRoleChange(`${user._id}`, "volunteer")
-                              }
-                              className="cursor-pointer">
+                              }>
                               <UserCheck className="w-4 h-4 mr-2 text-blue-600" />
                               Volunteer
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() =>
                                 handleRoleChange(`${user._id}`, "donor")
-                              }
-                              className="cursor-pointer">
+                              }>
                               <Users className="w-4 h-4 mr-2 text-primary" />
                               Donor
                             </DropdownMenuItem>
@@ -543,7 +523,7 @@ const AllRegisterUser: React.FC = () => {
           </Table>
         </div>
 
-        {/* Mobile Card View */}
+        {/* Mobile Cards */}
         <div className="md:hidden space-y-4">
           {paginatedUsers.length > 0 ? (
             paginatedUsers.map((user) => (
@@ -551,9 +531,9 @@ const AllRegisterUser: React.FC = () => {
                 key={user._id}
                 className="bg-card border border-border rounded-lg p-4 space-y-3">
                 <div className="flex items-start gap-3">
-                  <figure className="w-12 h-12 rounded-full border-2 border-primary overflow-hidden flex-shrink-0">
+                  <figure className="w-12 h-12 rounded-full border-2 border-primary overflow-hidden shrink-0">
                     <img
-                      src={user.imageURL || "/default-avatar.png"}
+                      src={user.imageURL ?? "/default-avatar.png"}
                       alt={user.name}
                       className="w-full h-full object-cover"
                     />
@@ -641,7 +621,7 @@ const AllRegisterUser: React.FC = () => {
         />
       </Container>
 
-      {/* Status Change Confirmation Dialog */}
+      {/* Status Confirmation Dialog */}
       <AlertDialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

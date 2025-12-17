@@ -1,13 +1,7 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import { GoHome } from "react-icons/go";
-import {
-  FaUserFriends,
-  FaPlus,
-  FaMoneyBillWave,
-  FaHandHoldingHeart,
-  FaList,
-} from "react-icons/fa";
+import { FaUserFriends, FaPlus, FaMoneyBillWave, FaList } from "react-icons/fa";
 import { MdOutlineBloodtype, MdVolunteerActivism } from "react-icons/md";
 import {
   Menu,
@@ -72,7 +66,7 @@ const Dashboard: React.FC = () => {
         ...commonLinks,
         {
           to: "/dashboard/all-register-user",
-          label: "All Users",
+          label: "All Register Users",
           icon: FaUserFriends,
         },
         {

@@ -176,7 +176,6 @@ const AllVolunteerApplications: React.FC = () => {
     queryKey: ["volunteer-volunteer"],
     queryFn: async () => {
       const response = await axiosSecure.get("/volunteer-request");
-      console.log(response.data);
       return response.data;
     },
   });
@@ -550,7 +549,7 @@ const AllVolunteerApplications: React.FC = () => {
                       {getStatusBadge(application.status)}
                     </TableCell>
                     <TableCell>
-                      <div className="flex justify-center gap-1">
+                      <div className="flex justify-end gap-1">
                         {/* Approve Button - Only for pending */}
                         {application.status === "pending" && (
                           <Button

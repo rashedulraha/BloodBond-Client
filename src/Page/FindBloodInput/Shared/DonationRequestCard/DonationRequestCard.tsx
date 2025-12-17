@@ -24,7 +24,7 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({
   } = donationdata || {};
 
   // Format date - "20 Dec, 2024"
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
     if (!dateString) return "N/A";
     const dateObj = new Date(dateString);
     return dateObj.toLocaleDateString("en-US", {
@@ -35,7 +35,7 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({
   };
 
   // Format time - "2:30 PM"
-  const formatTime = (timeString: string) => {
+  const formatTime = (timeString?: string) => {
     if (!timeString) return "N/A";
     const [hours, minutes] = timeString.split(":");
     const hour = parseInt(hours);

@@ -176,7 +176,6 @@ const AllDonationRequest: React.FC = () => {
     data: allRequests = [],
     isLoading,
     error,
-    refetch,
   } = useQuery<AllRequester[]>({
     queryKey: ["all-donation-requests"],
     queryFn: async () => {
@@ -488,19 +487,7 @@ const AllDonationRequest: React.FC = () => {
                     <TableCell className="text-center">
                       {getStatusBadge(request.donationStatus as DonationStatus)}
                     </TableCell>
-                    <TableCell className="text-center">
-                      {request.donationStatus === "inprogress" &&
-                      request.donorName ? (
-                        <div className="text-xs">
-                          <div className="font-medium">{request.donorName}</div>
-                          <div className="text-muted-foreground">
-                            {request.donorEmail}
-                          </div>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground text-xs">-</span>
-                      )}
-                    </TableCell>
+                    <TableCell className="text-center">{"Rashedul"}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         {/* View Button */}
@@ -585,7 +572,7 @@ const AllDonationRequest: React.FC = () => {
                 key={request._id}
                 className="bg-card border border-border rounded-lg p-4 space-y-3">
                 <div className="flex items-start gap-3">
-                  <figure className="w-12 h-12 rounded-full border-2 border-primary overflow-hidden flex-shrink-0">
+                  <figure className="w-12 h-12 rounded-full border-2 border-primary overflow-hidden shrink-0">
                     <img
                       src={request.imageURL || "/default-avatar.png"}
                       alt={request.requesterName}
@@ -607,13 +594,13 @@ const AllDonationRequest: React.FC = () => {
 
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
+                    <MapPin className="w-4 h-4 text-primary shrink-0" />
                     <span className="text-muted-foreground">
                       {request.hospitalName}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-primary flex-shrink-0" />
+                    <Clock className="w-4 h-4 text-primary shrink-0" />
                     <span>
                       {formatDate(request.donationDate)} at{" "}
                       {formatTime(request.donationTime)}

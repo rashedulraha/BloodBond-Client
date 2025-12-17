@@ -153,7 +153,7 @@ export interface VolunteerApplication {
   division: string;
   district: string;
   photoURL?: string;
-  status: VolunteerStatus;
+  status?: VolunteerStatus;
   appliedDate: string;
   experience?: string;
   motivation?: string;
