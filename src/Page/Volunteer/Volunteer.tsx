@@ -1,5 +1,5 @@
 import Container from "@/Page/Shared/Responsive/Container";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -12,15 +12,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-  SelectGroup,
-  SelectLabel,
-} from "@/components/ui/select";
 
 import useAuth from "@/Hook/useAuth";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
@@ -34,18 +25,6 @@ type VolunteerFormInputs = {
   division: string;
 };
 
-const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
-const divisions = [
-  "Dhaka",
-  "Chattogram",
-  "Rajshahi",
-  "Sylhet",
-  "Barishal",
-  "Khulna",
-  "Mymensingh",
-  "Rangpur",
-];
-
 const Volunteer = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
@@ -56,7 +35,6 @@ const Volunteer = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    control,
   } = useForm<VolunteerFormInputs>({
     defaultValues: {
       name: user?.displayName || "",
@@ -130,141 +108,72 @@ const Volunteer = () => {
             </p>
           </div>
 
-          <div className="space-y-6">
-            {/* Name & Email */}
-            <div className="flex flex-col md:flex-row gap-5">
-              <div className="w-full">
-                <Label>Full Name</Label>
-                <Input
-                  type="text"
-                  placeholder="Enter your full name"
-                  {...register("name", { required: "Name is required" })}
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-destructive">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-              <div className="w-full">
-                <Label>Email</Label>
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Invalid email address",
-                    },
-                  })}
-                />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-destructive">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Phone & Blood Group */}
-            <div className="flex flex-col md:flex-row gap-5">
-              <div className="w-full">
-                <Label>Phone (optional)</Label>
-                <Input
-                  type="tel"
-                  placeholder="Enter phone number"
-                  {...register("phone")}
-                />
-              </div>
-              <div className="w-full">
-                <Label>Blood Group</Label>
-                <Controller
-                  name="bloodGroup"
-                  control={control}
-                  rules={{ required: "Blood group is required" }}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange}>
-                      <SelectTrigger
-                        className={
-                          errors.bloodGroup ? "border-destructive" : ""
-                        }>
-                        <SelectValue placeholder="Select blood group" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Select your blood group</SelectLabel>
-                          {bloodGroups.map((group) => (
-                            <SelectItem key={group} value={group}>
-                              {group}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+          <div className="space-y-6 flex flex-col h-full">
+            <div className="space-y-6 flex-2">
+              {/* Name & Email */}
+              <div className="flex flex-col md:flex-row gap-5">
+                <div className="w-full">
+                  <Label>Full Name</Label>
+                  <Input
+                    type="text"
+                    placeholder="Enter your full name"
+                    {...register("name", { required: "Name is required" })}
+                  />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-destructive">
+                      {errors.name.message}
+                    </p>
                   )}
-                />
-                {errors.bloodGroup && (
-                  <p className="mt-1 text-sm text-destructive">
-                    {errors.bloodGroup.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* District & Division */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="w-full">
-                <Label>District</Label>
-                <Input
-                  type="text"
-                  placeholder="Enter your district"
-                  {...register("district", {
-                    required: "District is required",
-                  })}
-                />
-                {errors.district && (
-                  <p className="mt-1 text-sm text-destructive">
-                    {errors.district.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="w-full">
-                <Label>Division</Label>
-                <Controller
-                  name="division"
-                  control={control}
-                  rules={{ required: "Division is required" }}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange}>
-                      <SelectTrigger
-                        className={errors.division ? "border-destructive" : ""}>
-                        <SelectValue placeholder="Select division" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Select your division</SelectLabel>
-                          {divisions.map((div) => (
-                            <SelectItem key={div} value={div}>
-                              {div}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                </div>
+                <div className="w-full">
+                  <Label>Email</Label>
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email address",
+                      },
+                    })}
+                  />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-destructive">
+                      {errors.email.message}
+                    </p>
                   )}
-                />
-                {errors.division && (
-                  <p className="mt-1 text-sm text-destructive">
-                    {errors.division.message}
-                  </p>
-                )}
+                </div>
+              </div>
+              {/* Phone & age */}
+              <div className="flex flex-col md:flex-row gap-5">
+                <div className="w-full">
+                  <Label>Phone (optional)</Label>
+                  <Input
+                    type="tel"
+                    placeholder="Enter phone number"
+                    {...register("phone")}
+                  />
+                </div>
+                <div className="w-full">
+                  <Label>Your age</Label>
+                  <Input
+                    type="text"
+                    placeholder="Enter your district"
+                    {...register("district", {
+                      required: "District is required",
+                    })}
+                  />
+                  {errors.district && (
+                    <p className="mt-1 text-sm text-destructive">
+                      {errors.district.message}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
-
             {/* Submit Button */}
-            <div className="flex justify-center pt-2">
+            <div className="flex justify-center pt-2 flex-1">
               <Button
                 onClick={handleSubmit(onSubmit)}
                 disabled={isLoading}
