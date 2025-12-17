@@ -80,8 +80,8 @@ export interface DonationRequest {
   requesterName: string;
   requesterEmail: string;
   recipientName: string;
+  recipientDivision: string;
   recipientDistrict: string;
-  recipientUpazila: string;
   hospitalName: string;
   fullAddressLine: string;
   bloodGroup: string;

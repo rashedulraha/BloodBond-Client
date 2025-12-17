@@ -33,6 +33,17 @@ const DIVISIONS = [
   { id: "8", name: "Mymensingh" },
 ];
 
+const selectBloodGroup = [
+                            "A+",
+                            "A-",
+                            "B+",
+                            "B-",
+                            "AB+",
+                            "AB-",
+                            "O+",
+                            "O-"
+                          ]
+
 const DISTRICTS_JSON_URL = "/districts.json";
 
 const RegisterPage = () => {
@@ -301,16 +312,7 @@ const RegisterPage = () => {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Select your blood group</SelectLabel>
-                          {[
-                            "A+",
-                            "A-",
-                            "B+",
-                            "B-",
-                            "AB+",
-                            "AB-",
-                            "O+",
-                            "O-",
-                          ].map((group) => (
+                          {selectBloodGroup.map((group) => (
                             <SelectItem key={group} value={group}>
                               {group}
                             </SelectItem>
