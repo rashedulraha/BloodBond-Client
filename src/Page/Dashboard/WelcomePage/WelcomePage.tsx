@@ -210,7 +210,7 @@ const DashboardWelcome: React.FC = () => {
           {/* Welcome Message */}
           <div className="pb-6 border-b border-border">
             <h1 className="text-3xl md:text-4xl font-extrabold text-foreground flex items-center gap-3 flex-wrap">
-              <Heart className="w-7 h-7 md:w-8 md:h-8 text-destructive flex-shrink-0" />
+              <Heart className="w-7 h-7 md:w-8 md:h-8 text-destructive shrink-0" />
               <span>Welcome back,</span>
               <span className="text-primary">{user?.displayName}!</span>
             </h1>
@@ -481,7 +481,7 @@ const DashboardWelcome: React.FC = () => {
                 </p>
                 <Button
                   onClick={() => navigate("/dashboard/create-donation-request")}
-                  className="bg-gradient-to-r from-primary to-destructive hover:from-primary/90 hover:to-destructive/90">
+                  className="bg-linear-to-r from-primary to-destructive hover:from-primary/90 hover:to-destructive/90">
                   <Heart className="w-4 h-4 mr-2" />
                   Create Your First Request
                 </Button>

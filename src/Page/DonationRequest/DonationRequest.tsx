@@ -197,7 +197,7 @@ const DonationRequest: React.FC = () => {
   };
 
   // Block check - user status should be "blocked" to show blocked message
-  if (user?.status === "blocked") {
+  if (user?.status === "block") {
     return (
       <div className="p-12 min-h-screen flex items-center justify-center bg-background text-foreground">
         <div className="max-w-xl mx-auto bg-card shadow-2xl rounded-xl p-10 text-center border-t-4 border-destructive">

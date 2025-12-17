@@ -1,46 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "./useAxiosSecure";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import useAuth from "./useAuth";
 
-interface UseRoleResult {
-  role: string | null;
-  isLoading: boolean;
-  isError: boolean;
-  error: unknown;
-}
+const useRole = () => {
+  const { user } = useAuth();
+  const [role, setRole] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-const useRole = (): UseRoleResult => {
-  const axiosSecure = useAxiosSecure();
-  const { user, loading } = useAuth();
+  useEffect(() => {
+    if (!user?.email) return;
 
-  const {
-    data: role = "donor",
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["userRole", user?.email],
-    queryFn: async () => {
-      if (!user?.email) {
-        throw new Error("User email not available for role query.");
-      }
+    axios.get(`/user/${user?.email}/role`).then((res) => {
+      setRole(res.data.role);
+      setStatus(res.data.status);
+      setLoading(false);
+    });
+  }, [user?.email]);
 
-      const res = await axiosSecure.get(`/user/${user.email}/role`);
-
-      return res.data;
-    },
-
-    enabled: !!user?.email && !loading,
-
-    staleTime: 1000 * 60 * 5,
-  });
-
-  return {
-    role,
-    isLoading,
-    isError,
-    error,
-  };
+  return { role, status, loading };
 };
 
 export default useRole;
