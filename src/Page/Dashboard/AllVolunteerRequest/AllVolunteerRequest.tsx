@@ -58,12 +58,12 @@ import useAxiosSecure from "@/Hook/useAxiosSecure";
 import type { VolunteerApplication } from "@/types/blog";
 import LoadingSpinner from "@/Page/Shared/Spinner/LoadingSpinner";
 
-type VolunteerStatus = "pending" | "approved" | "rejected";
+type VolunteerStatus = string;
 
 const ITEMS_PER_PAGE = 8;
 
 // Status Badge Component
-const getStatusBadge = (status: VolunteerStatus) => {
+const getStatusBadge = (status?: VolunteerStatus) => {
   switch (status) {
     case "pending":
       return (

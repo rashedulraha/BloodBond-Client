@@ -15,18 +15,19 @@ export interface BlogPost {
 // all user data fetch type
 
 export interface AllUser {
-  status: ReactNode;
-  _id: Key | null | undefined;
+  _id: string;
   name: string;
   email: string;
-  bloodGroup: string;
-  division: string;
-  createAt: string;
   role: string;
-  imageURL: string;
+  status: string;
+  imageURL?: string;
 
-  district: string;
+  bloodGroup?: string;
+  division?: string;
+  district?: string;
+  createAt?: string;
 }
+
 export interface AllRequester {
   recipientName: string;
   _id: string;
@@ -107,7 +108,7 @@ export type RegisterInput = {
 
 //  bangla division type
 export type banglaDivision = {
-  map(arg0: (d: any) => JSX.Element): ReactNode;
+  map(arg0: (d: unknown) => JSX.Element): ReactNode;
   id: string;
   name: string;
   bn_name: string;
@@ -153,7 +154,7 @@ export interface VolunteerApplication {
   division: string;
   district: string;
   photoURL?: string;
-  status?: VolunteerStatus;
+  status?: string;
   appliedDate: string;
   experience?: string;
   motivation?: string;

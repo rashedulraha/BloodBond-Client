@@ -65,8 +65,8 @@ import useAxiosSecure from "@/Hook/useAxiosSecure";
 import type { AllUser } from "@/types/blog";
 import LoadingSpinner from "@/Page/Shared/Spinner/LoadingSpinner";
 
-type UserStatus = "active" | "block";
-type UserRole = "admin" | "volunteer" | "donor";
+type UserStatus = string;
+type UserRole = string;
 
 const ITEMS_PER_PAGE = 8;
 
