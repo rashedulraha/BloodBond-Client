@@ -61,7 +61,7 @@ import useAxiosSecure from "@/Hook/useAxiosSecure";
 
 type DonationStatus = "pending" | "inprogress" | "done" | "canceled";
 
-interface DonationRequest {
+interface myDonationRequest {
   _id: string;
   recipientName: string;
   bloodGroup: string;
@@ -192,7 +192,7 @@ const MyDonationRequestsPage: React.FC = () => {
     data: allRequests = [],
     isLoading,
     error,
-  } = useQuery<DonationRequest[]>({
+  } = useQuery<myDonationRequest[]>({
     queryKey: ["my-donation-requests", user?.email],
     queryFn: async () => {
       const response = await axiosSecure.get("/donation-request-info", {
@@ -402,7 +402,7 @@ const MyDonationRequestsPage: React.FC = () => {
         </div>
 
         {/* Data Table - Desktop */}
-        <div className="hidden md:block overflow-x-auto rounded-lg border border-border">
+        <div className="hidden md:block rounded-md overflow-x-auto  border border-border">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50">
