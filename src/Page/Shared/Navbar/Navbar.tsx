@@ -13,7 +13,7 @@ import useAxiosSecure from "@/Hook/useAxiosSecure";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logOutUser } = useAuth();
-  const { role } = useRole();
+  const { role, status } = useRole();
   const axiosSecure = useAxiosSecure();
 
   const { data: profileInfo = [] } = useQuery({
@@ -130,15 +130,13 @@ const Navbar = () => {
                     <li className="text-center text-muted-foreground text-sm flex items-center justify-center flex-row capitalize">
                       Role: <span className="text-green-500">{role}</span>
                     </li>
-                    <li className="text-center text-muted-foreground text-sm flex items-center justify-center flex-row capitalize"> 
+                    <li className="text-center text-muted-foreground text-sm flex items-center justify-center flex-row capitalize">
                       Status:{" "}
                       <span
                         className={
-                          userData?.status === "block"
-                            ? "text-red-500"
-                            : "text-green-500"
+                          status === "block" ? "text-red-500" : "text-green-500"
                         }>
-                        {userData?.status || "active"}
+                        {status || "active"}
                       </span>
                     </li>
                   </ul>
