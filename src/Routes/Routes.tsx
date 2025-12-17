@@ -77,6 +77,8 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  //!  auth route
   {
     path: "/",
     Component: AuthLayout,
@@ -91,6 +93,8 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  //!  dashboard route
   {
     path: "dashboard",
     element: (

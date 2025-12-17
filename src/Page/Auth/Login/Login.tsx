@@ -1,6 +1,6 @@
 import Container from "@/Page/Shared/Responsive/Container";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useState } from "react";
 import { FaEnvelope, FaSignInAlt, FaUser, FaHeartbeat } from "react-icons/fa";
@@ -24,12 +24,16 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const { loginUser, signinWithGoogle } = useAuth();
+  const { loginUser, signinWithGoogle, user } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const axiosSecure = useAxiosSecure();
+
+  if (user) {
+    return <Navigate to={location.state || "/"} />;
+  }
 
   const onInputSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
@@ -81,7 +85,7 @@ const LoginPage = () => {
     }
   };
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-4xl">
           {/* Left Column - Header and Icon (unchanged) */}

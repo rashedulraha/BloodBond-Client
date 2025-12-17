@@ -123,3 +123,16 @@ export interface District {
   lon: string;
   url: string;
 }
+
+//!  registration type
+
+export type registration = {
+  name: string;
+  email: string;
+  avatar: FileList;
+  bloodGroup: string;
+  division: string;
+  district: string;
+  password: string;
+  confirmPassword: string;
+};

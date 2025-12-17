@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,18 +20,7 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import useAuth from "@/Hook/useAuth";
 import axios from "axios";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
-import type { District } from "@/types/blog";
-
-type Inputs = {
-  name: string;
-  email: string;
-  avatar: FileList;
-  bloodGroup: string;
-  division: string;
-  district: string;
-  password: string;
-  confirmPassword: string;
-};
+import type { District, registration } from "@/types/blog";
 
 const DIVISIONS = [
   { id: "1", name: "Chattogram" },
@@ -54,7 +43,8 @@ const RegisterPage = () => {
     watch,
     control,
     setValue,
-  } = useForm<Inputs>();
+  } = useForm<registration>();
+  const { registerUser, profileUpdate, signinWithGoogle, user } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
   const [districts, setDistricts] = useState<District[]>([]);
@@ -62,7 +52,6 @@ const RegisterPage = () => {
   const [loadingDistricts, setLoadingDistricts] = useState(true);
   const [districtError, setDistrictError] = useState<string | null>(null);
 
-  const { registerUser, profileUpdate, signinWithGoogle } = useAuth();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,7 +96,7 @@ const RegisterPage = () => {
     }
   }, [selectedDivision, districts, setValue]);
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<registration> = async (data) => {
     setIsLoading(true);
 
     console.log("Form Data:", data);
@@ -182,6 +171,10 @@ const RegisterPage = () => {
       console.log(error);
     }
   };
+
+  if (user) {
+    return <Navigate to={location.state || "/"} />;
+  }
 
   return (
     <Container>

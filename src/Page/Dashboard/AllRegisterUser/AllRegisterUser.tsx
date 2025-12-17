@@ -28,11 +28,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+
 import type { AllUser } from "@/types/blog";
 import { Button } from "@/components/ui/button";
 import { Search, Users } from "lucide-react";
@@ -61,11 +63,12 @@ const AllRegisterUser = () => {
 
   const handleToggleUserRole = (_id: string, userRole: string) => {
     const userInfo = {
-      id: _id,
       role: userRole,
     };
 
-    console.log(userInfo);
+    axiosSecure.patch(`/update-user-role/${_id}`, userInfo).then((res) => {
+      console.log(res);
+    });
   };
 
   return (
