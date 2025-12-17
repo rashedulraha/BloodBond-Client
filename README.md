@@ -4,7 +4,7 @@
 
 ## 🚀 Live Links
 
-- **Client Live URL:** [bloodbond-red.vercel.app]
+- **Client Live URL:** <https://bloodbond-red.vercel.app>
 - **Server API URL:** []
 
 ---
