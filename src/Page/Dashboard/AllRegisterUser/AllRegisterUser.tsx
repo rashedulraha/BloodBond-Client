@@ -369,7 +369,7 @@ const AllRegisterUser: React.FC = () => {
                 setFilterStatus(value)
               }
               value={filterStatus}>
-              <SelectTrigger className="w-full sm:w-[160px] bg-card border-2">
+              <SelectTrigger className="w-full sm:w-40 bg-card border-2">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -387,7 +387,7 @@ const AllRegisterUser: React.FC = () => {
             <Select
               onValueChange={(value: UserRole | "all") => setFilterRole(value)}
               value={filterRole}>
-              <SelectTrigger className="w-full sm:w-[160px] bg-card border-2">
+              <SelectTrigger className="w-full sm:w-40 bg-card border-2">
                 <SelectValue placeholder="Role" />
               </SelectTrigger>
               <SelectContent>
@@ -499,7 +499,7 @@ const AllRegisterUser: React.FC = () => {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               onClick={() =>
-                                handleRoleChange(user._id, "admin")
+                                handleRoleChange(`${user._id}`, "admin")
                               }
                               className="cursor-pointer">
                               <Shield className="w-4 h-4 mr-2 text-purple-600" />
@@ -507,7 +507,7 @@ const AllRegisterUser: React.FC = () => {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() =>
-                                handleRoleChange(user._id, "volunteer")
+                                handleRoleChange(`${user._id}`, "volunteer")
                               }
                               className="cursor-pointer">
                               <UserCheck className="w-4 h-4 mr-2 text-blue-600" />
@@ -515,7 +515,7 @@ const AllRegisterUser: React.FC = () => {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() =>
-                                handleRoleChange(user._id, "donor")
+                                handleRoleChange(`${user._id}`, "donor")
                               }
                               className="cursor-pointer">
                               <Users className="w-4 h-4 mr-2 text-primary" />
@@ -603,15 +603,21 @@ const AllRegisterUser: React.FC = () => {
                       <DropdownMenuLabel>Authorization</DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        onClick={() => handleRoleChange(user._id, "admin")}>
+                        onClick={() =>
+                          handleRoleChange(`${user._id}`, "admin")
+                        }>
                         Admin
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => handleRoleChange(user._id, "volunteer")}>
+                        onClick={() =>
+                          handleRoleChange(`${user._id}`, "volunteer")
+                        }>
                         Volunteer
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => handleRoleChange(user._id, "donor")}>
+                        onClick={() =>
+                          handleRoleChange(`${user._id}`, "donor")
+                        }>
                         Donor
                       </DropdownMenuItem>
                     </DropdownMenuContent>
