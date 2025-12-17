@@ -1,20 +1,17 @@
 import React, { useState, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  HeartPulse,
-  Filter,
-  Clock,
-  MapPin,
   Users,
-  XCircle,
-  CheckCircle,
-  Hourglass,
-  RefreshCw,
-  Eye,
-  Trash2,
-  AlertCircle,
   Search,
+  Filter,
+  CheckCircle,
+  XCircle,
+  Trash2,
+  Eye,
+  AlertCircle,
+  Mail,
+  MapPin,
+  Clock,
 } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -43,8 +40,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,44 +50,41 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import Container from "@/Page/Shared/Responsive/Container";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
-import type { AllRequester } from "@/types/blog";
+import type { VolunteerApplication } from "@/types/blog";
+import LoadingSpinner from "@/Page/Shared/Spinner/LoadingSpinner";
 
-type DonationStatus = "pending" | "inprogress" | "done" | "canceled";
+type VolunteerStatus = "pending" | "approved" | "rejected";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 8;
 
 // Status Badge Component
-const getStatusBadge = (status: DonationStatus) => {
+const getStatusBadge = (status: VolunteerStatus) => {
   switch (status) {
     case "pending":
       return (
         <Badge className="bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 dark:text-yellow-500">
-          <Hourglass className="w-3 h-3 mr-1" /> Pending
+          <Clock className="w-3 h-3 mr-1" /> Pending
         </Badge>
       );
-    case "inprogress":
-      return (
-        <Badge className="bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 dark:text-blue-500">
-          <RefreshCw className="w-3 h-3 mr-1" /> In Progress
-        </Badge>
-      );
-    case "done":
+    case "approved":
       return (
         <Badge className="bg-green-500/10 text-green-600 hover:bg-green-500/20 dark:text-green-500">
-          <CheckCircle className="w-3 h-3 mr-1" /> Done
+          <CheckCircle className="w-3 h-3 mr-1" /> Approved
         </Badge>
       );
-    case "canceled":
+    case "rejected":
       return (
         <Badge className="bg-red-500/10 text-red-600 hover:bg-red-500/20 dark:text-red-500">
-          <XCircle className="w-3 h-3 mr-1" /> Canceled
+          <XCircle className="w-3 h-3 mr-1" /> Rejected
         </Badge>
       );
     default:
-      return <Badge variant="outline">Unknown</Badge>;
+      return <Badge variant="outline">{status}</Badge>;
   }
 };
 
@@ -157,29 +149,33 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
 };
 
 // Main Component
-const AllVolunteerRequest: React.FC = () => {
-  const navigate = useNavigate();
+const AllVolunteerApplications: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
-  const [filterStatus, setFilterStatus] = useState<DonationStatus | "all">(
+  const [filterStatus, setFilterStatus] = useState<VolunteerStatus | "all">(
     "all"
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [requestToDelete, setRequestToDelete] = useState<string | null>(null);
+  const [applicationToDelete, setApplicationToDelete] = useState<string | null>(
+    null
+  );
+  const [approveDialogOpen, setApproveDialogOpen] = useState(false);
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] =
+    useState<VolunteerApplication | null>(null);
 
-  // Fetch all donation requests
+  // Fetch all volunteer applications
   const {
-    data: allRequests = [],
+    data: allApplications = [],
     isLoading,
     error,
-    refetch,
-  } = useQuery<AllRequester[]>({
-    queryKey: ["all-donation-requests"],
+  } = useQuery<VolunteerApplication[]>({
+    queryKey: ["volunteer-request"],
     queryFn: async () => {
-      const response = await axiosSecure.get("/donation-request-info");
+      const response = await axiosSecure.get("/volunteer-request");
       return response.data;
     },
   });
@@ -187,75 +183,88 @@ const AllVolunteerRequest: React.FC = () => {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await axiosSecure.delete(`/donation-request-delete/${id}`);
+      await axiosSecure.delete(`/volunteer-applications/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["all-donation-requests"] });
-      toast.success("Donation request deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["volunteer-applications"] });
+      toast.success("Volunteer application deleted successfully!");
       setDeleteDialogOpen(false);
-      setRequestToDelete(null);
+      setApplicationToDelete(null);
     },
     onError: (error) => {
-      console.error("Error deleting request:", error);
-      toast.error("Failed to delete donation request. Please try again.");
+      console.error("Error deleting application:", error);
+      toast.error("Failed to delete volunteer application. Please try again.");
     },
   });
 
-  // Update status mutation
-  const updateStatusMutation = useMutation({
-    mutationFn: async ({
-      id,
-      status,
-    }: {
-      id: string;
-      status: DonationStatus;
-    }) => {
-      await axiosSecure.patch(`/donation-request/${id}/status`, {
-        donationStatus: status,
-      });
+  // Approve mutation
+  const approveMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await axiosSecure.patch(`/volunteer-applications/${id}/approve`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["all-donation-requests"] });
-      toast.success("Status updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["volunteer-applications"] });
+      toast.success(
+        "Volunteer approved successfully! User role updated to volunteer."
+      );
+      setApproveDialogOpen(false);
+      setSelectedApplication(null);
     },
     onError: (error) => {
-      console.error("Error updating status:", error);
-      toast.error("Failed to update status. Please try again.");
+      console.error("Error approving volunteer:", error);
+      toast.error("Failed to approve volunteer. Please try again.");
+    },
+  });
+
+  // Reject mutation
+  const rejectMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await axiosSecure.patch(`/volunteer-applications/${id}/reject`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["volunteer-applications"] });
+      toast.success("Volunteer application rejected.");
+      setRejectDialogOpen(false);
+      setSelectedApplication(null);
+    },
+    onError: (error) => {
+      console.error("Error rejecting volunteer:", error);
+      toast.error("Failed to reject volunteer. Please try again.");
     },
   });
 
   // Filtering and Search Logic
-  const filteredRequests = useMemo(() => {
-    let filtered = [...allRequests];
+  const filteredApplications = useMemo(() => {
+    let filtered = [...allApplications];
 
     // Filter by status
     if (filterStatus !== "all") {
-      filtered = filtered.filter((req) => req.donationStatus === filterStatus);
+      filtered = filtered.filter((app) => app.status === filterStatus);
     }
 
     // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(
-        (req) =>
-          req.requesterName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          req.recipientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          req.bloodGroup?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          req.hospitalName?.toLowerCase().includes(searchTerm.toLowerCase())
+        (app) =>
+          app.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          app.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          app.bloodGroup?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          app.district?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     return filtered;
-  }, [allRequests, filterStatus, searchTerm]);
+  }, [allApplications, filterStatus, searchTerm]);
 
   // Pagination Logic
-  const totalItems = filteredRequests.length;
+  const totalItems = filteredApplications.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-  const paginatedRequests = useMemo(() => {
+  const paginatedApplications = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
-    return filteredRequests.slice(startIndex, endIndex);
-  }, [filteredRequests, currentPage]);
+    return filteredApplications.slice(startIndex, endIndex);
+  }, [filteredApplications, currentPage]);
 
   // Reset page when filter changes
   React.useEffect(() => {
@@ -272,25 +281,46 @@ const AllVolunteerRequest: React.FC = () => {
   );
 
   // Handle View Details
-  const handleViewDetails = (id: string) => {
-    navigate(`/donation-request/${id}`);
+  const handleViewDetails = (application: VolunteerApplication) => {
+    // Navigate to details page or open modal
+    console.log("View details:", application);
+    // navigate(`/dashboard/volunteer-details/${application._id}`);
   };
 
   // Handle Delete
   const handleDeleteClick = (id: string) => {
-    setRequestToDelete(id);
+    setApplicationToDelete(id);
     setDeleteDialogOpen(true);
   };
 
   const confirmDelete = () => {
-    if (requestToDelete) {
-      deleteMutation.mutate(requestToDelete);
+    if (applicationToDelete) {
+      deleteMutation.mutate(applicationToDelete);
     }
   };
 
-  // Handle Status Update
-  const handleStatusUpdate = (id: string, status: DonationStatus) => {
-    updateStatusMutation.mutate({ id, status });
+  // Handle Approve
+  const handleApproveClick = (application: VolunteerApplication) => {
+    setSelectedApplication(application);
+    setApproveDialogOpen(true);
+  };
+
+  const confirmApprove = () => {
+    if (selectedApplication) {
+      approveMutation.mutate(selectedApplication._id);
+    }
+  };
+
+  // Handle Reject
+  const handleRejectClick = (application: VolunteerApplication) => {
+    setSelectedApplication(application);
+    setRejectDialogOpen(true);
+  };
+
+  const confirmReject = () => {
+    if (selectedApplication) {
+      rejectMutation.mutate(selectedApplication._id);
+    }
   };
 
   // Format date
@@ -304,34 +334,28 @@ const AllVolunteerRequest: React.FC = () => {
     });
   };
 
-  // Format time
-  const formatTime = (timeString: string) => {
-    if (!timeString) return "N/A";
-    const [hours, minutes] = timeString.split(":");
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const formattedHour = hour % 12 || 12;
-    return `${formattedHour}:${minutes} ${ampm}`;
-  };
-
   const statusOptions = [
-    { value: "all", label: "All Requests" },
+    { value: "all", label: "All Applications" },
     { value: "pending", label: "Pending" },
-    { value: "inprogress", label: "In Progress" },
-    { value: "done", label: "Done" },
-    { value: "canceled", label: "Canceled" },
+    { value: "approved", label: "Approved" },
+    { value: "rejected", label: "Rejected" },
   ];
+
+  // Stats
+  const stats = useMemo(() => {
+    return {
+      total: allApplications.length,
+      pending: allApplications.filter((app) => app.status === "pending").length,
+      approved: allApplications.filter((app) => app.status === "approved")
+        .length,
+      rejected: allApplications.filter((app) => app.status === "rejected")
+        .length,
+    };
+  }, [allApplications]);
 
   // Loading State
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-muted-foreground">Loading donation requests...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   // Error State
@@ -341,10 +365,10 @@ const AllVolunteerRequest: React.FC = () => {
         <div className="text-center max-w-md">
           <AlertCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-foreground mb-2">
-            Error Loading Requests
+            Error Loading Applications
           </h2>
           <p className="text-muted-foreground">
-            Failed to load donation requests. Please try again later.
+            Failed to load volunteer applications. Please try again later.
           </p>
         </div>
       </div>
@@ -358,21 +382,91 @@ const AllVolunteerRequest: React.FC = () => {
         <header className="mb-8">
           <h1 className="text-3xl md:text-4xl font-extrabold text-foreground flex items-center gap-3">
             <Users className="w-7 h-7 md:w-8 md:h-8 text-primary" />
-            All Volunteer Requests
+            Volunteer Applications
           </h1>
           <p className="mt-2 text-base md:text-xl text-muted-foreground">
-            Manage all blood donation requests from all users across the
-            platform.
+            Manage volunteer applications - approve, reject, or delete as
+            needed.
           </p>
         </header>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-card border border-border rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Total</p>
+                <p className="text-2xl font-bold text-foreground">
+                  {stats.total}
+                </p>
+              </div>
+              <Users className="w-8 h-8 text-primary/50" />
+            </div>
+          </div>
+
+          <div className="bg-card border border-border rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Pending</p>
+                <p className="text-2xl font-bold text-yellow-600">
+                  {stats.pending}
+                </p>
+              </div>
+              <Clock className="w-8 h-8 text-yellow-500/50" />
+            </div>
+          </div>
+
+          <div className="bg-card border border-border rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Approved</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {stats.approved}
+                </p>
+              </div>
+              <CheckCircle className="w-8 h-8 text-green-500/50" />
+            </div>
+          </div>
+
+          <div className="bg-card border border-border rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Rejected</p>
+                <p className="text-2xl font-bold text-red-600">
+                  {stats.rejected}
+                </p>
+              </div>
+              <XCircle className="w-8 h-8 text-red-500/50" />
+            </div>
+          </div>
+        </div>
 
         {/* Filter and Search Controls */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6 pb-4 border-b">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1">
             <h2 className="text-lg md:text-xl font-semibold text-foreground flex items-center gap-2">
               <Filter className="w-5 h-5 text-primary" />
-              Filter Requests ({totalItems} total)
+              Filter Applications ({totalItems} found)
             </h2>
+
+            <Select
+              onValueChange={(value: VolunteerStatus | "all") =>
+                setFilterStatus(value)
+              }
+              value={filterStatus}>
+              <SelectTrigger className="w-full sm:w-[200px] bg-card border-2">
+                <SelectValue placeholder="Filter by Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {statusOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Search Input */}
@@ -380,7 +474,7 @@ const AllVolunteerRequest: React.FC = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Search by name, blood group..."
+              placeholder="Search by name, email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 w-full lg:w-[300px] border-2"
@@ -389,68 +483,104 @@ const AllVolunteerRequest: React.FC = () => {
         </div>
 
         {/* Data Table - Desktop */}
-        <div className="hidden md:block overflow-x-auto rounded-md border border-border">
+        <div className="hidden md:block overflow-x-auto rounded-lg border border-border">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50">
                 <TableHead className="font-bold text-primary">Avatar</TableHead>
+                <TableHead className="font-bold text-primary">Name</TableHead>
                 <TableHead className="font-bold text-primary">
-                  Requester
+                  <Mail className="w-4 h-4 inline mr-1" /> Contact
+                </TableHead>
+                <TableHead className="font-bold text-primary text-center">
+                  Blood Group
                 </TableHead>
                 <TableHead className="font-bold text-primary">
-                  Address
+                  <MapPin className="w-4 h-4 inline mr-1" /> Location
                 </TableHead>
                 <TableHead className="font-bold text-primary">
-                  <HeartPulse className="w-4 h-4 inline mr-1" /> Age
+                  Applied Date
                 </TableHead>
-                <TableHead className="font-bold text-primary">
-                  <HeartPulse className="w-4 h-4 inline mr-1" /> Status
+                <TableHead className="font-bold text-primary text-center">
+                  Status
                 </TableHead>
-
-                <TableHead className="font-bold text-primary text-right">
+                <TableHead className="font-bold text-primary text-center">
                   Actions
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedRequests.length > 0 ? (
-                paginatedRequests.map((request) => (
-                  <TableRow key={request._id} className="hover:bg-muted/50">
+              {paginatedApplications.length > 0 ? (
+                paginatedApplications.map((application) => (
+                  <TableRow key={application._id} className="hover:bg-muted/50">
                     <TableCell>
                       <figure className="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
                         <img
-                          src={request.imageURL || "/default-avatar.png"}
-                          alt={request.requesterName}
+                          src={application.photoURL || "/default-avatar.png"}
+                          alt={application.name}
                           className="w-full h-full object-cover"
                         />
                       </figure>
                     </TableCell>
                     <TableCell className="font-medium">
-                      <div className="text-sm">
-                        <div>{request.requesterName}</div>
+                      {application.name}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      <div>{application.email}</div>
+                      {application.phone && (
                         <div className="text-xs text-muted-foreground">
-                          {request.requesterEmail}
+                          {application.phone}
                         </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center font-bold text-destructive">
+                      {application.bloodGroup}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      <div>{application.district}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {application.division}
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium">
-                      Naogaon Dhaka bangladesh
+                    <TableCell className="text-sm">
+                      {formatDate(application.appliedDate)}
                     </TableCell>
-                    <TableCell className="font-bold text-destructive">
-                      25
-                    </TableCell>
-
                     <TableCell className="text-center">
-                      {getStatusBadge(request.donationStatus as DonationStatus)}
+                      {getStatusBadge(application.status)}
                     </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                    <TableCell>
+                      <div className="flex justify-end gap-1">
+                        {/* Approve Button - Only for pending */}
+                        {application.status === "pending" && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleApproveClick(application)}
+                            className="hover:bg-green-500/10 text-green-600"
+                            title="Approve">
+                            <CheckCircle className="w-4 h-4" />
+                          </Button>
+                        )}
+
+                        {/* Reject Button - Only for pending */}
+                        {application.status === "pending" && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRejectClick(application)}
+                            className="hover:bg-red-500/10 text-red-600"
+                            title="Reject">
+                            <XCircle className="w-4 h-4" />
+                          </Button>
+                        )}
+
                         {/* View Button */}
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleViewDetails(request._id)}
-                          className="hover:bg-primary/10">
+                          onClick={() => handleViewDetails(application)}
+                          className="hover:bg-primary/10"
+                          title="View Details">
                           <Eye className="w-4 h-4" />
                         </Button>
 
@@ -458,34 +588,11 @@ const AllVolunteerRequest: React.FC = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDeleteClick(request._id)}
-                          className="hover:bg-destructive/10 text-destructive">
+                          onClick={() => handleDeleteClick(application._id)}
+                          className="hover:bg-destructive/10 text-destructive"
+                          title="Delete">
                           <Trash2 className="w-4 h-4" />
                         </Button>
-
-                        {/* Status Update Buttons - Only for volunteers */}
-                        {request.donationStatus === "inprogress" && (
-                          <>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                handleStatusUpdate(request._id, "done")
-                              }
-                              className="hover:bg-green-500/10 text-green-600">
-                              <CheckCircle className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                handleStatusUpdate(request._id, "canceled")
-                              }
-                              className="hover:bg-red-500/10 text-red-600">
-                              <XCircle className="w-4 h-4" />
-                            </Button>
-                          </>
-                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -497,7 +604,7 @@ const AllVolunteerRequest: React.FC = () => {
                     className="h-32 text-center text-muted-foreground">
                     <div className="flex flex-col items-center gap-2">
                       <AlertCircle className="w-12 h-12 text-muted-foreground/50" />
-                      <p>No donation requests found</p>
+                      <p>No volunteer applications found</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -508,62 +615,79 @@ const AllVolunteerRequest: React.FC = () => {
 
         {/* Mobile Card View */}
         <div className="md:hidden space-y-4">
-          {paginatedRequests.length > 0 ? (
-            paginatedRequests.map((request) => (
+          {paginatedApplications.length > 0 ? (
+            paginatedApplications.map((application) => (
               <div
-                key={request._id}
+                key={application._id}
                 className="bg-card border border-border rounded-lg p-4 space-y-3">
                 <div className="flex items-start gap-3">
                   <figure className="w-12 h-12 rounded-full border-2 border-primary overflow-hidden shrink-0">
                     <img
-                      src={request.imageURL || "/default-avatar.png"}
-                      alt={request.requesterName}
+                      src={application.photoURL || "/default-avatar.png"}
+                      alt={application.name}
                       className="w-full h-full object-cover"
                     />
                   </figure>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-base">
-                      {request.requesterName}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-base truncate">
+                      {application.name}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
-                      For: {request.recipientName}
+                    <p className="text-sm text-muted-foreground truncate">
+                      {application.email}
                     </p>
                   </div>
                   <Badge className="bg-destructive/10 text-destructive">
-                    {request.bloodGroup}
+                    {application.bloodGroup}
                   </Badge>
                 </div>
 
-                <div className="space-y-2 text-sm">
+                <div className="space-y-1 text-sm">
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-primary shrink-0" />
                     <span className="text-muted-foreground">
-                      {request.hospitalName}
+                      {application.district}, {application.division}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-primary shrink-0" />
-                    <span>
-                      {formatDate(request.donationDate)} at{" "}
-                      {formatTime(request.donationTime)}
+                    <span className="text-muted-foreground">
+                      Applied: {formatDate(application.appliedDate)}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-3 border-t">
-                  {getStatusBadge(request.donationStatus as DonationStatus)}
+                  {getStatusBadge(application.status)}
 
                   <div className="flex gap-2">
+                    {application.status === "pending" && (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleApproveClick(application)}
+                          className="text-green-600">
+                          <CheckCircle className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRejectClick(application)}
+                          className="text-red-600">
+                          <XCircle className="w-4 h-4" />
+                        </Button>
+                      </>
+                    )}
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleViewDetails(request._id)}>
+                      onClick={() => handleViewDetails(application)}>
                       <Eye className="w-4 h-4" />
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleDeleteClick(request._id)}
+                      onClick={() => handleDeleteClick(application._id)}
                       className="text-destructive">
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -574,7 +698,7 @@ const AllVolunteerRequest: React.FC = () => {
           ) : (
             <div className="text-center py-12 text-muted-foreground">
               <AlertCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
-              <p>No donation requests found</p>
+              <p>No volunteer applications found</p>
             </div>
           )}
         </div>
@@ -591,10 +715,10 @@ const AllVolunteerRequest: React.FC = () => {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Delete Volunteer Application?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              donation request from the database.
+              This action cannot be undone. This will permanently delete this
+              volunteer application from the database.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -602,7 +726,53 @@ const AllVolunteerRequest: React.FC = () => {
             <AlertDialogAction
               onClick={confirmDelete}
               className="bg-destructive hover:bg-destructive/90">
-              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending ? "Deleting..." : "Delete Application"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Approve Confirmation Dialog */}
+      <AlertDialog open={approveDialogOpen} onOpenChange={setApproveDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Approve Volunteer Application?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will approve {selectedApplication?.name}'s application and
+              automatically update their user role to "volunteer". They will
+              gain volunteer permissions.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmApprove}
+              className="bg-green-600 hover:bg-green-700">
+              {approveMutation.isPending
+                ? "Approving..."
+                : "Approve Application"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Reject Confirmation Dialog */}
+      <AlertDialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reject Volunteer Application?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will reject {selectedApplication?.name}'s volunteer
+              application. They will not be granted volunteer permissions. You
+              can delete this application later if needed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmReject}
+              className="bg-red-600 hover:bg-red-700">
+              {rejectMutation.isPending ? "Rejecting..." : "Reject Application"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -611,4 +781,4 @@ const AllVolunteerRequest: React.FC = () => {
   );
 };
 
-export default AllVolunteerRequest;
+export default AllVolunteerApplications;

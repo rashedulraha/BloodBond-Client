@@ -34,6 +34,7 @@ import Container from "@/Page/Shared/Responsive/Container";
 import useRole from "@/Hook/useRole";
 import useAuth from "@/Hook/useAuth";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
+import LoadingSpinner from "@/Page/Shared/Spinner/LoadingSpinner";
 
 // Blood Groups
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -289,14 +290,7 @@ const Profile: React.FC = () => {
 
   // Loading State
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-muted-foreground">Loading profile...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   // Error State

@@ -144,3 +144,17 @@ export interface CtaButtonProps {
   variant: "primary" | "secondary";
 }
 
+export interface VolunteerApplication {
+  _id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  bloodGroup: string;
+  division: string;
+  district: string;
+  photoURL?: string;
+  status: VolunteerStatus;
+  appliedDate: string;
+  experience?: string;
+  motivation?: string;
+}

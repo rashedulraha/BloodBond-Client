@@ -105,9 +105,12 @@ const DashboardWelcome: React.FC = () => {
   const { data: allRequests = [], isLoading } = useQuery<DonationRequest[]>({
     queryKey: ["my-recent-requests", user?.email],
     queryFn: async () => {
-      const response = await axiosSecure.get("/donation-request-info", {
-        params: { requesterEmail: user?.email },
-      });
+      const response = await axiosSecure.get(
+        `/donation-request-info?email=${user?.email}`,
+        {
+          params: { requesterEmail: user?.email },
+        }
+      );
       return response.data;
     },
     enabled: !!user?.email,
@@ -480,7 +483,7 @@ const DashboardWelcome: React.FC = () => {
                   creating your first request to help someone in need.
                 </p>
                 <Button
-                  onClick={() => navigate("/dashboard/create-donation-request")}
+                  onClick={() => navigate("/dashboard/donation-requests")}
                   className="bg-linear-to-r from-primary to-destructive hover:from-primary/90 hover:to-destructive/90">
                   <Heart className="w-4 h-4 mr-2" />
                   Create Your First Request

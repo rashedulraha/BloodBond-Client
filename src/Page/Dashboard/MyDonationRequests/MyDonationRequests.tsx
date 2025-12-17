@@ -58,6 +58,7 @@ import {
 import Container from "@/Page/Shared/Responsive/Container";
 import useAuth from "@/Hook/useAuth";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
+import LoadingSpinner from "@/Page/Shared/Spinner/LoadingSpinner";
 
 type DonationStatus = "pending" | "inprogress" | "done" | "canceled";
 
@@ -195,9 +196,9 @@ const MyDonationRequestsPage: React.FC = () => {
   } = useQuery<myDonationRequest[]>({
     queryKey: ["my-donation-requests", user?.email],
     queryFn: async () => {
-      const response = await axiosSecure.get("/donation-request-info", {
-        params: { requesterEmail: user?.email },
-      });
+      const response = await axiosSecure.get(
+        `/donation-request-info?email=${user?.email}`
+      );
       return response.data;
     },
     enabled: !!user?.email,
@@ -331,16 +332,7 @@ const MyDonationRequestsPage: React.FC = () => {
 
   // Loading State
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="inline-block w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-muted-foreground">
-            Loading your donation requests...
-          </p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   // Error State
