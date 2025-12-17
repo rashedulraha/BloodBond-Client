@@ -56,10 +56,12 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({
                 {bloodGroup || "N/A"}
               </div>
             </div>
+
             {/* Recipient Name */}
             <h3 className="text-xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors truncate">
               {recipientName || "Unknown Recipient"}
             </h3>
+
             {/* Details */}
             <div className="space-y-3 mb-6">
               {/* Location */}
@@ -90,7 +92,6 @@ const DonationRequestCard: React.FC<DonationRequestCardProps> = ({
                 </p>
               </div>
             </div>
-            0
           </div>
           {/* View Details Button */}
           <Link to={`/donation-request-details/${_id}`}>

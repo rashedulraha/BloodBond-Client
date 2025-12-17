@@ -81,7 +81,7 @@ const LoginPage = () => {
     }
   };
   return (
-    <div className="min-h-screen bg-background py-12">
+    <div className="min-h-screen ">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-4xl">
           {/* Left Column - Header and Icon (unchanged) */}
@@ -123,7 +123,7 @@ const LoginPage = () => {
           </div>
 
           {/* Right Column - Login Form */}
-          <div className="bg-card rounded-md shadow-md p-8 border border-border col-span-1">
+          <div className="bg-card/50  rounded-md shadow-md p-8 border border-secondary col-span-1">
             <form onSubmit={handleSubmit(onInputSubmit)} className="space-y-6">
               {/* Email Field */}
               <div>

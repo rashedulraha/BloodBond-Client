@@ -184,316 +184,305 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="py-10">
-      <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl">
-          {/* Left Column */}
-          <div className="text-center lg:text-left">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary mb-6">
-              <FaUserPlus className="text-3xl" />
-            </div>
-            <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
-              Join Our <span className="text-primary">Life-Saving</span>{" "}
-              Community
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8 max-w-lg">
-              Become a donor and help save lives. Your registration will connect
-              you with people in need of blood in your area.
-            </p>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                  <FaTint />
-                </div>
-                <span className="text-foreground">
-                  All blood groups welcome
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                  <FaMapMarkerAlt />
-                </div>
-                <span className="text-foreground">Location-based matching</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                  <FaUser />
-                </div>
-                <span className="text-foreground">
-                  Track your donation impact
-                </span>
-              </div>
-            </div>
+    <Container>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+        {/* Left Column */}
+        <div className="text-center lg:text-left">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary mb-6">
+            <FaUserPlus className="text-3xl" />
           </div>
-
-          {/* Right Column - Form */}
-          <div className="bg-card rounded-md shadow-lg p-8 border border-border">
-            {loadingDistricts && (
-              <p className="text-center text-primary mb-4">
-                Loading districts...
-              </p>
-            )}
-            {districtError && (
-              <p className="text-center text-destructive mb-4">
-                {districtError}
-              </p>
-            )}
-
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Name & Email */}
-              <div className="flex flex-col md:flex-row gap-5">
-                <div className="w-full">
-                  <Label>Full Name</Label>
-                  <Input
-                    type="text"
-                    placeholder="Rashedul Islam"
-                    {...register("name", { required: "Name is required" })}
-                  />
-                  {errors.name && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.name.message}
-                    </p>
-                  )}
-                </div>
-                <div className="w-full">
-                  <Label>Email</Label>
-                  <InputGroup>
-                    <InputGroupInput
-                      type="email"
-                      placeholder="Enter your email"
-                      {...register("email", {
-                        required: "Email is required",
-                        pattern: {
-                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: "Invalid email address",
-                        },
-                      })}
-                    />
-                  </InputGroup>
-                  {errors.email && (
-                    <p className="text-destructive text-sm mt-1">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
+            Join Our <span className="text-primary">Life-Saving</span> Community
+          </h1>
+          <p className="text-lg text-muted-foreground mb-8 max-w-lg">
+            Become a donor and help save lives. Your registration will connect
+            you with people in need of blood in your area.
+          </p>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                <FaTint />
               </div>
-
-              {/* Avatar & Blood Group */}
-              <div className="flex flex-col md:flex-row gap-5">
-                <div className="w-full">
-                  <Label>Profile Photo</Label>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    {...register("avatar", {
-                      required: "Profile photo is required",
-                      validate: (value) =>
-                        value.length > 0 || "Profile photo is required",
-                    })}
-                  />
-                  {errors.avatar && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.avatar.message}
-                    </p>
-                  )}
-                </div>
-                <div className="w-full">
-                  <Label>Blood Group</Label>
-                  <Controller
-                    name="bloodGroup"
-                    control={control}
-                    rules={{ required: "Blood group is required" }}
-                    render={({ field }) => (
-                      <Select onValueChange={field.onChange}>
-                        <SelectTrigger
-                          className={
-                            errors.bloodGroup ? "border-destructive" : ""
-                          }>
-                          <SelectValue placeholder="Select blood group" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Select your blood group</SelectLabel>
-                            {[
-                              "A+",
-                              "A-",
-                              "B+",
-                              "B-",
-                              "AB+",
-                              "AB-",
-                              "O+",
-                              "O-",
-                            ].map((group) => (
-                              <SelectItem key={group} value={group}>
-                                {group}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.bloodGroup && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.bloodGroup.message}
-                    </p>
-                  )}
-                </div>
+              <span className="text-foreground">All blood groups welcome</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                <FaMapMarkerAlt />
               </div>
-
-              {/* Division & District */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="w-full">
-                  <Label>Division</Label>
-                  <Controller
-                    name="division"
-                    control={control}
-                    rules={{ required: "Division is required" }}
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        disabled={loadingDistricts}>
-                        <SelectTrigger
-                          className={
-                            errors.division ? "border-destructive" : ""
-                          }>
-                          <SelectValue placeholder="Select division" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Select your division</SelectLabel>
-                            {DIVISIONS.map((div) => (
-                              <SelectItem key={div.id} value={div.name}>
-                                {div.name}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.division && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.division.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="w-full">
-                  <Label>District</Label>
-                  <Controller
-                    name="district"
-                    control={control}
-                    rules={{ required: "District is required" }}
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        disabled={
-                          !selectedDivision ||
-                          loadingDistricts ||
-                          districtError !== null
-                        }>
-                        <SelectTrigger
-                          className={
-                            errors.district ? "border-destructive" : ""
-                          }>
-                          <SelectValue placeholder="Select district" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Select your district</SelectLabel>
-                            {filteredDistricts.length === 0 &&
-                              selectedDivision &&
-                              !loadingDistricts && (
-                                <p className="px-4 py-2 text-muted-foreground italic">
-                                  No districts found
-                                </p>
-                              )}
-                            {filteredDistricts.map((dist) => (
-                              <SelectItem key={dist.id} value={dist.name}>
-                                {dist.name}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.district && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.district.message}
-                    </p>
-                  )}
-                </div>
+              <span className="text-foreground">Location-based matching</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                <FaUser />
               </div>
-
-              {/* Passwords */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="w-full">
-                  <Label>Password</Label>
-                  <Input
-                    type="password"
-                    placeholder="Enter your password"
-                    {...register("password", {
-                      required: "Password is required",
-                      minLength: {
-                        value: 6,
-                        message: "Password must be at least 6 characters",
-                      },
-                    })}
-                  />
-                  {errors.password && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
-                <div className="w-full">
-                  <Label>Confirm Password</Label>
-                  <Input
-                    type="password"
-                    placeholder="Confirm your password"
-                    {...register("confirmPassword", {
-                      required: "Please confirm your password",
-                      validate: (value) =>
-                        value === password || "Passwords do not match",
-                    })}
-                  />
-                  {errors.confirmPassword && (
-                    <p className="mt-1 text-sm text-destructive">
-                      {errors.confirmPassword.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Buttons */}
-              <div className="flex items-center gap-5">
-                <Button type="submit" disabled={isLoading} className="flex-1">
-                  {isLoading ? "Creating Account..." : "Register"}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleLoginWithGoogle}
-                  variant="outline"
-                  className="flex-1">
-                  Login with Google
-                </Button>
-              </div>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-muted-foreground">
-                Already have an account?{" "}
-                <Link to="/login" className="text-primary hover:underline">
-                  Login here
-                </Link>
-              </p>
+              <span className="text-foreground">
+                Track your donation impact
+              </span>
             </div>
           </div>
         </div>
-      </Container>
-    </div>
+
+        {/* Right Column - Form */}
+        <div className="bg-card/50 rounded-md shadow-lg p-8 border border-secondary">
+          {loadingDistricts && (
+            <p className="text-center text-primary mb-4">
+              Loading districts...
+            </p>
+          )}
+          {districtError && (
+            <p className="text-center text-destructive mb-4">{districtError}</p>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Name & Email */}
+            <div className="flex flex-col md:flex-row gap-5">
+              <div className="w-full">
+                <Label>Full Name</Label>
+                <Input
+                  type="text"
+                  placeholder="Rashedul Islam"
+                  {...register("name", { required: "Name is required" })}
+                />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-destructive">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+              <div className="w-full">
+                <Label>Email</Label>
+                <InputGroup>
+                  <InputGroupInput
+                    type="email"
+                    placeholder="Enter your email"
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email address",
+                      },
+                    })}
+                  />
+                </InputGroup>
+                {errors.email && (
+                  <p className="text-destructive text-sm mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Avatar & Blood Group */}
+            <div className="flex flex-col md:flex-row gap-5">
+              <div className="w-full">
+                <Label>Profile Photo</Label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  {...register("avatar", {
+                    required: "Profile photo is required",
+                    validate: (value) =>
+                      value.length > 0 || "Profile photo is required",
+                  })}
+                />
+                {errors.avatar && (
+                  <p className="mt-1 text-sm text-destructive">
+                    {errors.avatar.message}
+                  </p>
+                )}
+              </div>
+              <div className="w-full">
+                <Label>Blood Group</Label>
+                <Controller
+                  name="bloodGroup"
+                  control={control}
+                  rules={{ required: "Blood group is required" }}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange}>
+                      <SelectTrigger
+                        className={
+                          errors.bloodGroup ? "border-destructive" : ""
+                        }>
+                        <SelectValue placeholder="Select blood group" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Select your blood group</SelectLabel>
+                          {[
+                            "A+",
+                            "A-",
+                            "B+",
+                            "B-",
+                            "AB+",
+                            "AB-",
+                            "O+",
+                            "O-",
+                          ].map((group) => (
+                            <SelectItem key={group} value={group}>
+                              {group}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.bloodGroup && (
+                  <p className="mt-1 text-sm text-destructive">
+                    {errors.bloodGroup.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Division & District */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
+                <Label>Division</Label>
+                <Controller
+                  name="division"
+                  control={control}
+                  rules={{ required: "Division is required" }}
+                  render={({ field }) => (
+                    <Select
+                      onValueChange={field.onChange}
+                      disabled={loadingDistricts}>
+                      <SelectTrigger
+                        className={errors.division ? "border-destructive" : ""}>
+                        <SelectValue placeholder="Select division" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Select your division</SelectLabel>
+                          {DIVISIONS.map((div) => (
+                            <SelectItem key={div.id} value={div.name}>
+                              {div.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.division && (
+                  <p className="mt-1 text-sm text-destructive">
+                    {errors.division.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="w-full">
+                <Label>District</Label>
+                <Controller
+                  name="district"
+                  control={control}
+                  rules={{ required: "District is required" }}
+                  render={({ field }) => (
+                    <Select
+                      onValueChange={field.onChange}
+                      disabled={
+                        !selectedDivision ||
+                        loadingDistricts ||
+                        districtError !== null
+                      }>
+                      <SelectTrigger
+                        className={errors.district ? "border-destructive" : ""}>
+                        <SelectValue placeholder="Select district" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Select your district</SelectLabel>
+                          {filteredDistricts.length === 0 &&
+                            selectedDivision &&
+                            !loadingDistricts && (
+                              <p className="px-4 py-2 text-muted-foreground italic">
+                                No districts found
+                              </p>
+                            )}
+                          {filteredDistricts.map((dist) => (
+                            <SelectItem key={dist.id} value={dist.name}>
+                              {dist.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.district && (
+                  <p className="mt-1 text-sm text-destructive">
+                    {errors.district.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Passwords */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="w-full">
+                <Label>Password</Label>
+                <Input
+                  type="password"
+                  placeholder="Enter your password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-destructive">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+              <div className="w-full">
+                <Label>Confirm Password</Label>
+                <Input
+                  type="password"
+                  placeholder="Confirm your password"
+                  {...register("confirmPassword", {
+                    required: "Please confirm your password",
+                    validate: (value) =>
+                      value === password || "Passwords do not match",
+                  })}
+                />
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-sm text-destructive">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex items-center gap-5">
+              <Button type="submit" disabled={isLoading} className="flex-1">
+                {isLoading ? "Creating Account..." : "Register"}
+              </Button>
+              <Button
+                type="button"
+                onClick={handleLoginWithGoogle}
+                variant="outline"
+                className="flex-1">
+                Login with Google
+              </Button>
+            </div>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-muted-foreground">
+              Already have an account?{" "}
+              <Link to="/login" className="text-primary hover:underline">
+                Login here
+              </Link>
+            </p>
+          </div>
+        </div>
+      </div>
+    </Container>
   );
 };
 
