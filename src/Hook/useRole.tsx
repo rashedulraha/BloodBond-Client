@@ -1,25 +1,27 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import useAuth from "./useAuth";
+import useAxiosSecure from "./useAxiosSecure";
 
 const useRole = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
   const [role, setRole] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user?.email) return;
+    if (!user?.email || authLoading) return;
 
-    axios
-      .get(`http://localhost:3000/user/${user.email}/role`)
+    axiosSecure
+      .get(`/user/${user.email}/role`)
       .then((res) => {
-        setRole(res.data?.role);
-        setStatus(res.data?.status);
+        setRole(res.data.role);
+        setStatus(res.data.status);
       })
-      .catch(console.error)
+      .catch((err) => console.error(err))
       .finally(() => setLoading(false));
-  }, [user?.email]);
+  }, [user?.email, authLoading, axiosSecure]);
 
   return { role, status, loading };
 };
