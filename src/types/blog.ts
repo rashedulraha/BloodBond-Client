@@ -159,3 +159,9 @@ export interface VolunteerApplication {
   experience?: string;
   motivation?: string;
 }
+
+export interface Message {
+  id: number;
+  role: "user" | "bot";
+  text: string;
+}

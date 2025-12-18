@@ -12,12 +12,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-
-interface Message {
-  id: number;
-  role: "user" | "bot";
-  text: string;
-}
+import type { Message } from "@/types/blog";
 
 const HelpDesk: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,9 +74,9 @@ const HelpDesk: React.FC = () => {
             <Card className="shadow-2xl border-primary/10 backdrop-blur-md bg-card/95 overflow-hidden">
               {/* Header */}
 
-              <CardHeader className="bg-primary/50 p-4 flex  flex-row items-center justify-between space-y-0">
+              <CardHeader className="bg-primary p-4 flex  flex-row items-center justify-between space-y-0">
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-9 w-9 border-2 border-white/20">
+                  <Avatar className="h-9 w-9 border-2  border-secondary">
                     <AvatarImage
                       className="bg-background"
                       src="https://www.shutterstock.com/image-vector/bot-icon-chatbot-flat-style-260nw-778683235.jpg"
@@ -92,16 +87,16 @@ const HelpDesk: React.FC = () => {
                   </Avatar>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-bold text-white tracking-tight">
+                      <h3 className="text-sm font-bold text-foreground tracking-tight">
                         BondBot
                       </h3>
                       <Badge
                         variant="outline"
-                        className="text-[9px] h-4 text-white border-white/30 bg-white/10 px-1">
+                        className="text-[9px] h-4 text-foreground/50 border border-secondary bg-background/10 px-1">
                         AI
                       </Badge>
                     </div>
-                    <p className="text-[10px] text-white/70 flex items-center gap-1">
+                    <p className="text-[10px] text-foreground/70 flex items-center gap-1">
                       <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
                       Always Active
                     </p>
@@ -118,7 +113,7 @@ const HelpDesk: React.FC = () => {
 
               {/* Chat Body */}
               <CardContent className="p-0">
-                <ScrollArea ref={scrollRef} className="h-[380px] p-4">
+                <ScrollArea ref={scrollRef} className="h-[280px] p-4">
                   <div className="space-y-4">
                     {messages.map((msg) => (
                       <div
@@ -205,7 +200,7 @@ const HelpDesk: React.FC = () => {
               <MessageCircle size={30} />
               <span className="absolute -top-1 -right-1 flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
               </span>
             </div>
           )}
