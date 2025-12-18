@@ -26,6 +26,7 @@ import DonationProcess from "@/Page/Shared/Footer/Page/DonationProcess/DonationP
 import DonorEligibility from "@/Page/Shared/Footer/Page/DonorEligibility/DonorEligibility";
 import FAQ from "@/Page/Shared/Footer/Page/FAQ/FAQ";
 import HealthTips from "@/Page/Shared/Footer/Page/HealthTips/HealthTips";
+import NewsUpdates from "@/Page/Shared/Footer/Page/NewsUpdates/NewsUpdates";
 import OurMission from "@/Page/Shared/Footer/Page/OurMission/OurMission";
 import Partners from "@/Page/Shared/Footer/Page/Partners/Partners";
 import Report from "@/Page/Shared/Footer/Page/Report/Report";
@@ -107,6 +108,10 @@ const router = createBrowserRouter([
       {
         path: "report",
         Component: Report,
+      },
+      {
+        path: "news",
+        Component: NewsUpdates,
       },
       {
         path: "donation-request-details/:id",
