@@ -33,6 +33,7 @@ import Partners from "@/Page/Shared/Footer/Page/Partners/Partners";
 import PrivacyPolicy from "@/Page/Shared/Footer/Page/PrivacyPolicy/PrivacyPolicy";
 import Report from "@/Page/Shared/Footer/Page/Report/Report";
 import Research from "@/Page/Shared/Footer/Page/Research/Research";
+import SafetyGuidelines from "@/Page/Shared/Footer/Page/SafetyGuidelines/SafetyGuidelines";
 import Team from "@/Page/Shared/Footer/Page/Team/Team";
 import TermsOfService from "@/Page/Shared/Footer/Page/TermsOfService/TermsOfService";
 
@@ -127,6 +128,10 @@ const router = createBrowserRouter([
       {
         path: "cookies",
         Component: CookiePolicy,
+      },
+      {
+        path: "safety",
+        Component: SafetyGuidelines,
       },
       {
         path: "donation-request-details/:id",
