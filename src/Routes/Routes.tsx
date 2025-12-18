@@ -28,7 +28,9 @@ import FAQ from "@/Page/Shared/Footer/Page/FAQ/FAQ";
 import HealthTips from "@/Page/Shared/Footer/Page/HealthTips/HealthTips";
 import OurMission from "@/Page/Shared/Footer/Page/OurMission/OurMission";
 import Partners from "@/Page/Shared/Footer/Page/Partners/Partners";
+import Report from "@/Page/Shared/Footer/Page/Report/Report";
 import Research from "@/Page/Shared/Footer/Page/Research/Research";
+import Team from "@/Page/Shared/Footer/Page/Team/Team";
 
 import PrivetRoute from "@/Page/Shared/PrivetRoute/PrivetRoute";
 import PrivetVolunteerRoute from "@/Page/Shared/Volunteer/PrivetVolunteerRoute";
@@ -92,7 +94,7 @@ const router = createBrowserRouter([
       },
       {
         path: "team",
-        Component: OurMission,
+        Component: Team,
       },
       {
         path: "partners",
@@ -101,6 +103,10 @@ const router = createBrowserRouter([
       {
         path: "careers",
         Component: Careers,
+      },
+      {
+        path: "report",
+        Component: Report,
       },
       {
         path: "donation-request-details/:id",
