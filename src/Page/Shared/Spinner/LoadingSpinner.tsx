@@ -1,12 +1,12 @@
 const LoadingSpinner = () => {
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/60 backdrop-blur-md">
+    <div className="fixed inset-0 z-999 flex flex-col items-center justify-center bg-card backdrop-blur-md">
       <div className="relative flex items-center justify-center">
         {/* Animated Outer Ring (Blood Flow) */}
         <div className="absolute w-24 h-24 border-4 border-transparent border-t-[#fb2c36] border-r-[#fb2c36]/30 rounded-full animate-spin"></div>
 
         {/* Secondary Outer Ring (Subtle) */}
-        <div className="absolute w-24 h-24 border-4 border-gray-100 rounded-full"></div>
+        <div className="absolute w-24 h-24 border-4 border-primary rounded-full"></div>
 
         {/* The Heart Container */}
         <div className="relative animate-heartbeat">
@@ -38,10 +38,10 @@ const LoadingSpinner = () => {
           <span className="h-1.5 w-1.5 bg-[#fb2c36] rounded-full animate-bounce-delay-2"></span>
           <span className="h-1.5 w-1.5 bg-[#fb2c36] rounded-full animate-bounce"></span>
         </div>
-        <h3 className="text-gray-800 font-bold text-lg tracking-wide">
+        <h3 className="text-foreground/80 font-bold text-lg tracking-wide">
           Connecting Lives
         </h3>
-        <p className="text-gray-500 text-xs font-medium uppercase tracking-[3px]">
+        <p className="text-foreground/60 text-xs font-medium uppercase tracking-[3px]">
           Please Wait
         </p>
       </div>
