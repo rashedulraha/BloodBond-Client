@@ -59,8 +59,7 @@ const Navbar = () => {
           </div>
 
           {/* Center Nav Links */}
-          <div className="hidden lg:flex gap-6 font-medium flex-1">
-            {/* {user ? privateLinks : publicLinks} */}
+          <div className="hidden lg:flex gap-6 font-medium flex-1 items-center justify-center">
             {publicLinks}
           </div>
 

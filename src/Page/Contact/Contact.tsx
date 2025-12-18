@@ -14,7 +14,6 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import Container from "../Shared/Responsive/Container";
 
 // --- [ 1. Zod Schema for Contact Form ] ---
 const contactSchema = z.object({
@@ -61,7 +60,7 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <Container>
+    <div className="max-w-5xl mx-auto px-4">
       {/* --- [ 2. Header ] --- */}
       <div className="text-center pb-4 border-b border-border mb-10">
         <h1 className="text-5xl font-extrabold text-primary mb-2">
@@ -218,7 +217,7 @@ const Contact: React.FC = () => {
           </div>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

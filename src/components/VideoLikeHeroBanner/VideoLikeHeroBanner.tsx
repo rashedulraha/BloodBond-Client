@@ -1,28 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 // Updated Icons for a strong impact
-import { Search, HeartPulse, Droplet, TrendingUp } from "lucide-react";
-import type { CtaButtonProps } from "@/types/blog";
+import { HeartPulse, Droplet, TrendingUp } from "lucide-react";
 import useAuth from "@/Hook/useAuth";
-
-const CtaButton: React.FC<CtaButtonProps> = ({ to, label, Icon, variant }) => {
-  const isPrimary = variant === "primary";
-  const baseClasses =
-    "btn btn-md shadow-xl font-bold transition-all duration-300 transform hover:scale-[1.05] flex items-center justify-center min-w-[220px]";
-
-  return (
-    <Link
-      to={to}
-      className={`${baseClasses} ${
-        isPrimary
-          ? "btn-primary bg-primary text-primary-foreground border-0 hover:bg-primary/90 "
-          : "bg-secondary text-primary border-secondary/50 hover:bg-secondary/80"
-      }`}>
-      <Icon className="w-5 h-5 mr-3" />
-      {label}
-    </Link>
-  );
-};
+import { Button } from "../ui/button";
+import { FaSearch } from "react-icons/fa";
 
 const VideoLikeHeroBanner: React.FC = () => {
   const { user } = useAuth();
@@ -68,28 +50,30 @@ const VideoLikeHeroBanner: React.FC = () => {
         data-aos-duration="800"
         data-aos-delay="700">
         {/* Primary CTA: Find Blood Requests (Urgency) */}
-        <CtaButton
-          to="/search-page"
-          label="Search Donors" // Emphasize urgency
-          Icon={Search}
-          variant="primary"
-        />
+        <Link to={"/search-page"}>
+          <Button>
+            <FaSearch />
+            Search Donors
+          </Button>
+        </Link>
 
         {/* Secondary CTA: Register as Donor (Community Building) */}
         {user ? (
-          <CtaButton
-            to="/volunteer"
-            label="Join as a Volunteer" // Clear call to action
-            Icon={Droplet}
-            variant="secondary"
-          />
+          <>
+            <Link to={"/volunteer"}>
+              <Button variant={"outline"}>
+                <Droplet /> Join as a Volunteer
+              </Button>
+            </Link>
+          </>
         ) : (
-          <CtaButton
-            to="/register"
-            label="Join as donor" // Clear call to action
-            Icon={Droplet}
-            variant="secondary"
-          />
+          <>
+            <Link to={"/register"}>
+              <Button variant={"outline"}>
+                <Droplet /> Join as a donor
+              </Button>
+            </Link>
+          </>
         )}
       </div>
 

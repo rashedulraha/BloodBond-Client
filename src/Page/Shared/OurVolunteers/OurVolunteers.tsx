@@ -64,7 +64,7 @@ const OurVolunteers: React.FC = () => {
   }, [startAnimation]);
 
   return (
-    <section className="py-10 overflow-hidden bg-background">
+    <section className="py-10 overflow-hidden ">
       <Container>
         {/* Section Header */}
         <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-16">
