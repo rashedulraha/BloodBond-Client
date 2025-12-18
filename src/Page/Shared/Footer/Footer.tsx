@@ -384,12 +384,12 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
             </div>
             <div className="flex items-center gap-6 text-sm">
               {legalLinks.map((link) => (
-                <a
+                <Link
                   key={link.href}
-                  href={link.href}
+                  to={link.href}
                   className="text-muted-foreground hover:text-foreground transition-colors font-sans">
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
             <div className="text-xs text-muted-foreground/60 font-sans">

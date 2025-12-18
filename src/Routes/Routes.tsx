@@ -29,6 +29,7 @@ import HealthTips from "@/Page/Shared/Footer/Page/HealthTips/HealthTips";
 import NewsUpdates from "@/Page/Shared/Footer/Page/NewsUpdates/NewsUpdates";
 import OurMission from "@/Page/Shared/Footer/Page/OurMission/OurMission";
 import Partners from "@/Page/Shared/Footer/Page/Partners/Partners";
+import PrivacyPolicy from "@/Page/Shared/Footer/Page/PrivacyPolicy/PrivacyPolicy";
 import Report from "@/Page/Shared/Footer/Page/Report/Report";
 import Research from "@/Page/Shared/Footer/Page/Research/Research";
 import Team from "@/Page/Shared/Footer/Page/Team/Team";
@@ -112,6 +113,10 @@ const router = createBrowserRouter([
       {
         path: "news",
         Component: NewsUpdates,
+      },
+      {
+        path: "privacy",
+        Component: PrivacyPolicy,
       },
       {
         path: "donation-request-details/:id",
