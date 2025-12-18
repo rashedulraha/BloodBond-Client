@@ -1,37 +1,47 @@
 import axios from "axios";
 import { useEffect } from "react";
 import useAuth from "./useAuth";
+import { useNavigate } from "react-router-dom";
 
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
 });
 
 const useAxiosSecure = () => {
-  const { user } = useAuth();
+  const { user, logOutUser } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const requestInterceptor = axiosSecure.interceptors.request.use(
+    // request interceptor
+    const reqInterceptor = axiosSecure.interceptors.request.use(
       async (config) => {
         if (user) {
-          const token = await user.getIdToken();
-          console.log(token);
-
-          if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-            console.log("Token added to header:", token);
-          }
+          const token = await user.getIdToken(true);
+          config.headers.authorization = `Bearer ${token}`;
         }
         return config;
-      },
-      (error) => {
+      }
+    );
+
+    // response interceptor
+    const resInterceptor = axiosSecure.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const status = error.response?.status;
+
+        if (status === 401 || status === 403) {
+          await logOutUser().then(() => navigate("/login"));
+        }
+
         return Promise.reject(error);
       }
     );
 
     return () => {
-      axiosSecure.interceptors.request.eject(requestInterceptor);
+      axiosSecure.interceptors.request.eject(reqInterceptor);
+      axiosSecure.interceptors.response.eject(resInterceptor);
     };
-  }, [user]);
+  }, [user, logOutUser, navigate]);
 
   return axiosSecure;
 };
