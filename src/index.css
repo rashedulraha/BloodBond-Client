@@ -145,3 +145,60 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Heartbeat Animation */
+@keyframes heartbeat {
+  0% {
+    transform: scale(0.95);
+  }
+  5% {
+    transform: scale(1.1);
+  }
+  39% {
+    transform: scale(0.85);
+  }
+  45% {
+    transform: scale(1);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(0.9);
+  }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.2s infinite;
+}
+
+/* Heart drop shadow */
+.drop-shadow-heart {
+  filter: drop-shadow(0 0 10px rgba(251, 44, 54, 0.5));
+}
+
+/* Bounce dots with delays */
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 0.6s infinite;
+}
+
+.animate-bounce-delay-1 {
+  animation: bounce 0.6s infinite;
+  animation-delay: -0.3s;
+}
+
+.animate-bounce-delay-2 {
+  animation: bounce 0.6s infinite;
+  animation-delay: -0.15s;
+}
