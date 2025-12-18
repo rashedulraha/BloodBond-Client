@@ -22,6 +22,7 @@ import Home from "@/Page/Home/Home";
 import AdminPrivetRoute from "@/Page/Shared/Admin/AdminPrivetRoute";
 import BloodTypesGuide from "@/Page/Shared/Footer/Page/BloodTypesGuide/BloodTypesGuide";
 import Careers from "@/Page/Shared/Footer/Page/Careers/Careers";
+import CookiePolicy from "@/Page/Shared/Footer/Page/CookiePolicy/CookiePolicy";
 import DonationProcess from "@/Page/Shared/Footer/Page/DonationProcess/DonationProcess";
 import DonorEligibility from "@/Page/Shared/Footer/Page/DonorEligibility/DonorEligibility";
 import FAQ from "@/Page/Shared/Footer/Page/FAQ/FAQ";
@@ -33,6 +34,7 @@ import PrivacyPolicy from "@/Page/Shared/Footer/Page/PrivacyPolicy/PrivacyPolicy
 import Report from "@/Page/Shared/Footer/Page/Report/Report";
 import Research from "@/Page/Shared/Footer/Page/Research/Research";
 import Team from "@/Page/Shared/Footer/Page/Team/Team";
+import TermsOfService from "@/Page/Shared/Footer/Page/TermsOfService/TermsOfService";
 
 import PrivetRoute from "@/Page/Shared/PrivetRoute/PrivetRoute";
 import PrivetVolunteerRoute from "@/Page/Shared/Volunteer/PrivetVolunteerRoute";
@@ -117,6 +119,14 @@ const router = createBrowserRouter([
       {
         path: "privacy",
         Component: PrivacyPolicy,
+      },
+      {
+        path: "terms",
+        Component: TermsOfService,
+      },
+      {
+        path: "cookies",
+        Component: CookiePolicy,
       },
       {
         path: "donation-request-details/:id",
