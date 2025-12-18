@@ -45,27 +45,27 @@ const OurVolunteers: React.FC = () => {
 
   const doubledVolunteers = [...volunteers, ...volunteers];
 
-  // Animation Control er jonno
+  // Animation Control
   const controls = useAnimation();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Thik kora startAnimation function
   const startAnimation = useCallback(() => {
     controls.start({
       x: ["0%", "-50%"],
       transition: {
-        duration: 15,
+        duration: 20,
         ease: "linear",
         repeat: Infinity,
       },
     });
-  });
+  }, [controls]);
 
   useEffect(() => {
     startAnimation();
   }, [startAnimation]);
 
   return (
-    <section className="py-20 overflow-hidden">
+    <section className="py-10 overflow-hidden">
       <Container>
         {/* Section Header */}
         <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-16">
