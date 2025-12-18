@@ -197,18 +197,21 @@ const MyDonationRequestsPage: React.FC = () => {
     queryKey: ["my-donation-requests", user?.email],
     queryFn: async () => {
       const response = await axiosSecure.get(
-        `/donation-request-info?email=${user?.email}`
+        `/my-donation/${user?.email}/request`
       );
+      console.log(response.data);
+
       return response.data;
     },
     enabled: !!user?.email,
   });
 
-  // Delete mutation
+  //! Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       await axiosSecure.delete(`/donation-request/${id}`);
     },
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-donation-requests"] });
       toast.success("Donation request deleted successfully!");

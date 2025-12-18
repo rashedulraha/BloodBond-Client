@@ -31,7 +31,7 @@ import useAuth from "@/Hook/useAuth";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
 import Container from "@/Page/Shared/Responsive/Container";
 import type { DonationRequest } from "@/types/blog";
-import LoadingSpinner from "@/Page/Shared/Spinner/LoadingSpinner";
+import DashboardSpinner from "@/Page/Shared/Spinner/DashboardSpinner";
 
 const DonationRequestDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -93,7 +93,7 @@ const DonationRequestDetails = () => {
 
   // Loading state
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <DashboardSpinner />;
   }
 
   //? !if id to navigate search page

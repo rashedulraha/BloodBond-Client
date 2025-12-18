@@ -95,7 +95,7 @@ const Dashboard: React.FC = () => {
         ...commonLinks,
         {
           to: "/dashboard/all-blood-donation-request",
-          label: "All Requests",
+          label: "All Donation Requests",
           icon: FaList,
         },
       ];
@@ -186,7 +186,7 @@ const Dashboard: React.FC = () => {
 
       {/* --- [ 2. Main Content Area ] --- */}
       <main
-        className={`flex flex-col grow transition-all duration-300 ${
+        className={`flex flex-col grow min-w-0 overflow-x-hidden transition-all duration-300 ${
           isCollapsed ? "lg:ml-20" : "lg:ml-64"
         }`}>
         {/* --- [ Mobile Header/Toggle ] --- */}
@@ -198,7 +198,7 @@ const Dashboard: React.FC = () => {
         </header>
 
         {/* --- [ Page Outlet ] --- */}
-        <div className="grow p-4 md:p-6 lg:p-8 overflow-auto">
+        <div className="grow p-4 md:p-6 lg:p-8">
           <Outlet />
         </div>
       </main>

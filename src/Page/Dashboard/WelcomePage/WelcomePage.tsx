@@ -102,12 +102,12 @@ const DashboardWelcome: React.FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [requestToDelete, setRequestToDelete] = useState<string | null>(null);
 
-  // Fetch user's donation requests (latest 3)
+  //! Fetch user's donation requests (latest 3)
   const { data: allRequests = [], isLoading } = useQuery<DonationRequest[]>({
     queryKey: ["my-recent-requests", user?.email],
     queryFn: async () => {
       const response = await axiosSecure.get(
-        `/donation-request-info?email=${user?.email}`,
+        `/my-donation/${user?.email}/request`,
         {
           params: { requesterEmail: user?.email },
         }
@@ -124,7 +124,7 @@ const DashboardWelcome: React.FC = () => {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await axiosSecure.delete(`/donation-request-delete/${id}`);
+      await axiosSecure.delete(`/donation-request/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-recent-requests"] });
