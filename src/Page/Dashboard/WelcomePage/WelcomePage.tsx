@@ -41,6 +41,7 @@ import {
 import Container from "@/Page/Shared/Responsive/Container";
 import useAuth from "@/Hook/useAuth";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
+import DashboardSpinner from "@/Page/Shared/Spinner/DashboardSpinner";
 
 type DonationStatus = "pending" | "inprogress" | "done" | "canceled";
 
@@ -248,12 +249,7 @@ const DashboardWelcome: React.FC = () => {
             </div>
 
             {isLoading ? (
-              <div className="text-center py-12">
-                <div className="inline-block w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p className="text-muted-foreground">
-                  Loading your requests...
-                </p>
-              </div>
+              <DashboardSpinner />
             ) : hasRequests ? (
               <>
                 {/* Desktop Table View */}

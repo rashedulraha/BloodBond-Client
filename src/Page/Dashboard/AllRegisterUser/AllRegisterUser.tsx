@@ -63,7 +63,7 @@ import { Input } from "@/components/ui/input";
 import Container from "@/Page/Shared/Responsive/Container";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
 import type { AllUser } from "@/types/blog";
-import LoadingSpinner from "@/Page/Shared/Spinner/LoadingSpinner";
+import DashboardSpinner from "@/Page/Shared/Spinner/DashboardSpinner";
 
 type UserStatus = string;
 type UserRole = string;
@@ -306,10 +306,6 @@ const AllRegisterUser: React.FC = () => {
     { value: "donor" as const, label: "Donor" },
   ];
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -403,123 +399,135 @@ const AllRegisterUser: React.FC = () => {
         {/* Desktop Table */}
         <div className="hidden md:block overflow-x-auto rounded-lg border border-border">
           <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/50">
-                <TableHead className="font-bold text-primary">Avatar</TableHead>
-                <TableHead className="font-bold text-primary">Name</TableHead>
-                <TableHead className="font-bold text-primary">
-                  <Mail className="w-4 h-4 inline mr-1" /> Email
-                </TableHead>
-                <TableHead className="font-bold text-primary text-center">
-                  Status
-                </TableHead>
-                <TableHead className="font-bold text-primary text-center">
-                  Role
-                </TableHead>
-                <TableHead className="font-bold text-primary text-center">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {paginatedUsers.length > 0 ? (
-                paginatedUsers.map((user) => (
-                  <TableRow key={user._id} className="hover:bg-muted/50">
-                    <TableCell>
-                      <figure className="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
-                        <img
-                          src={user.imageURL ?? "/default-avatar.png"}
-                          alt={user.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </figure>
-                    </TableCell>
-                    <TableCell className="font-medium">{user.name}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {user.email}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {getStatusBadge(user.status)}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {getRoleBadge(user.role)}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex justify-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleStatusClick(user)}
-                          className={
-                            user.status === "active"
-                              ? "hover:bg-red-500/10 hover:text-red-600 hover:border-red-500"
-                              : "hover:bg-green-500/10 hover:text-green-600 hover:border-green-500"
-                          }>
-                          {user.status === "active" ? (
-                            <>
-                              <UserX className="w-4 h-4 mr-1" />
-                              Block
-                            </>
-                          ) : (
-                            <>
-                              <UserCheck className="w-4 h-4 mr-1" />
-                              Unblock
-                            </>
-                          )}
-                        </Button>
-
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm">
-                              <Shield className="w-4 h-4 mr-1" />
-                              Change Role
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>
-                              Authorization Level
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleRoleChange(`${user._id}`, "admin")
-                              }>
-                              <Shield className="w-4 h-4 mr-2 text-purple-600" />
-                              Admin
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleRoleChange(`${user._id}`, "volunteer")
-                              }>
-                              <UserCheck className="w-4 h-4 mr-2 text-blue-600" />
-                              Volunteer
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleRoleChange(`${user._id}`, "donor")
-                              }>
-                              <Users className="w-4 h-4 mr-2 text-primary" />
-                              Donor
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </TableCell>
+            {isLoading ? (
+              <DashboardSpinner />
+            ) : (
+              <>
+                <TableHeader>
+                  <TableRow className="bg-muted/50">
+                    <TableHead className="font-bold text-primary">
+                      Avatar
+                    </TableHead>
+                    <TableHead className="font-bold text-primary">
+                      Name
+                    </TableHead>
+                    <TableHead className="font-bold text-primary">
+                      <Mail className="w-4 h-4 inline mr-1" /> Email
+                    </TableHead>
+                    <TableHead className="font-bold text-primary text-center">
+                      Status
+                    </TableHead>
+                    <TableHead className="font-bold text-primary text-center">
+                      Role
+                    </TableHead>
+                    <TableHead className="font-bold text-primary text-center">
+                      Actions
+                    </TableHead>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="h-32 text-center text-muted-foreground">
-                    <div className="flex flex-col items-center gap-2">
-                      <AlertCircle className="w-12 h-12 text-muted-foreground/50" />
-                      <p>No users found</p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
+                </TableHeader>
+                <TableBody>
+                  {paginatedUsers.length > 0 ? (
+                    paginatedUsers.map((user) => (
+                      <TableRow key={user._id} className="hover:bg-muted/50">
+                        <TableCell>
+                          <figure className="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+                            <img
+                              src={user.imageURL ?? "/default-avatar.png"}
+                              alt={user.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </figure>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {user.name}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {user.email}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {getStatusBadge(user.status)}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {getRoleBadge(user.role)}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex justify-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleStatusClick(user)}
+                              className={
+                                user.status === "active"
+                                  ? "hover:bg-red-500/10 hover:text-red-600 hover:border-red-500"
+                                  : "hover:bg-green-500/10 hover:text-green-600 hover:border-green-500"
+                              }>
+                              {user.status === "active" ? (
+                                <>
+                                  <UserX className="w-4 h-4 mr-1" />
+                                  Block
+                                </>
+                              ) : (
+                                <>
+                                  <UserCheck className="w-4 h-4 mr-1" />
+                                  Unblock
+                                </>
+                              )}
+                            </Button>
+
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                  <Shield className="w-4 h-4 mr-1" />
+                                  Change Role
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>
+                                  Authorization Level
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleRoleChange(`${user._id}`, "admin")
+                                  }>
+                                  <Shield className="w-4 h-4 mr-2 text-purple-600" />
+                                  Admin
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleRoleChange(`${user._id}`, "volunteer")
+                                  }>
+                                  <UserCheck className="w-4 h-4 mr-2 text-blue-600" />
+                                  Volunteer
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleRoleChange(`${user._id}`, "donor")
+                                  }>
+                                  <Users className="w-4 h-4 mr-2 text-primary" />
+                                  Donor
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={6}
+                        className="h-32 text-center text-muted-foreground">
+                        <div className="flex flex-col items-center gap-2">
+                          <AlertCircle className="w-12 h-12 text-muted-foreground/50" />
+                          <p>No users found</p>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </>
+            )}
           </Table>
         </div>
 
