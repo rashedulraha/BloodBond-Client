@@ -25,6 +25,7 @@ import DonationProcess from "@/Page/Shared/Footer/Page/DonationProcess/DonationP
 import DonorEligibility from "@/Page/Shared/Footer/Page/DonorEligibility/DonorEligibility";
 import FAQ from "@/Page/Shared/Footer/Page/FAQ/FAQ";
 import HealthTips from "@/Page/Shared/Footer/Page/HealthTips/HealthTips";
+import OurMission from "@/Page/Shared/Footer/Page/OurMission/OurMission";
 import Research from "@/Page/Shared/Footer/Page/Research/Research";
 
 import PrivetRoute from "@/Page/Shared/PrivetRoute/PrivetRoute";
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
       {
         path: "research",
         Component: Research,
+      },
+      {
+        path: "mission",
+        Component: OurMission,
       },
       {
         path: "donation-request-details/:id",
