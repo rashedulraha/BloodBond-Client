@@ -57,7 +57,6 @@ const DIVISIONS = [
   { id: "8", name: "Mymensingh" },
 ];
 
-// Districts by Division (Simplified version - আপনি পরে districts.json থেকে load করতে পারেন)
 const DISTRICTS_BY_DIVISION: { [key: string]: string[] } = {
   Dhaka: [
     "Dhaka",
@@ -180,7 +179,6 @@ const DonationRequest: React.FC = () => {
         ...data,
         requesterEmail: user?.email || "",
         requesterName: user?.displayName || "",
-        donationStatus: "pending",
       };
 
       await axiosSecure.post("/donation-request", donationInfo);
@@ -533,10 +531,7 @@ const DonationRequest: React.FC = () => {
 
               {/* Submit Button */}
               <div className="mt-8 flex justify-center">
-                <Button
-                  type="submit"
-                  disabled={formState.isSubmitting}
-                  className="w-full sm:w-auto px-8 md:px-10 py-6 text-base md:text-lg font-semibold bg-linear-to-r from-primary to-destructive hover:from-primary/90 hover:to-destructive/90 shadow-lg">
+                <Button type="submit" disabled={formState.isSubmitting}>
                   {formState.isSubmitting ? (
                     <>
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>

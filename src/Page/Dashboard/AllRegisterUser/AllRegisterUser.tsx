@@ -202,7 +202,8 @@ const AllRegisterUser: React.FC = () => {
   // Toggle user status mutation
   const statusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: UserStatus }) => {
-      await axiosSecure.patch("/register-user", { id, status });
+      const updateInfo = { id, status };
+      await axiosSecure.patch("/update-user-status", updateInfo);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["register-user"] });
@@ -218,8 +219,10 @@ const AllRegisterUser: React.FC = () => {
   // Update user role mutation
   const roleMutation = useMutation({
     mutationFn: async ({ id, role }: { id: string; role: UserRole }) => {
-      await axiosSecure.patch(`/update-user-role/${id}`, { role });
+      const userRole = { role };
+      await axiosSecure.patch(`/update-user-role/${id}`, userRole);
     },
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["register-user"] });
       toast.success("User role updated successfully!");

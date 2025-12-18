@@ -176,7 +176,7 @@ const AllVolunteerApplications: React.FC = () => {
   } = useQuery<VolunteerApplication[]>({
     queryKey: ["volunteer-volunteer"],
     queryFn: async () => {
-      const response = await axiosSecure.get("/volunteer-request");
+      const response = await axiosSecure.get("/volunteer-applications");
       return response.data;
     },
   });

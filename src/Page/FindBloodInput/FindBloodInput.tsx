@@ -51,7 +51,7 @@ const FindBloodInput: React.FC = () => {
   const { data: donationCardData = [], isLoading } = useQuery({
     queryKey: ["card-data"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/donation-request-info");
+      const res = await axiosSecure.get("/donation-request");
       return res.data;
     },
   });

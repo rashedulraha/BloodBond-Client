@@ -180,7 +180,7 @@ const AllDonationRequest: React.FC = () => {
   } = useQuery<AllRequester[]>({
     queryKey: ["all-donation-requests"],
     queryFn: async () => {
-      const response = await axiosSecure.get("/donation-request-info");
+      const response = await axiosSecure.get("/donation-request");
       return response.data;
     },
   });

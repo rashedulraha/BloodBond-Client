@@ -27,11 +27,11 @@ const useAxiosSecure = () => {
     const resInterceptor = axiosSecure.interceptors.response.use(
       (response) => response,
       async (error) => {
-        const status = error.response?.status;
+        // const status = error.response?.status;
 
-        if (status === 401 || status === 403) {
-          await logOutUser().then(() => navigate("/login"));
-        }
+        // if (status === 401 || status === 403) {
+        //   await logOutUser().then(() => navigate("/login"));
+        // }
 
         return Promise.reject(error);
       }
