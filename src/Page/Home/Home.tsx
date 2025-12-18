@@ -22,7 +22,9 @@ const Home = () => {
       {/* Other Sections */}
       <Container>
         <Features />
-        <OurVolunteers />
+      </Container>
+      <OurVolunteers />
+      <Container>
         <HowItWorks />
         <ContactUs />
       </Container>

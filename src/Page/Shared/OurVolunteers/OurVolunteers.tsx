@@ -48,7 +48,6 @@ const OurVolunteers: React.FC = () => {
   // Animation Control
   const controls = useAnimation();
 
-  // Thik kora startAnimation function
   const startAnimation = useCallback(() => {
     controls.start({
       x: ["0%", "-50%"],
@@ -65,7 +64,7 @@ const OurVolunteers: React.FC = () => {
   }, [startAnimation]);
 
   return (
-    <section className="py-10 overflow-hidden">
+    <section className="py-10 overflow-hidden bg-background">
       <Container>
         {/* Section Header */}
         <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-16">
@@ -99,7 +98,7 @@ const OurVolunteers: React.FC = () => {
             {doubledVolunteers.map((person, idx) => (
               <div
                 key={idx}
-                className="w-[300px] shrink-0 group relative bg-card/40 border border-border rounded-2xl p-6 transition-all duration-500 hover:border-primary/40 shadow-sm hover:shadow-xl hover:shadow-primary/5">
+                className="w-[300px] shrink-0 group relative bg-card/50 border border-border rounded-lg p-6 transition-all duration-500 hover:border-primary/50 shadow-sm hover:shadow-xl hover:shadow-primary/5">
                 {/* Badge */}
                 {person.donations >= 10 && (
                   <div className="absolute -top-3 -right-3 bg-primary text-primary-foreground text-[10px] font-black px-3 py-1 rounded-full shadow-lg z-10 flex items-center gap-1">
