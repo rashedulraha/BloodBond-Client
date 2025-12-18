@@ -21,11 +21,13 @@ import Funding from "@/Page/Funding/Funding";
 import Home from "@/Page/Home/Home";
 import AdminPrivetRoute from "@/Page/Shared/Admin/AdminPrivetRoute";
 import BloodTypesGuide from "@/Page/Shared/Footer/Page/BloodTypesGuide/BloodTypesGuide";
+import Careers from "@/Page/Shared/Footer/Page/Careers/Careers";
 import DonationProcess from "@/Page/Shared/Footer/Page/DonationProcess/DonationProcess";
 import DonorEligibility from "@/Page/Shared/Footer/Page/DonorEligibility/DonorEligibility";
 import FAQ from "@/Page/Shared/Footer/Page/FAQ/FAQ";
 import HealthTips from "@/Page/Shared/Footer/Page/HealthTips/HealthTips";
 import OurMission from "@/Page/Shared/Footer/Page/OurMission/OurMission";
+import Partners from "@/Page/Shared/Footer/Page/Partners/Partners";
 import Research from "@/Page/Shared/Footer/Page/Research/Research";
 
 import PrivetRoute from "@/Page/Shared/PrivetRoute/PrivetRoute";
@@ -87,6 +89,18 @@ const router = createBrowserRouter([
       {
         path: "mission",
         Component: OurMission,
+      },
+      {
+        path: "team",
+        Component: OurMission,
+      },
+      {
+        path: "partners",
+        Component: Partners,
+      },
+      {
+        path: "careers",
+        Component: Careers,
       },
       {
         path: "donation-request-details/:id",
