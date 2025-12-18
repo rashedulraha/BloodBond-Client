@@ -65,6 +65,10 @@ const ITEMS_PER_PAGE = 8;
 
 // Status Badge Component
 const getStatusBadge = (status?: VolunteerStatus) => {
+  if (!status) {
+    return <Badge variant="outline">Unknown</Badge>;
+  }
+
   switch (status) {
     case "pending":
       return (
@@ -72,13 +76,13 @@ const getStatusBadge = (status?: VolunteerStatus) => {
           <Clock className="w-3 h-3 mr-1" /> Pending
         </Badge>
       );
-    case "approved":
+    case "approve":
       return (
         <Badge className="bg-green-500/10 text-green-600 hover:bg-green-500/20 dark:text-green-500">
           <CheckCircle className="w-3 h-3 mr-1" /> Approved
         </Badge>
       );
-    case "rejected":
+    case "reject":
       return (
         <Badge className="bg-red-500/10 text-red-600 hover:bg-red-500/20 dark:text-red-500">
           <XCircle className="w-3 h-3 mr-1" /> Rejected
@@ -174,7 +178,7 @@ const AllVolunteerApplications: React.FC = () => {
     isLoading,
     error,
   } = useQuery<VolunteerApplication[]>({
-    queryKey: ["volunteer-volunteer"],
+    queryKey: ["volunteer-applications"],
     queryFn: async () => {
       const response = await axiosSecure.get("/volunteer-applications");
       return response.data;
