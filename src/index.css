@@ -118,6 +118,9 @@
   --sidebar-ring: oklch(0.396 0.141 25.723);
 }
 
+.active {
+  @apply underline text-primary transition-all hover:text-primary;
+}
 @layer base {
   * {
     @apply border-border outline-ring/50;

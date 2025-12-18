@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Container from "../Responsive/Container";
 import { useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import useAuth from "@/Hook/useAuth";
 import useRole from "@/Hook/useRole";
+import LoadingSpinner from "../Spinner/LoadingSpinner";
+import CustomNavLink from "./Shared/CustomNavLink";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logOutUser } = useAuth();
+  const { user, logOutUser, loading } = useAuth();
   const { role, status } = useRole();
 
   const handleUserLogout = () => {
@@ -20,32 +22,21 @@ const Navbar = () => {
   //! Public Links (Icons removed)
   const publicLinks = (
     <>
-      <Link to="/" className="hover:text-primary transition-colors">
-        Home
-      </Link>
-      <Link to="/about" className="hover:text-primary transition-colors">
-        About
-      </Link>
-      <Link to="/blog" className="hover:text-primary transition-colors">
-        Blog
-      </Link>
-      <Link to="/contact" className="hover:text-primary transition-colors">
-        Contact Us
-      </Link>
+      <CustomNavLink to="" span="Home" />
+      <CustomNavLink to="about" span="About" />
+      <CustomNavLink to="blog" span="Blog" />
+      <CustomNavLink to="contact" span="Contact" />
+      {user && <CustomNavLink to="funding" span="Funding" />}
+      <hr />
+      <NavLink to="/dashboard/donation-requests" className="lg:hidden">
+        <Button>Donation request</Button>
+      </NavLink>
     </>
   );
 
-  // Private Links (Icons removed)
-  const privateLinks = (
-    <>
-      <Link to="/funding" className="hover:text-primary transition-colors">
-        Funding
-      </Link>
-      <Link to="/dashboard/donation-requests" className="lg:hidden">
-        <Button>Donation request</Button>
-      </Link>
-    </>
-  );
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className=" backdrop-blur-sm sticky top-0 z-50 shadow-sm border-b border-border">
@@ -58,19 +49,19 @@ const Navbar = () => {
             </Link>
 
             {/* Mobile Menu Button - Using basic symbols */}
-            <div className="lg:hidden ml-2">
-              <button
+            <div className="lg:hidden">
+              <span
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 cursor-pointer text-2xl font-bold">
+                className=" cursor-pointer text-2xl font-bold">
                 {isOpen ? "✕" : "☰"}
-              </button>
+              </span>
             </div>
           </div>
 
           {/* Center Nav Links */}
           <div className="hidden lg:flex gap-6 font-medium flex-1">
             {/* {user ? privateLinks : publicLinks} */}
-            {publicLinks} {user && privateLinks}
+            {publicLinks}
           </div>
 
           {/* Right Side: Mode Toggle + Avatar */}
@@ -115,7 +106,7 @@ const Navbar = () => {
                       Role: <span className="text-green-500">{role}</span>
                     </li>
                     <li className="text-center text-muted-foreground text-sm flex items-center justify-center flex-row capitalize">
-                      Status:{" "}
+                      Status:
                       <span
                         className={
                           status === "block" ? "text-red-500" : "text-green-500"
@@ -146,8 +137,12 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="lg:hidden border-t border-border pt-2 flex flex-col z-5 absolute left-0 w-full backdrop-blur-3xl px-4 bg-background/90 gap-2 pb-5  ">
-            {publicLinks} {user && privateLinks}
+          <div
+            className="lg:hidden border-t border-border pt-2  z-5 absolute left-0 w-full backdrop-blur-3xl px-4 bg-background/90"
+            data-aos="fade-down">
+            <Container>
+              <div className="pt-2 flex flex-col gap-2 pb-5">{publicLinks}</div>
+            </Container>
           </div>
         )}
       </Container>

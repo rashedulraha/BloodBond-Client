@@ -17,6 +17,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 
 // --- Interfaces ---
 interface FooterLink {
@@ -34,26 +35,26 @@ interface FooterProps {
 const quickLinks: FooterLink[] = [
   {
     name: "Find Donors",
-    href: "/find-donors",
+    href: "/search-page",
     icon: <FaUserMd className="w-4 h-4" />,
   },
   {
     name: "Blood Requests",
-    href: "/requests",
+    href: "/dashboard/donation-requests",
     icon: <FaHandHoldingHeart className="w-4 h-4" />,
   },
   {
-    name: "Donation Centers",
-    href: "/centers",
+    name: "My donation",
+    href: "/dashboard/my-donation-requests",
     icon: <FaHospital className="w-4 h-4" />,
   },
   {
-    name: "Upcoming Drives",
-    href: "/drives",
+    name: "Become e volunteer",
+    href: "/volunteer",
     icon: <FaCalendarAlt className="w-4 h-4" />,
   },
-  { name: "Become Donor", href: "/register/donor" },
-  { name: "Organizations", href: "/organizations" },
+  { name: "Become Donor", href: "/register" },
+  { name: "Organizations", href: "" },
 ];
 
 const resources: FooterLink[] = [
@@ -83,31 +84,31 @@ const emergencyContacts = [
 const socialLinks = [
   {
     icon: <FaFacebook />,
-    href: "#",
+    href: "https://www.facebook.com/rashedulraha",
     label: "Facebook",
     color: "hover:text-blue-600",
   },
   {
     icon: <FaTwitter />,
-    href: "#",
+    href: "https://x.com/",
     label: "Twitter",
     color: "hover:text-sky-500",
   },
   {
     icon: <FaInstagram />,
-    href: "#",
+    href: "https://instagram.com",
     label: "Instagram",
     color: "hover:text-pink-600",
   },
   {
     icon: <FaLinkedin />,
-    href: "#",
+    href: "https://www.linkedin.com/in/rashedulraha/",
     label: "LinkedIn",
     color: "hover:text-blue-700",
   },
   {
     icon: <FaYoutube />,
-    href: "#",
+    href: "https://youtube.com",
     label: "YouTube",
     color: "hover:text-red-600",
   },
@@ -141,8 +142,8 @@ const FooterLinks: React.FC<{ title: string; links: FooterLink[] }> = ({
     <ul className="space-y-3">
       {links.map((link) => (
         <li key={link.name}>
-          <a
-            href={link.href}
+          <Link
+            to={`${link.href}`}
             className="flex items-center gap-3 text-muted-foreground hover:text-foreground hover:translate-x-2 transition-all duration-300 group font-sans">
             {link.icon && (
               <span className="text-primary group-hover:scale-110 transition-transform">
@@ -150,7 +151,7 @@ const FooterLinks: React.FC<{ title: string; links: FooterLink[] }> = ({
               </span>
             )}
             <span>{link.name}</span>
-          </a>
+          </Link>
         </li>
       ))}
     </ul>
@@ -310,6 +311,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
           </div>
           <div className="space-y-8">
             <FooterLinks title="About Bloodbond" links={aboutUs} />
+
             {/* Contact Us Section */}
             <div>
               <h3 className="text-xl font-bold mb-6 pb-2 border-b-2 border-primary inline-block font-sans">
@@ -344,6 +346,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
             </div>
           </div>
         </div>
+
         {/* Newsletter & Social */}
         <div className="mt-12 pt-8 border-t border-border grid grid-cols-1 lg:grid-cols-2 gap-8">
           <NewsletterSection />
@@ -356,20 +359,21 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social) => (
-                <a
+                <Link
                   key={social.label}
-                  href={social.href}
+                  to={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
                   className={`bg-secondary text-muted-foreground ${social.color} w-12 h-12 rounded-full flex items-center justify-center text-lg transition-all duration-300 transform hover:scale-110 hover:bg-secondary/80 shadow-sm`}>
                   {social.icon}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
         </div>
       </div>
+
       {/* Bottom Bar */}
       <div className="bg-background/80 py-6 border-t border-border">
         <div className="container mx-auto px-4">

@@ -20,6 +20,12 @@ import DonationRequestDetails from "@/Page/FindBloodInput/Shared/DonationRequest
 import Funding from "@/Page/Funding/Funding";
 import Home from "@/Page/Home/Home";
 import AdminPrivetRoute from "@/Page/Shared/Admin/AdminPrivetRoute";
+import BloodTypesGuide from "@/Page/Shared/Footer/Page/BloodTypesGuide/BloodTypesGuide";
+import DonationProcess from "@/Page/Shared/Footer/Page/DonationProcess/DonationProcess";
+import DonorEligibility from "@/Page/Shared/Footer/Page/DonorEligibility/DonorEligibility";
+import FAQ from "@/Page/Shared/Footer/Page/FAQ/FAQ";
+import HealthTips from "@/Page/Shared/Footer/Page/HealthTips/HealthTips";
+import Research from "@/Page/Shared/Footer/Page/Research/Research";
 
 import PrivetRoute from "@/Page/Shared/PrivetRoute/PrivetRoute";
 import PrivetVolunteerRoute from "@/Page/Shared/Volunteer/PrivetVolunteerRoute";
@@ -52,6 +58,30 @@ const router = createBrowserRouter([
       {
         path: "search-page",
         Component: FindBloodInput,
+      },
+      {
+        path: "eligibility",
+        Component: DonorEligibility,
+      },
+      {
+        path: "process",
+        Component: DonationProcess,
+      },
+      {
+        path: "blood-types",
+        Component: BloodTypesGuide,
+      },
+      {
+        path: "health-tips",
+        Component: HealthTips,
+      },
+      {
+        path: "faq",
+        Component: FAQ,
+      },
+      {
+        path: "research",
+        Component: Research,
       },
       {
         path: "donation-request-details/:id",
