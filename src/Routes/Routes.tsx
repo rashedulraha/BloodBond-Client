@@ -18,6 +18,7 @@ import DonationRequest from "@/Page/DonationRequest/DonationRequest";
 import FindBloodInput from "@/Page/FindBloodInput/FindBloodInput";
 import DonationRequestDetails from "@/Page/FindBloodInput/Shared/DonationRequestDetails/DonationRequestDetails";
 import Funding from "@/Page/Funding/Funding";
+import Success from "@/Page/Funding/Success";
 
 import Home from "@/Page/Home/Home";
 import AdminPrivetRoute from "@/Page/Shared/Admin/AdminPrivetRoute";
@@ -133,6 +134,10 @@ const router = createBrowserRouter([
       {
         path: "safety",
         Component: SafetyGuidelines,
+      },
+      {
+        path: "success",
+        Component: Success,
       },
       {
         path: "donation-request-details/:id",
