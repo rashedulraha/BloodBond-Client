@@ -9,6 +9,7 @@ import Contact from "@/Page/Contact/Contact";
 import AllDonationRequest from "@/Page/Dashboard/AllDonationRequest/AllDonationRequest";
 import AllRegisterUser from "@/Page/Dashboard/AllRegisterUser/AllRegisterUser";
 import AllVolunteerRequest from "@/Page/Dashboard/AllVolunteerRequest/AllVolunteerRequest";
+import FundingTable from "@/Page/Dashboard/FundingData/FundingData";
 import MyDonationRequests from "@/Page/Dashboard/MyDonationRequests/MyDonationRequests";
 import Profile from "@/Page/Dashboard/Profile/Profile";
 
@@ -236,6 +237,14 @@ const router = createBrowserRouter([
         element: (
           <AdminPrivetRoute>
             <AllVolunteerRequest />
+          </AdminPrivetRoute>
+        ),
+      },
+      {
+        path: "funding",
+        element: (
+          <AdminPrivetRoute>
+            <FundingTable />
           </AdminPrivetRoute>
         ),
       },

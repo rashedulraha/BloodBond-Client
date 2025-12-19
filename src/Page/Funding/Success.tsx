@@ -14,7 +14,11 @@ const Success = () => {
 
   useEffect(() => {
     if (sessionId) {
-      axiosSecure.post("/save-founder-details");
+      axiosSecure
+        .post(`/save-founder-details?session_id=${sessionId}`)
+        .then((res) => {
+          console.log(res);
+        });
     }
   }, [axiosSecure, sessionId]);
 
