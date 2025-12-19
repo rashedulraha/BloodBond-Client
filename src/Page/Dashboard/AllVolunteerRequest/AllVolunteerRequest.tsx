@@ -358,6 +358,9 @@ const AllVolunteerApplications: React.FC = () => {
     };
   }, [allApplications]);
 
+  if (isLoading) {
+    return <DashboardSpinner />;
+  }
   // Error State
   if (error) {
     return (
@@ -485,145 +488,131 @@ const AllVolunteerApplications: React.FC = () => {
         {/* Data Table - Desktop */}
         <div className="hidden md:block overflow-x-auto rounded-lg border border-border">
           <Table>
-            {isLoading ? (
-              <DashboardSpinner />
-            ) : (
-              <>
-                <TableHeader>
-                  <TableRow className="bg-muted/50">
-                    <TableHead className="font-bold text-primary">
-                      Avatar
-                    </TableHead>
-                    <TableHead className="font-bold text-primary">
-                      Name
-                    </TableHead>
-                    <TableHead className="font-bold text-primary">
-                      <Mail className="w-4 h-4 inline mr-1" /> Contact
-                    </TableHead>
-                    <TableHead className="font-bold text-primary text-center">
-                      Blood Group
-                    </TableHead>
-                    <TableHead className="font-bold text-primary">
-                      <MapPin className="w-4 h-4 inline mr-1" /> Location
-                    </TableHead>
-                    <TableHead className="font-bold text-primary">
-                      Applied Date
-                    </TableHead>
-                    <TableHead className="font-bold text-primary text-center">
-                      Status
-                    </TableHead>
-                    <TableHead className="font-bold text-primary text-center">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {paginatedApplications.length > 0 ? (
-                    paginatedApplications.map((application) => (
-                      <TableRow
-                        key={application._id}
-                        className="hover:bg-muted/50">
-                        <TableCell>
-                          <figure className="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
-                            <img
-                              src={
-                                application.photoURL || "/default-avatar.png"
-                              }
-                              alt={application.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </figure>
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {application.name}
-                        </TableCell>
-                        <TableCell className="text-sm">
-                          <div>{application.email}</div>
-                          {application.phone && (
-                            <div className="text-xs text-muted-foreground">
-                              {application.phone}
-                            </div>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-center font-bold text-destructive">
-                          {application.bloodGroup}
-                        </TableCell>
-                        <TableCell className="text-sm">
-                          <div>{application.district}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {application.division}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-sm">
-                          {formatDate(application.appliedDate)}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {getStatusBadge(application.status)}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex justify-end gap-1">
-                            {/* Approve Button - Only for pending */}
-                            {application.status === "pending" && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleApproveClick(application)}
-                                className="hover:bg-green-500/10 text-green-600"
-                                title="Approve">
-                                <CheckCircle className="w-4 h-4" />
-                              </Button>
-                            )}
-
-                            {/* Reject Button - Only for pending */}
-                            {application.status === "pending" && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleRejectClick(application)}
-                                className="hover:bg-red-500/10 text-red-600"
-                                title="Reject">
-                                <XCircle className="w-4 h-4" />
-                              </Button>
-                            )}
-
-                            {/* View Button */}
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleViewDetails(application)}
-                              className="hover:bg-primary/10"
-                              title="View Details">
-                              <Eye className="w-4 h-4" />
-                            </Button>
-
-                            {/* Delete Button */}
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDeleteClick(application._id)}
-                              className="hover:bg-destructive/10 text-destructive"
-                              title="Delete">
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={8}
-                        className="h-32 text-center text-muted-foreground">
-                        <div className="flex flex-col items-center gap-2">
-                          <AlertCircle className="w-12 h-12 text-muted-foreground/50" />
-                          <p>No volunteer applications found</p>
+            <TableHeader>
+              <TableRow className="bg-muted/50">
+                <TableHead className="font-bold text-primary">Avatar</TableHead>
+                <TableHead className="font-bold text-primary">Name</TableHead>
+                <TableHead className="font-bold text-primary">
+                  <Mail className="w-4 h-4 inline mr-1" /> Contact
+                </TableHead>
+                <TableHead className="font-bold text-primary text-center">
+                  Blood Group
+                </TableHead>
+                <TableHead className="font-bold text-primary">
+                  <MapPin className="w-4 h-4 inline mr-1" /> Location
+                </TableHead>
+                <TableHead className="font-bold text-primary">
+                  Applied Date
+                </TableHead>
+                <TableHead className="font-bold text-primary text-center">
+                  Status
+                </TableHead>
+                <TableHead className="font-bold text-primary text-center">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginatedApplications.length > 0 ? (
+                paginatedApplications.map((application) => (
+                  <TableRow key={application._id} className="hover:bg-muted/50">
+                    <TableCell>
+                      <figure className="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+                        <img
+                          src={application.photoURL || "/default-avatar.png"}
+                          alt={application.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </figure>
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {application.name}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      <div>{application.email}</div>
+                      {application.phone && (
+                        <div className="text-xs text-muted-foreground">
+                          {application.phone}
                         </div>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </>
-            )}
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center font-bold text-destructive">
+                      {application.bloodGroup}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      <div>{application.district}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {application.division}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      {formatDate(application.appliedDate)}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {getStatusBadge(application.status)}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-end gap-1">
+                        {/* Approve Button - Only for pending */}
+                        {application.status === "pending" && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleApproveClick(application)}
+                            className="hover:bg-green-500/10 text-green-600"
+                            title="Approve">
+                            <CheckCircle className="w-4 h-4" />
+                          </Button>
+                        )}
+
+                        {/* Reject Button - Only for pending */}
+                        {application.status === "pending" && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRejectClick(application)}
+                            className="hover:bg-red-500/10 text-red-600"
+                            title="Reject">
+                            <XCircle className="w-4 h-4" />
+                          </Button>
+                        )}
+
+                        {/* View Button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleViewDetails(application)}
+                          className="hover:bg-primary/10"
+                          title="View Details">
+                          <Eye className="w-4 h-4" />
+                        </Button>
+
+                        {/* Delete Button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteClick(application._id)}
+                          className="hover:bg-destructive/10 text-destructive"
+                          title="Delete">
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={8}
+                    className="h-32 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center gap-2">
+                      <AlertCircle className="w-12 h-12 text-muted-foreground/50" />
+                      <p>No volunteer applications found</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
           </Table>
         </div>
 

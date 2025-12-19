@@ -188,7 +188,7 @@ const MyDonationRequestsPage: React.FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [requestToDelete, setRequestToDelete] = useState<string | null>(null);
 
-  // Fetch all donation requests from database
+  // Fetch my donation requests from database
   const {
     data: allRequests = [],
     isLoading,
@@ -333,6 +333,18 @@ const MyDonationRequestsPage: React.FC = () => {
     { value: "canceled", label: "Canceled" },
   ];
 
+  if (isLoading) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center">
+        <DashboardSpinner />
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return <DashboardSpinner />;
+  }
+
   // Error State
   if (error) {
     return (
@@ -393,160 +405,152 @@ const MyDonationRequestsPage: React.FC = () => {
 
         {/* Data Table - Desktop */}
         <div className="hidden md:block rounded-md overflow-x-auto  border border-border">
-          {isLoading ? (
-            <DashboardSpinner />
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/50">
-                  <TableHead className="font-bold text-primary">
-                    Recipient
-                  </TableHead>
-                  <TableHead className="font-bold text-primary">
-                    <HeartPulse className="w-4 h-4 inline mr-1" /> Blood
-                  </TableHead>
-                  <TableHead className="font-bold text-primary">
-                    <MapPin className="w-4 h-4 inline mr-1" /> Location
-                  </TableHead>
-                  <TableHead className="font-bold text-primary">
-                    <Clock className="w-4 h-4 inline mr-1" /> Date & Time
-                  </TableHead>
-                  <TableHead className="font-bold text-primary text-center">
-                    Status
-                  </TableHead>
-                  <TableHead className="font-bold text-primary text-center">
-                    Donor Info
-                  </TableHead>
-                  <TableHead className="font-bold text-primary text-right">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedRequests.length > 0 ? (
-                  paginatedRequests.map((request) => (
-                    <TableRow key={request._id} className="hover:bg-muted/50">
-                      <TableCell className="font-medium">
-                        {request.recipientName}
-                      </TableCell>
-                      <TableCell className="font-bold text-destructive">
-                        {request.bloodGroup}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        <div className="text-sm">
-                          <div>{request.recipientUpazila}</div>
-                          <div className="text-xs">
-                            {request.recipientDistrict}
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/50">
+                <TableHead className="font-bold text-primary">
+                  Recipient
+                </TableHead>
+                <TableHead className="font-bold text-primary">
+                  <HeartPulse className="w-4 h-4 inline mr-1" /> Blood
+                </TableHead>
+                <TableHead className="font-bold text-primary">
+                  <MapPin className="w-4 h-4 inline mr-1" /> Location
+                </TableHead>
+                <TableHead className="font-bold text-primary">
+                  <Clock className="w-4 h-4 inline mr-1" /> Date & Time
+                </TableHead>
+                <TableHead className="font-bold text-primary text-center">
+                  Status
+                </TableHead>
+                <TableHead className="font-bold text-primary text-center">
+                  Donor Info
+                </TableHead>
+                <TableHead className="font-bold text-primary text-right">
+                  Actions
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginatedRequests.length > 0 ? (
+                paginatedRequests.map((request) => (
+                  <TableRow key={request._id} className="hover:bg-muted/50">
+                    <TableCell className="font-medium">
+                      {request.recipientName}
+                    </TableCell>
+                    <TableCell className="font-bold text-destructive">
+                      {request.bloodGroup}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      <div className="text-sm">
+                        <div>{request.recipientUpazila}</div>
+                        <div className="text-xs">
+                          {request.recipientDistrict}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm">
+                        <div className="font-medium">
+                          {formatDate(request.donationDate)}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatTime(request.donationTime)}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {getStatusBadge(request.donationStatus)}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {request.donationStatus === "inprogress" &&
+                      request.donorName ? (
+                        <div className="text-xs">
+                          <div className="font-medium">{request.donorName}</div>
+                          <div className="text-muted-foreground">
+                            {request.donorEmail}
                           </div>
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          <div className="font-medium">
-                            {formatDate(request.donationDate)}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {formatTime(request.donationTime)}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {getStatusBadge(request.donationStatus)}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {request.donationStatus === "inprogress" &&
-                        request.donorName ? (
-                          <div className="text-xs">
-                            <div className="font-medium">
-                              {request.donorName}
-                            </div>
-                            <div className="text-muted-foreground">
-                              {request.donorEmail}
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground text-xs">
-                            -
-                          </span>
+                      ) : (
+                        <span className="text-muted-foreground text-xs">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        {/* View Button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleViewDetails(request._id)}
+                          className="hover:bg-primary/10">
+                          <Eye className="w-4 h-4" />
+                        </Button>
+
+                        {/* Edit Button - Only for pending status */}
+                        {request.donationStatus === "pending" && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEdit(request._id)}
+                            className="hover:bg-blue-500/10 text-blue-600">
+                            <Edit className="w-4 h-4" />
+                          </Button>
                         )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          {/* View Button */}
+
+                        {/* Delete Button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteClick(request._id)}
+                          className="hover:bg-destructive/10 text-destructive">
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+
+                        {/* Done Button - Only for inprogress */}
+                        {request.donationStatus === "inprogress" && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleViewDetails(request._id)}
-                            className="hover:bg-primary/10">
-                            <Eye className="w-4 h-4" />
+                            onClick={() =>
+                              handleStatusUpdate(request._id, "done")
+                            }
+                            className="hover:bg-green-500/10 text-green-600">
+                            <CheckCircle className="w-4 h-4" />
                           </Button>
+                        )}
 
-                          {/* Edit Button - Only for pending status */}
-                          {request.donationStatus === "pending" && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleEdit(request._id)}
-                              className="hover:bg-blue-500/10 text-blue-600">
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                          )}
-
-                          {/* Delete Button */}
+                        {/* Cancel Button - Only for inprogress */}
+                        {request.donationStatus === "inprogress" && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteClick(request._id)}
-                            className="hover:bg-destructive/10 text-destructive">
-                            <Trash2 className="w-4 h-4" />
+                            onClick={() =>
+                              handleStatusUpdate(request._id, "canceled")
+                            }
+                            className="hover:bg-red-500/10 text-red-600">
+                            <XCircle className="w-4 h-4" />
                           </Button>
-
-                          {/* Done Button - Only for inprogress */}
-                          {request.donationStatus === "inprogress" && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                handleStatusUpdate(request._id, "done")
-                              }
-                              className="hover:bg-green-500/10 text-green-600">
-                              <CheckCircle className="w-4 h-4" />
-                            </Button>
-                          )}
-
-                          {/* Cancel Button - Only for inprogress */}
-                          {request.donationStatus === "inprogress" && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                handleStatusUpdate(request._id, "canceled")
-                              }
-                              className="hover:bg-red-500/10 text-red-600">
-                              <XCircle className="w-4 h-4" />
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={7}
-                      className="h-32 text-center text-muted-foreground">
-                      <div className="flex flex-col items-center gap-2">
-                        <AlertCircle className="w-12 h-12 text-muted-foreground/50" />
-                        <p>
-                          No donation requests found for status: {filterStatus}
-                        </p>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          )}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={7}
+                    className="h-32 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center gap-2">
+                      <AlertCircle className="w-12 h-12 text-muted-foreground/50" />
+                      <p>
+                        No donation requests found for status: {filterStatus}
+                      </p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
 
         {/* Mobile Card View */}

@@ -329,7 +329,7 @@ const DashboardWelcome: React.FC = () => {
                             )}
                           </TableCell>
                           <TableCell>
-                            <div className="flex justify-center gap-1">
+                            <div className="flex justify-end gap-1">
                               {/* Done/Cancel buttons - only for inprogress */}
                               {req.donationStatus === "inprogress" && (
                                 <>
