@@ -7,12 +7,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDbY7gZz3QAAx6eSaeageoNC2p1u6HCLUU",
-  authDomain: "bloodbond-1adac.firebaseapp.com",
-  projectId: "bloodbond-1adac",
-  storageBucket: "bloodbond-1adac.firebasestorage.app",
-  messagingSenderId: "890265174006",
-  appId: "1:890265174006:web:c141a5fac8db4e906251d7",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
 };
 
 // Initialize Firebase

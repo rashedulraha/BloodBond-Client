@@ -14,10 +14,18 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { DollarSign, Users, Calendar, Mail } from "lucide-react";
 import DashboardSpinner from "@/Page/Shared/Spinner/DashboardSpinner";
 
+interface FundingData {
+  _id?: string;
+  name: string;
+  email: string;
+  amount: number;
+  createAt: string;
+}
+
 const FundingTable = () => {
   const axiosSecure = useAxiosSecure();
 
-  const { data: funds = [], isLoading } = useQuery({
+  const { data: funds = [], isLoading } = useQuery<FundingData[]>({
     queryKey: ["all-funds-admin"],
     queryFn: async () => {
       const res = await axiosSecure.get("/funding-all-info");
@@ -26,7 +34,7 @@ const FundingTable = () => {
   });
 
   const totalAmount = funds.reduce(
-    (acc: number, item: any) => acc + (item.amount || 0),
+    (acc: number, item: FundingData) => acc + (Number(item.amount) || 0),
     0
   );
 
@@ -70,18 +78,17 @@ const FundingTable = () => {
             </TableHeader>
             <TableBody>
               {funds.length > 0 ? (
-                funds.map((fund: any) => (
+                funds.map((fund) => (
                   <TableRow
                     key={fund._id}
                     className="border-border/50 hover:bg-muted/10 transition-colors">
                     <TableCell className="font-semibold py-4 text-foreground/90">
-                      {fund.name} {/* আগের userName বদলে name */}
+                      {fund.name}
                     </TableCell>
                     <TableCell className="text-muted-foreground font-medium">
-                      {fund.email} {/* আগের userEmail বদলে email */}
+                      {fund.email}
                     </TableCell>
                     <TableCell className="text-muted-foreground font-medium">
-                      {/* date বদলে createAt */}
                       {fund.createAt
                         ? format(new Date(fund.createAt), "dd MMM yyyy")
                         : "N/A"}
@@ -96,7 +103,7 @@ const FundingTable = () => {
                   <TableCell
                     colSpan={4}
                     className="h-24 text-center text-muted-foreground">
-                    No contributions found in the database.
+                    No contributions found.
                   </TableCell>
                 </TableRow>
               )}

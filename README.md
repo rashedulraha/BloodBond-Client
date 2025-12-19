@@ -1,11 +1,23 @@
 # 🩸 BloodBond | Blood Donation & Management System
 
-**BloodBond** is a robust and user-friendly MERN stack application designed to streamline blood donation activities. It bridges the gap between donors and recipients while providing administrative tools for managing users, requests, and community funding.
+**BloodBond** is a high-performance MERN stack application designed to bridge the gap between blood donors and those in need. Built with **React 19**, **TypeScript**, and **Tailwind CSS v4**, it offers a seamless, secure, and mission-driven experience for the community.
 
 ## 🚀 Live Links
 
-- **Client Live URL:** <https://bloodbond-red.vercel.app>
-- **Server API URL:** []
+- **Client Live URL:** [https://bloodbond-red.vercel.app](https://bloodbond-red.vercel.app)
+- **Server API URL:** [https://blood-bond-server-rho.vercel.app](https://blood-bond-server-rho.vercel.app)
+
+<!-- Access  -->
+
+## Admin email and password
+
+--Email: <rashedulweb@gmail.com>
+--Password : 123456
+
+## Volunteer email and password
+
+--Email: <rashedulweb@gmail.com>
+--Password : 123456
 
 ---
 
@@ -13,27 +25,21 @@
 
 ### 👤 Role-Based Access Control (RBAC)
 
-- **Donor:** Can create donation requests, manage their profile, and track their donation history.
-- **Volunteer:** Can manage all donation requests and update statuses, but cannot delete users or manage funding.
-- **Admin:** Full control over the system, including user status management (Block/Unblock), role assignments, and content moderation.
+- **Donor:** Can create donation requests, manage personal profiles, and track contribution history.
+- **Volunteer:** Can review and manage all blood donation requests and update statuses.
+- **Admin:** Full control over the system, user moderation (Block/Unblock), and funding management.
 
-### 📊 Advanced Dashboard
+### 📊 Advanced Management
 
-- **Interactive Stats:** Visualized data using **Recharts** for donation trends.
-- **Dynamic Filtering:** Filter donation requests by status (Pending, In-Progress, Done, Canceled).
-- **Profile Management:** Fully editable profile with district and upazila selection.
+- **Interactive Dashboard:** Real-time data visualization using **Recharts**.
+- **Location Mapping:** Precise donor search based on districts and upazilas.
+- **Dynamic Tables:** Advanced data filtering and pagination using **TanStack Table**.
 
-### 🩸 Donation Features
+### 💳 Funding & Support
 
-- **Public Search:** Search for donors by blood group, district, and upazila.
-- **Real-time Status:** Donation process workflow from `Pending` -> `In-Progress` -> `Done/Canceled`.
-- **Location Specific:** Integrated Bangladesh Geocode for precise district/upazila selection.
-
-### 💳 Additional Modules
-
-- **Stripe Funding:** Secure payment integration for organizational support.
-- **Animations:** Smooth UI transitions using **Framer Motion** and **AOS**.
-- **Responsive UI:** Crafted with **Tailwind CSS v4** and **Shadcn UI** for all device sizes.
+- **Stripe Integration:** Secure payment gateway for community funding.
+- **Wall of Honor:** A dedicated section celebrating the top financial contributors.
+- **Success Celebrations:** Interactive UI feedback with `canvas-confetti` after successful donations.
 
 ---
 
@@ -41,48 +47,50 @@
 
 **Frontend:**
 
-- React 19 (Vite), TypeScript, Tailwind CSS v4, Shadcn UI, Framer Motion, TanStack Query.
+- **Core:** React 19 (Vite), TypeScript, React Router 7.
+- **Styling:** Tailwind CSS v4 (OKLCH Color Space), Shadcn UI, DaisyUI v5.
+- **State Management:** **Zustand** (Global) & **TanStack Query v5** (Server State).
+- **Animations:** Framer Motion, AOS, and Three.js.
 
 **Backend:**
 
-- Node.js, Express.js, MongoDB, JWT (JSON Web Token).
-
-**Authentication & Storage:**
-
-- Firebase Auth, ImgBB API (Avatar Upload).
+- **Runtime:** Node.js, Express.js.
+- **Database:** MongoDB.
+- **Security:** Firebase Auth, JWT (JSON Web Token).
 
 ---
 
 ## 📦 Major Packages Used
 
-| Package                        | Purpose                                    |
-| :----------------------------- | :----------------------------------------- |
-| `@tanstack/react-table`        | For advanced tabular data and pagination   |
-| `react-hook-form` & `zod`      | Efficient form handling and validation     |
-| `recharts`                     | Data visualization on Admin Dashboard      |
-| `framer-motion` & `aos`        | Sleek UI animations                        |
-| `axios`                        | Secure API communication                   |
-| `lucide-react` & `react-icons` | Premium iconography                        |
-| `sweetalert2` & `sonner`       | Interactive modals and toast notifications |
+| Package                   | Purpose                                |
+| :------------------------ | :------------------------------------- |
+| `@tanstack/react-query`   | Efficient data fetching and caching    |
+| `react-hook-form` & `zod` | Type-safe form handling and validation |
+| `recharts`                | Data-driven charts and analytics       |
+| `stripe`                  | Secure payment processing              |
+| `framer-motion`           | Smooth UI transitions and animations   |
+| `lucide-react`            | Modern and consistent iconography      |
+| `date-fns`                | Specialized date formatting            |
 
 ---
 
 ## ⚙️ Environment Variables Setup
 
-Create a `.env` file in the root and add:
+Create a `.env` file in the root directory and add the following keys:
 
 ```env
-# Firebase
-VITE_FIREBASE_API_KEY=your_key
-VITE_FIREBASE_AUTH_DOMAIN=your_domain
+# Firebase Configuration
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
 
-# APIs
-VITE_IMGBB_API_KEY=your_key
-VITE_STRIPE_PUBLIC_KEY=your_key
+# Stripe & APIs
+VITE_STRIPE_PUBLIC_KEY=your_stripe_public_key
+VITE_IMGBB_API_KEY=your_imgbb_api_key
 
-# Database & JWT (Server Side)
-DB_USER=your_db_user
-DB_PASS=your_db_password
-JWT_ACCESS_TOKEN=your_secret_token
-
+# Backend Configuration (Server Side)
+DB_USER=your_mongodb_username
+DB_PASS=your_mongodb_password
+JWT_ACCESS_TOKEN=your_jwt_secret
+STRIPE_SECRET_KEY=your_stripe_secret
 ```
