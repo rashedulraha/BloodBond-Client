@@ -79,6 +79,11 @@ const Dashboard: React.FC = () => {
           label: "All Volunteer Requests",
           icon: MdVolunteerActivism,
         },
+        {
+          to: "/dashboard/donation-requests",
+          label: "Create Request",
+          icon: FaPlus,
+        },
         { to: "/dashboard/funding", label: "Funding", icon: FaMoneyBillWave },
       ];
     } else if (role === "donor") {
@@ -97,6 +102,11 @@ const Dashboard: React.FC = () => {
           to: "/dashboard/all-blood-donation-request",
           label: "All Donation Requests",
           icon: FaList,
+        },
+        {
+          to: "/dashboard/donation-requests",
+          label: "Create Request",
+          icon: FaPlus,
         },
       ];
     }

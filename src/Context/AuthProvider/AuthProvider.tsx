@@ -107,10 +107,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // ------------------
   //! Auth State Observer
-  // ------------------
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser || undefined);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+
+        const token = await currentUser.getIdToken();
+        localStorage.setItem("access-token", token);
+      } else {
+        setUser(undefined);
+        localStorage.removeItem("access-token");
+      }
+
       setLoading(false);
     });
 
