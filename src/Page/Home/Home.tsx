@@ -19,7 +19,7 @@ const Home = () => {
       <Container>
         <VideoLikeHeroBanner />
       </Container>
-      {/* Other Sections */}
+
       <Container>
         <Features />
       </Container>

@@ -26,7 +26,7 @@ const Navbar = () => {
       <CustomNavLink to="about" span="About" />
       <CustomNavLink to="blog" span="Blog" />
       <CustomNavLink to="contact" span="Contact" />
-      {user && <CustomNavLink to="funding" span="Funding" />}
+      {user && <CustomNavLink to="dashboard/funding" span="Funding" />}
       <hr />
       <NavLink to="/dashboard/donation-requests" className="lg:hidden">
         <Button>Donation request</Button>

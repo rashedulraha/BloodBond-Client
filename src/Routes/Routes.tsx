@@ -143,7 +143,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "funding",
+        path: "dashboard/funding",
         element: (
           <PrivetRoute>
             <Funding />
