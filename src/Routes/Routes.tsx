@@ -17,6 +17,7 @@ import DonationRequest from "@/Page/DonationRequest/DonationRequest";
 
 import FindBloodInput from "@/Page/FindBloodInput/FindBloodInput";
 import DonationRequestDetails from "@/Page/FindBloodInput/Shared/DonationRequestDetails/DonationRequestDetails";
+import Cancel from "@/Page/Funding/Cancel";
 import Funding from "@/Page/Funding/Funding";
 import Success from "@/Page/Funding/Success";
 
@@ -138,6 +139,10 @@ const router = createBrowserRouter([
       {
         path: "success",
         Component: Success,
+      },
+      {
+        path: "cancel",
+        Component: Cancel,
       },
       {
         path: "donation-request-details/:id",
