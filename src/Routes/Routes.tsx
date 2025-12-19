@@ -18,6 +18,7 @@ import DonationRequest from "@/Page/DonationRequest/DonationRequest";
 import FindBloodInput from "@/Page/FindBloodInput/FindBloodInput";
 import DonationRequestDetails from "@/Page/FindBloodInput/Shared/DonationRequestDetails/DonationRequestDetails";
 import Funding from "@/Page/Funding/Funding";
+
 import Home from "@/Page/Home/Home";
 import AdminPrivetRoute from "@/Page/Shared/Admin/AdminPrivetRoute";
 import BloodTypesGuide from "@/Page/Shared/Footer/Page/BloodTypesGuide/BloodTypesGuide";
@@ -143,18 +144,18 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "dashboard/funding",
-        element: (
-          <PrivetRoute>
-            <Funding />
-          </PrivetRoute>
-        ),
-      },
-      {
         path: "volunteer",
         element: (
           <PrivetRoute>
             <Volunteer />
+          </PrivetRoute>
+        ),
+      },
+      {
+        path: "funding",
+        element: (
+          <PrivetRoute>
+            <Funding />
           </PrivetRoute>
         ),
       },
@@ -199,6 +200,7 @@ const router = createBrowserRouter([
         path: "donation-requests",
         Component: DonationRequest,
       },
+
       {
         path: "my-donation-requests",
         element: (

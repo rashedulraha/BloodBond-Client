@@ -16,9 +16,9 @@ const AdminPrivetRoute = ({ children }: Children) => {
 
   useEffect(() => {
     if (!authLoading && !roleLoading && role !== "admin") {
-      logOutUser().then(() => {
-        navigate("/login", { replace: true });
-      });
+      // logOutUser().then(() => {
+      //   navigate("/login", { replace: true });
+      // });
     }
   }, [authLoading, roleLoading, role, logOutUser, navigate]);
 
