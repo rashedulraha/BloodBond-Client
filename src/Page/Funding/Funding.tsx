@@ -16,14 +16,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Container from "../Shared/Responsive/Container";
-
-type FormData = {
-  amount: number;
-};
+import useAxiosSecure from "@/Hook/useAxiosSecure";
+import useAuth from "@/Hook/useAuth";
+import type { FormData } from "@/types/blog";
 
 const Funding = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
 
   const {
     register,
@@ -47,11 +48,23 @@ const Funding = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    console.log("Submitting fund data:", data.amount);
-    toast.success(`Redirecting to payment for $${data.amount}`);
-    reset();
-    setSelectedAmount(null);
-    setIsModalOpen(false);
+    const foundInfo = {
+      found: data.amount,
+      email: user?.email,
+      photoURL: user?.photoURL,
+      name: user?.displayName,
+    };
+
+    // console.log(foundInfo);
+
+    axiosSecure.post("/create-checkout-session", foundInfo).then((res) => {
+      const paymentUrl = res.data.url;
+      window.open(paymentUrl, "_blank");
+      toast.success(`Redirecting to payment for $${data.amount}`);
+      reset();
+      setSelectedAmount(null);
+      setIsModalOpen(false);
+    });
   };
 
   return (
@@ -72,7 +85,7 @@ const Funding = () => {
               <DialogTrigger asChild>
                 <Button
                   size="lg"
-                  className="px-8 py-6 text-lg group cursor-pointer">
+                  className="px-8 py-6 text-lg group cursor-pointer rounded">
                   Give Fund{" "}
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -111,7 +124,6 @@ const Funding = () => {
                           ${" "}
                         </span>
                         <Input
-                          id="amount"
                           type="number"
                           placeholder="Enter amount"
                           className={`w-full pl-8 h-12 ${

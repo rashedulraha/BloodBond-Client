@@ -29,6 +29,7 @@ export interface AllUser {
 }
 
 export interface AllRequester {
+  fullAddress: ReactNode;
   recipientName: string;
   _id: string;
   imageURL: string;
@@ -64,6 +65,8 @@ export interface Donor {
 }
 
 export type bloodDonation = {
+  upazilaId: string;
+  districtId: string;
   _id: Key | null | undefined;
   recipientName: string;
   bloodGroup: string;
@@ -165,3 +168,7 @@ export interface Message {
   role: "user" | "bot";
   text: string;
 }
+
+export type FormData = {
+  amount: number;
+};
