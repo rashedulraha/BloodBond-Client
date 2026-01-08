@@ -14,7 +14,7 @@ const MainLayouts: React.FC = () => {
   useLenis();
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <div className="flex-1 my-5 md:py-10">
         <Outlet />

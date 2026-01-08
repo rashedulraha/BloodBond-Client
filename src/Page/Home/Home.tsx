@@ -21,12 +21,14 @@ const Home = () => {
         <VideoLikeHeroBanner />
       </AnimatedBackground>
 
-      <Features />
-      <OurVolunteers />
-      <Container>
-        <HowItWorks />
-        <ContactUs />
-      </Container>
+      <div className="bg-card mt-5 md:mt-10 ">
+        <Features />
+        <OurVolunteers />
+        <Container>
+          <HowItWorks />
+          <ContactUs />
+        </Container>
+      </div>
     </div>
   );
 };
