@@ -443,15 +443,13 @@ const Contact: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
-              size="lg"
               onClick={() => (window.location.href = "tel:+8801712345678")}
-              className="bg-destructive hover:bg-destructive/90">
+              className="cursor-pointer w-full sm:w-auto">
               <Phone className="w-5 h-5 mr-2" />
               Call Emergency Hotline
             </Button>
             <Button
               variant="outline"
-              size="lg"
               onClick={() =>
                 (window.location.href = "/dashboard/create-donation-request")
               }>

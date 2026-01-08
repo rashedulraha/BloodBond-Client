@@ -502,29 +502,39 @@ const Funding = () => {
 
         {/* Call to Action Section */}
         <div
-          className="text-center py-12 bg-linear-to-br from-primary/10 to-destructive/10 rounded-xl"
+          className="text-center px-4 sm:px-6 lg:px-12 py-10 sm:py-12 
+             bg-linear-to-br from-primary/10 to-destructive/10 
+             rounded-xl"
           data-aos="fade-up">
-          <h2 className="text-3xl font-bold text-foreground mb-4">
+          <h2
+            className="text-2xl sm:text-3xl lg:text-4xl 
+                 font-bold text-foreground mb-4">
             Your Contribution Saves Lives
           </h2>
-          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+
+          <p
+            className="text-sm sm:text-base 
+                text-muted-foreground mb-6 
+                max-w-xl lg:max-w-2xl mx-auto">
             Join our mission to ensure no one has to wait for life-saving blood.
             Every donation, no matter the size, makes a difference.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Button
               onClick={() => setIsModalOpen(true)}
-              className="cursor-pointer"
+              className="cursor-pointer w-full sm:w-auto"
               data-aos="zoom-in"
               data-aos-delay="100">
               Make a Donation Now
             </Button>
+
             <Button
               variant="outline"
               onClick={() => {
                 /* Navigate to about page */
               }}
-              className="cursor-pointer"
+              className="cursor-pointer w-full sm:w-auto"
               data-aos="zoom-in"
               data-aos-delay="200">
               Learn More About Our Work
