@@ -6,6 +6,7 @@ import Container from "../Shared/Responsive/Container";
 import LoadingSpinner from "../Shared/Spinner/LoadingSpinner";
 import VideoLikeHeroBanner from "@/components/VideoLikeHeroBanner/VideoLikeHeroBanner";
 import OurVolunteers from "../Shared/OurVolunteers/OurVolunteers";
+import AnimatedBackground from "@/components/AnimatedBackground/AnimatedBackground";
 
 const Home = () => {
   const { loading } = useAuth();
@@ -16,13 +17,12 @@ const Home = () => {
 
   return (
     <div>
-      <Container>
+      <AnimatedBackground>
         <VideoLikeHeroBanner />
-      </Container>
+      </AnimatedBackground>
 
-      <Container>
-        <Features />
-      </Container>
+      <Features />
+
       <OurVolunteers />
       <Container>
         <HowItWorks />

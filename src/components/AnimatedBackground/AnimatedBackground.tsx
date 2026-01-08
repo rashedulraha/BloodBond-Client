@@ -242,7 +242,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   return (
-    <div className="relative py-10 md:pt-20 overflow-hidden">
+    <div className="relative overflow-hidden">
       {/* Canvas for all animations */}
       <canvas
         ref={canvasRef}
