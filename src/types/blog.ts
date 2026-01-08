@@ -172,3 +172,12 @@ export interface Message {
 export type FormData = {
   amount: number;
 };
+
+//  link props
+
+export interface LinkProps {
+  to: string;
+  label: string;
+  Icon: React.ElementType;
+  isCollapsed: boolean;
+}

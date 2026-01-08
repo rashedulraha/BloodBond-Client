@@ -19,13 +19,8 @@ import useAuth from "@/Hook/useAuth";
 import { useSidebar } from "@/Hook/useSidebar";
 import useRole from "@/Hook/useRole";
 import { useLenis } from "@/Hook/useLenis";
-
-interface LinkProps {
-  to: string;
-  label: string;
-  Icon: React.ElementType;
-  isCollapsed: boolean;
-}
+import type { LinkProps } from "@/types/blog";
+import { toast } from "sonner";
 
 const SidebarLink: React.FC<LinkProps> = ({ to, label, Icon, isCollapsed }) => {
   return (
@@ -49,7 +44,7 @@ const Dashboard: React.FC = () => {
 
   const handleLogout = () => {
     logOutUser();
-    console.log("User logged out.");
+    toast.success("User logged out successfully");
   };
 
   // --- [ Dynamic Link Generation ] ---
