@@ -28,7 +28,7 @@ const OurMission: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen text-foreground ">
+    <div className="min-h-screen text-foreground">
       <Container>
         {/* Header Section */}
         <div className="max-w-3xl mb-16">

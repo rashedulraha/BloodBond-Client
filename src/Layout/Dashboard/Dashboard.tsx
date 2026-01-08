@@ -18,6 +18,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import useAuth from "@/Hook/useAuth";
 import { useSidebar } from "@/Hook/useSidebar";
 import useRole from "@/Hook/useRole";
+import { useLenis } from "@/Hook/useLenis";
 
 interface LinkProps {
   to: string;
@@ -43,6 +44,8 @@ const Dashboard: React.FC = () => {
   const { user, logOutUser } = useAuth();
   const { isOpen, isCollapsed, toggleOpen, toggleCollapse } = useSidebar();
   const { role } = useRole();
+
+  useLenis();
 
   const handleLogout = () => {
     logOutUser();

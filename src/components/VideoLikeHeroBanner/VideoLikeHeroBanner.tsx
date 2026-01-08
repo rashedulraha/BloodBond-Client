@@ -9,7 +9,7 @@ import { FaSearch } from "react-icons/fa";
 const VideoLikeHeroBanner: React.FC = () => {
   const { user } = useAuth();
   return (
-    <div className="mx-auto text-center max-w-7xl">
+    <div className="text-center container mx-auto ">
       {/* 1. Enhanced Tagline/Pre-Header (Focus on Urgency and Trust) */}
       <div
         className="inline-flex items-center text-[10px] uppercase tracking-widest font-semibold mb-6 p-2 px-4 rounded-full bg-destructive/10 text-destructive border border-destructive/50 truncate"

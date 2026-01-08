@@ -6,43 +6,10 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { motion, useAnimation } from "framer-motion";
 import Container from "../Responsive/Container";
+import { volunteerData } from "@/Data/VolunteerData/VolunteerData";
 
 const OurVolunteers: React.FC = () => {
-  const volunteers = [
-    {
-      name: "Mehedi Hasan",
-      role: "Lead Coordinator",
-      donations: 12,
-      image:
-        "https://i.pinimg.com/736x/fe/84/9b/fe849b60d8576a51b39e51f30df21df0.jpg",
-      social: { github: "#", linkedin: "#" },
-    },
-    {
-      name: "Sumiya Akter",
-      role: "Medical Volunteer",
-      donations: 8,
-      image:
-        "https://i.pinimg.com/736x/fe/84/9b/fe849b60d8576a51b39e51f30df21df0.jpg",
-      social: { twitter: "#", linkedin: "#" },
-    },
-    {
-      name: "Rakib Uddin",
-      role: "Tech Support",
-      donations: 15,
-      image:
-        "https://i.pinimg.com/736x/fe/84/9b/fe849b60d8576a51b39e51f30df21df0.jpg",
-      social: { github: "#", linkedin: "#" },
-    },
-    {
-      name: "Anika Tahsin",
-      role: "Field Organizer",
-      donations: 10,
-      image:
-        "https://i.pinimg.com/736x/fe/84/9b/fe849b60d8576a51b39e51f30df21df0.jpg",
-      social: { twitter: "#", github: "#" },
-    },
-  ];
-
+  const volunteers = volunteerData;
   const doubledVolunteers = [...volunteers, ...volunteers];
 
   // Animation Control

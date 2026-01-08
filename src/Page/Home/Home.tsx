@@ -22,7 +22,6 @@ const Home = () => {
       </AnimatedBackground>
 
       <Features />
-
       <OurVolunteers />
       <Container>
         <HowItWorks />
