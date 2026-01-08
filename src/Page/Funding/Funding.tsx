@@ -36,10 +36,11 @@ import Container from "../Shared/Responsive/Container";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
 import useAuth from "@/Hook/useAuth";
 import type { FormData } from "@/types/blog";
-import { RecentDonationsData } from "@/Data/Funding/recentDonationsData";
+
 import { ImpactAreasData } from "@/Data/Funding/ImpactAreasData";
 import { TopDonorsData } from "@/Data/Funding/TopDonorsData";
 import { Testimonials } from "@/Data/Funding/TestimonialsData";
+import { RecentDonationsData } from "@/Data/Funding/RecentDonationsData";
 
 const Funding = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,7 +56,7 @@ const Funding = () => {
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
-  // Mock data - replace with actual API calls
+  //! Mock data - replace with actual API calls
   const fundingGoal = 50000;
   const currentFunding = 37500;
   const fundingPercentage = Math.round((currentFunding / fundingGoal) * 100);
@@ -105,7 +106,7 @@ const Funding = () => {
 
   return (
     <Container>
-      <div className="space-y-16 py-8">
+      <div className="space-y-16">
         {/* Hero Section */}
         <div className="text-center space-y-8 max-w-4xl mx-auto">
           <h1
