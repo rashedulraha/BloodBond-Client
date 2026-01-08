@@ -65,6 +65,7 @@ const Navbar = () => {
 
           {/* Right Side: Mode Toggle + Avatar */}
           <div className="flex items-center gap-4 flex-2 md:flex-1 justify-end">
+            <ModeToggle />
             {!user && (
               <Link to="/login">
                 <Button className="cursor-pointer">Login</Button>
@@ -130,7 +131,6 @@ const Navbar = () => {
                 </ul>
               </div>
             )}
-            <ModeToggle />
           </div>
         </div>
 
