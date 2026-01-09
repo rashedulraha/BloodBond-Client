@@ -73,7 +73,7 @@ const VideoLikeHeroBanner: React.FC = () => {
           style={{ animationDelay: "2s" }}></div>
       </div>
 
-      <div className="container mx-auto px-4 ">
+      <div className="container mx-auto px-4 my-10 md:my-0 ">
         <div className="text-center max-w-5xl mx-auto">
           {/* 1. Enhanced Tagline/Pre-Header */}
           <div

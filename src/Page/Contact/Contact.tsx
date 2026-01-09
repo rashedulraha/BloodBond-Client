@@ -109,7 +109,7 @@ const Contact: React.FC = () => {
 
   return (
     <Container>
-      <div className="space-y-16">
+      <div className="space-y-16 overflow-hidden">
         {/* --- [ 2. Header ] --- */}
         <div className="text-center pb-4 border-b border-border">
           <h1
