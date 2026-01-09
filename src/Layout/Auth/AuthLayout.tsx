@@ -19,7 +19,7 @@ const AuthLayout = () => {
         </Container>
       </nav>
       <AnimatedBackground>
-        <main className="flex items-center justify-center">
+        <main className="flex items-center justify-center py-5 md:py-10">
           <Outlet />
         </main>
       </AnimatedBackground>
