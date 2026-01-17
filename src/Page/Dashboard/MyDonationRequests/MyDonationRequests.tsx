@@ -58,27 +58,10 @@ import {
 import Container from "@/Page/Shared/Responsive/Container";
 import useAuth from "@/Hook/useAuth";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
-import DashboardSpinner from "@/Page/Shared/Spinner/DashboardSpinner";
-
-type DonationStatus = "pending" | "inprogress" | "done" | "canceled";
-
-interface myDonationRequest {
-  _id: string;
-  recipientName: string;
-  bloodGroup: string;
-  recipientDistrict: string;
-  recipientUpazila: string;
-  hospitalName: string;
-  fullAddressLine: string;
-  donationDate: string;
-  donationTime: string;
-  donationStatus: DonationStatus;
-  requesterEmail: string;
-  requesterName: string;
-  requestMessage?: string;
-  donorName?: string;
-  donorEmail?: string;
-}
+import type {
+  DonationStatus,
+  myDonationRequestData,
+} from "@/types/MydonationRequestType";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -191,9 +174,9 @@ const MyDonationRequestsPage: React.FC = () => {
   // Fetch my donation requests from database
   const {
     data: allRequests = [],
-    isLoading,
+
     error,
-  } = useQuery<myDonationRequest[]>({
+  } = useQuery<myDonationRequestData[]>({
     queryKey: ["my-donation-requests", user?.email],
     queryFn: async () => {
       const response = await axiosSecure.get(
@@ -224,7 +207,7 @@ const MyDonationRequestsPage: React.FC = () => {
     },
   });
 
-  // Update status mutation (for Done/Cancel buttons)
+  //! Update status mutation (for Done/Cancel buttons)
   const updateStatusMutation = useMutation({
     mutationFn: async ({
       id,
@@ -247,7 +230,7 @@ const MyDonationRequestsPage: React.FC = () => {
     },
   });
 
-  // Filtering Logic
+  //! Filtering Logic
   const filteredRequests = useMemo(() => {
     if (filterStatus === "all") {
       return allRequests;
@@ -333,19 +316,7 @@ const MyDonationRequestsPage: React.FC = () => {
     { value: "canceled", label: "Canceled" },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="min-h-[70vh] flex items-center justify-center">
-        <DashboardSpinner />
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return <DashboardSpinner />;
-  }
-
-  // Error State
+  //? Error State
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">

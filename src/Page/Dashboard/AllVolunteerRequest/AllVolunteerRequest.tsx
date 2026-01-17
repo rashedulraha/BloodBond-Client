@@ -153,7 +153,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
   );
 };
 
-// Main Component
+//! Main Component Here
 const AllVolunteerApplications: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
@@ -359,7 +359,11 @@ const AllVolunteerApplications: React.FC = () => {
   }, [allApplications]);
 
   if (isLoading) {
-    return <DashboardSpinner />;
+    return (
+      <div className="min-h-[70vh] w-full flex items-center justify-center">
+        <DashboardSpinner />
+      </div>
+    );
   }
   // Error State
   if (error) {

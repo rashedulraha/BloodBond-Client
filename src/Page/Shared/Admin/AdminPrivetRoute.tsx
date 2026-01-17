@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import useAuth from "@/Hook/useAuth";
 import useRole from "@/Hook/useRole";
 
-import LoadingSpinner from "../Spinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
+import DashboardSpinner from "../Spinner/DashboardSpinner";
 
 type Children = {
   children: React.ReactNode;
@@ -23,7 +23,7 @@ const AdminPrivetRoute = ({ children }: Children) => {
   }, [authLoading, roleLoading, role, logOutUser, navigate]);
 
   if (authLoading || roleLoading) {
-    return <LoadingSpinner />;
+    return <DashboardSpinner />;
   }
 
   if (role !== "admin") {

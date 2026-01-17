@@ -34,7 +34,7 @@ import Container from "@/Page/Shared/Responsive/Container";
 import useRole from "@/Hook/useRole";
 import useAuth from "@/Hook/useAuth";
 import useAxiosSecure from "@/Hook/useAxiosSecure";
-import LoadingSpinner from "@/Page/Shared/Spinner/LoadingSpinner";
+import DashboardSpinner from "@/Page/Shared/Spinner/DashboardSpinner";
 
 // Blood Groups
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -290,7 +290,7 @@ const Profile: React.FC = () => {
 
   // Loading State
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <DashboardSpinner />;
   }
 
   // Error State
