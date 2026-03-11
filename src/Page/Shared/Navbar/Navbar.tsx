@@ -9,6 +9,7 @@ import useAuth from "@/Hook/useAuth";
 import useRole from "@/Hook/useRole";
 import LoadingSpinner from "../Spinner/LoadingSpinner";
 import CustomNavLink from "./Shared/CustomNavLink";
+import { HeartPlus } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,7 +46,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className=" items-center gap-2 flex flex-1">
             <Link to="/" className="text-2xl font-bold hidden lg:flex">
-              Blood <span className="text-primary">Bond</span>
+              <HeartPlus /> Blood <span className="text-primary">Bond</span>
             </Link>
 
             {/* Mobile Menu Button - Using basic symbols */}
