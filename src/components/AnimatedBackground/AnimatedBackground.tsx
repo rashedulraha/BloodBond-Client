@@ -43,7 +43,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
       const cells: BloodCell[] = [];
       const cellCount = Math.min(
         80,
-        Math.floor((canvas.width * canvas.height) / 15000)
+        Math.floor((canvas.width * canvas.height) / 15000),
       );
 
       for (let i = 0; i < cellCount; i++) {
@@ -87,7 +87,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
         cell.size * 0.7,
         cell.angle,
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
 
       const gradient = ctx.createRadialGradient(
@@ -96,7 +96,7 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
         0,
         cell.x,
         cell.y,
-        cell.size
+        cell.size,
       );
 
       gradient.addColorStop(0, `rgba(220, 38, 38, ${cell.opacity})`);
@@ -122,11 +122,11 @@ const AnimatedBackground: React.FC<{ children: React.ReactNode }> = ({
         0,
         0,
         canvas.width,
-        canvas.height
+        canvas.height,
       );
-      bgGradient.addColorStop(0, "rgba(254, 242, 242, 0.05)");
-      bgGradient.addColorStop(0.5, "rgba(254, 226, 226, 0.03)");
-      bgGradient.addColorStop(1, "rgba(254, 242, 242, 0.05)");
+      bgGradient.addColorStop(0, "rgba(254, 242, 242, 0.0)");
+      bgGradient.addColorStop(0.5, "rgba(254, 226, 226, 0.0)");
+      bgGradient.addColorStop(1, "rgba(254, 242, 242, 0.0)");
       ctx.fillStyle = bgGradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 

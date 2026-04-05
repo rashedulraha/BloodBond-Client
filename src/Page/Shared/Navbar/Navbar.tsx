@@ -42,21 +42,23 @@ const Navbar = () => {
   return (
     <div className=" backdrop-blur-sm sticky top-0 z-50 shadow-sm border-b border-border">
       <Container>
-        <div className="flex items-center justify-between py-3">
+        <div className="flex items-center justify-between py-3 gap-3">
+          {/* Mobile Menu Button - Using basic symbols */}
+          <div className="lg:hidden">
+            <span
+              onClick={() => setIsOpen(!isOpen)}
+              className=" cursor-pointer text-2xl font-bold">
+              {isOpen ? "✕" : "☰"}
+            </span>
+          </div>
           {/* Logo */}
           <div className=" items-center gap-2 flex flex-1">
-            <Link to="/" className="text-2xl font-bold hidden lg:flex">
-              <HeartPlus /> Blood <span className="text-primary">Bond</span>
+            <Link
+              to="/"
+              className="text-2xl flex  gap-2 items-center  font-bold  truncate text-primary">
+              <HeartPlus className="hidden lg:flex text-primary" /> Blood{" "}
+              <span className="text-primary">Bond</span>
             </Link>
-
-            {/* Mobile Menu Button - Using basic symbols */}
-            <div className="lg:hidden">
-              <span
-                onClick={() => setIsOpen(!isOpen)}
-                className=" cursor-pointer text-2xl font-bold">
-                {isOpen ? "✕" : "☰"}
-              </span>
-            </div>
           </div>
 
           {/* Center Nav Links */}
